@@ -1,0 +1,25 @@
+{
+  "name": "@dab-co/jam-sqlite",
+  "version": "0.1.0",
+  "description": "node js Sqlite database module for jam-app",
+  "main": "main.js",
+  "scripts": {
+    "test": "node main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DAB-Co/jam-sqlite.git"
+  },
+  "publishConfig": {
+    "registry":"https://npm.pkg.github.com"
+  },
+  "author": "DAB Co.",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DAB-Co/jam-sqlite/issues"
+  },
+  "homepage": "https://github.com/DAB-Co/jam-sqlite#readme",
+  "dependencies": {
+    "sqlite3": "^4.2.0"
+  }
+}
