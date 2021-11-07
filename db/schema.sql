@@ -10,18 +10,25 @@ CREATE TABLE IF NOT EXISTS "matches" (
 	"id"	INTEGER NOT NULL UNIQUE,
 	"connections"	BLOB,
 	FOREIGN KEY("id") REFERENCES "accounts"("id"),
-	PRIMARY KEY("id" AUTOINCREMENT)
+	PRIMARY KEY("id")
 );
 CREATE TABLE IF NOT EXISTS "artists" (
 	"id"	INTEGER NOT NULL UNIQUE,
-	"api_id"	TEXT UNIQUE,
-	"listeners"	BLOB,
+	"artist_name"	TEXT UNIQUE,
+	"listener_ids"	BLOB,
+	PRIMARY KEY("id" AUTOINCREMENT)
+);
+CREATE TABLE IF NOT EXISTS "tracks" (
+	"id"	INTEGER NOT NULL UNIQUE,
+	"track_name"	TEXT UNIQUE,
+	"listener_ids"	BLOB,
 	PRIMARY KEY("id" AUTOINCREMENT)
 );
 CREATE TABLE IF NOT EXISTS "user_data" (
 	"id"	INTEGER NOT NULL UNIQUE,
-	"artists"	BLOB,
+	"artist_ids"	BLOB,
+	"track_ids"	BLOB,
 	FOREIGN KEY("id") REFERENCES "accounts"("id"),
-	PRIMARY KEY("id" AUTOINCREMENT)
+	PRIMARY KEY("id")
 );
 COMMIT;
