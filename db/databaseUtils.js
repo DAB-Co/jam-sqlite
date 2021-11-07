@@ -1,7 +1,7 @@
 const path = require("path");
 const DatabaseWrapper = require(path.join(__dirname, "databaseWrapper.js"));
 
-class DbUtils {
+class DatabaseUtils {
     constructor(database_path) {
         this.databaseWrapper = new DatabaseWrapper(database_path);
     }
@@ -23,4 +23,4 @@ class DbUtils {
     }
 }
 
-module.exports = DbUtils;
+module.exports = DatabaseUtils;
