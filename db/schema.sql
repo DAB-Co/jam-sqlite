@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS "tracks" (
 	"listener_ids"	BLOB,
 	PRIMARY KEY("id" AUTOINCREMENT)
 );
-CREATE TABLE IF NOT EXISTS "user_data" (
+CREATE TABLE IF NOT EXISTS "user_preferences" (
 	"id"	INTEGER NOT NULL UNIQUE,
 	"artist_ids"	BLOB,
 	"track_ids"	BLOB,
