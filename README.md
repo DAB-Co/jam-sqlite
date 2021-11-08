@@ -1,4 +1,4 @@
-# @DAB-CO/jam-sqlite
+# @dab-co/jam-sqlite
 
 ## Installing this module
 
@@ -27,3 +27,4 @@
 - Once you are done with changes you need to use ```npm publish``` in order to be able to install it
   via ```npm install```. This will upload the package to the github registry. If this doesn't work, try
   running ```npm login --scope=@github_username --registry=https://npm.pkg.github.com``` first.
+  
