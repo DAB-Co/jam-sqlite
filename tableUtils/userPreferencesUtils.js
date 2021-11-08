@@ -1,6 +1,4 @@
-const path = require("path");
-
-class AccountUtils{
+class UserPreferencesUtils{
     constructor(databaseWrapper) {
         this.databaseWrapper = databaseWrapper;
     }
