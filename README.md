@@ -35,7 +35,7 @@ by aggregating it. By aggregation, we make sure every utility file makes use of 
 - Preferably DatabaseWrapper class will be instantiated in a header file to make sure that only one connection is opened,
 and whenever desired utility file is needed it will be fed into the corresponding class.
   
-- Example:
+- Example usage on production:
   
 ```
 // initializeDatabase.js
