@@ -32,8 +32,8 @@
 - Every table in the database will have corresponding utility file. They will make use of the databaseWrapper class
 by aggregating it. By aggregation, we make sure every utility file makes use of the intended database connection.
   
-- Preferably DatabaseWrapper class will be instantiated in a header file to make sure that only one connection is opened,
-and whenever desired utility file is needed it will be fed into the corresponding class.
+- Preferably DatabaseWrapper class will be instantiated in a header file to make sure that only one connection is opened.
+Whenever a utility file is needed, the instantiated databaseWrapper object will be fed into the corresponding class.
   
 ## Example usage on production:
   
