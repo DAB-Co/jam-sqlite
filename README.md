@@ -37,14 +37,14 @@ and whenever desired utility file is needed it will be fed into the correspondin
   
 ## Example usage on production:
   
-```nodejs
+```javascript
 // initializeDatabase.js
 const DatabaseWrapper = require("@dab-co/jam-sqlite").DatabaseWrapper;
 const databaseWrapper = new DatabaseWrapper("database.db");
 module.exports = databaseWrapper;
 ```
   
-```nodejs
+```javascript
 // some file that uses any one of the utils
 const databaseWrapper = require("./initializeDatabase.js");
 const AccountUtils = require("@dab-co/jam-sqlite").TableUtils.AccountUtils;
