@@ -14,7 +14,11 @@ class DatabaseWrapper {
         return this.database.prepare(sql);
     }
 
-    get_matching(sql, params=[]) {
+    get(sql, params=[]) {
+        return this.prepare(sql).get(params);
+    }
+
+    get_all(sql, params=[]) {
         return this.prepare(sql).all(params);
     }
 
