@@ -3,3 +3,5 @@ class UserPreferencesUtils{
         this.databaseWrapper = databaseWrapper;
     }
 }
+
+module.exports = UserPreferencesUtils;

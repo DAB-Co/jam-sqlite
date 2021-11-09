@@ -3,3 +3,5 @@ class MatchesUtils{
         this.databaseWrapper = databaseWrapper;
     }
 }
+
+module.exports = MatchesUtils;

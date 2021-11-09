@@ -3,3 +3,5 @@ class ArtistUtils{
         this.databaseWrapper = databaseWrapper;
     }
 }
+
+module.exports = ArtistUtils;

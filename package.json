@@ -1,6 +1,6 @@
 {
   "name": "@dab-co/jam-sqlite",
-  "version": "1.0.0",
+  "version": "1.1.1",
   "description": "node js Sqlite database module for jam-app",
   "main": "main.js",
   "scripts": {

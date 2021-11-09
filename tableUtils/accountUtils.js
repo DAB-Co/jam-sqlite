@@ -4,7 +4,7 @@ class AccountUtils{
     }
 
     // Returns true if username exists
-    usernameExists = async function (username) {
+    usernameExists = function (username) {
         let result = databaseWrapper.get("SELECT * FROM accounts WHERE username = ?;", [username]);
         return result.length != 0;
     };
@@ -15,8 +15,10 @@ class AccountUtils{
     };
 
     // Returns password of a user by username
-    getPassword = async function (username) {
+    getPassword = function (username) {
         let result = databaseWrapper.get("SELECT password FROM accounts WHERE username = ?;", [username]);
         return result[0].password;
     };
 }
+
+module.exports = AccountUtils;

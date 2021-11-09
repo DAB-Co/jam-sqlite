@@ -3,3 +3,5 @@ class TracksUtils{
         this.databaseWrapper = databaseWrapper;
     }
 }
+
+module.exports = TracksUtils;
