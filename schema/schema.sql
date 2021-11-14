@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS "common_preferences" (
 	"id"	INTEGER NOT NULL UNIQUE,
 	"name"	TEXT UNIQUE,
 	"type"	TEXT,
-	"listener_weights"	BLOB,
+	"user_weights"	BLOB,
 	PRIMARY KEY("id" AUTOINCREMENT)
 );
 CREATE TABLE IF NOT EXISTS "user_preferences" (
