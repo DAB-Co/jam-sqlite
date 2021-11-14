@@ -12,22 +12,16 @@ CREATE TABLE IF NOT EXISTS "matches" (
 	PRIMARY KEY("id"),
 	FOREIGN KEY("id") REFERENCES "accounts"("id")
 );
-CREATE TABLE IF NOT EXISTS "artists" (
+CREATE TABLE IF NOT EXISTS "common_preferences" (
 	"id"	INTEGER NOT NULL UNIQUE,
-	"artist_name"	TEXT UNIQUE,
-	"listener_weights"	BLOB,
-	PRIMARY KEY("id" AUTOINCREMENT)
-);
-CREATE TABLE IF NOT EXISTS "tracks" (
-	"id"	INTEGER NOT NULL UNIQUE,
-	"track_name"	TEXT UNIQUE,
+	"name"	TEXT UNIQUE,
+	"type"	TEXT,
 	"listener_weights"	BLOB,
 	PRIMARY KEY("id" AUTOINCREMENT)
 );
 CREATE TABLE IF NOT EXISTS "user_preferences" (
 	"id"	INTEGER NOT NULL UNIQUE,
-	"artist_weights"	BLOB,
-	"track_weights"	BLOB,
+	"preferences"	BLOB,
 	PRIMARY KEY("id"),
 	FOREIGN KEY("id") REFERENCES "accounts"("id")
 );
