@@ -5,6 +5,10 @@ class MatchesUtils extends _Row{
     constructor(databaseWrapper) {
         super("matches", databaseWrapper);
     }
+
+    get_matches() {
+
+    }
 }
 
 module.exports = MatchesUtils;
