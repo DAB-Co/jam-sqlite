@@ -1,6 +1,9 @@
-class AccountUtils{
+const path = require("path");
+const _Row = require(path.join(__dirname, "_row.js"))
+
+class AccountUtils extends _Row{
     constructor(databaseWrapper) {
-        this.databaseWrapper = databaseWrapper;
+        super("accounts", databaseWrapper);
     }
 
     // Returns true if username exists

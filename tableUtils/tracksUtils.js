@@ -1,6 +1,9 @@
-class TracksUtils{
+const path = require("path");
+const _Row = require(path.join(__dirname, "_row.js"))
+
+class TracksUtils extends _Row{
     constructor(databaseWrapper) {
-        this.databaseWrapper = databaseWrapper;
+        super("tracks", databaseWrapper);
     }
 }
 
