@@ -1,15 +1,20 @@
 class _Row {
-    constructor(table_name, databaseWrapper) {
+    constructor(table_name, databaseWrapper, primary_key) {
         this.table_name = table_name;
         this.databaseWrapper = databaseWrapper;
+        this.primary_key = primary_key;
     }
 
     get_row_ids() {
-        return this.databaseWrapper.getAll("SELECT id FROM ?", [this.table_name]);
+        return this.databaseWrapper.getAll("SELECT ? FROM ${this.table_name}", [this.primary_key]);
     }
 
     get_column(row_id, column) {
-        return this.databaseWrapper.get("SELECT ? FROM ? WHERE id=?", [column, this.table_name, row_id]);
+        return this.databaseWrapper.get(`SELECT ? FROM ${this.table_name} WHERE ${this.primary_key}=?`, [column, row_id]);
+    }
+
+    update_column(row_id, column_id, column_data) {
+        this.databaseWrapper.run_query(`UPDATE ${this.table_name} SET ${column_id}=? WHERE ${this.primary_key}=?`, [column_data, row_id]);
     }
 }
 

@@ -3,7 +3,7 @@ const _Row = require(path.join(__dirname, "_row.js"))
 
 class UserPreferencesUtils extends _Row{
     constructor(databaseWrapper) {
-        super("user_preferences", databaseWrapper);
+        super("user_preferences", databaseWrapper, "user_id");
     }
 }
 
