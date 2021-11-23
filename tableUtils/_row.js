@@ -9,8 +9,12 @@ class _Row {
         return this.databaseWrapper.getAll("SELECT ? FROM ${this.table_name}", [this.primary_key]);
     }
 
+    get_row(id) {
+        return this.databaseWrapper.get(`SELECT * FROM ${this.table_name} WHERE ${this.primary_key}=?`, [id]);
+    }
+
     get_column(row_id, column) {
-        return this.databaseWrapper.get(`SELECT ? FROM ${this.table_name} WHERE ${this.primary_key}=?`, [column, row_id]);
+        return this.get_row(row_id)[column];
     }
 
     update_column(row_id, column_id, column_data) {

@@ -11,7 +11,7 @@ class MatchesUtils extends _Row{
     }
 
     update_user_connections(user_id, connections) {
-        this.update_column(user_id, "user_connections", JSON.stringify(connections));
+        return this.update_column(user_id, "user_connections", JSON.stringify(connections));
     }
 }
 

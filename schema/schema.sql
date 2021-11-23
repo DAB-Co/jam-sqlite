@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS "accounts" (
 	"user_id"	INTEGER NOT NULL UNIQUE,
 	"user_email"	TEXT UNIQUE,
 	"username"	TEXT UNIQUE,
-	"user_password"	TEXT,
+	"user_password_hash"	TEXT,
 	PRIMARY KEY("user_id" AUTOINCREMENT)
 );
 CREATE TABLE IF NOT EXISTS "matches" (

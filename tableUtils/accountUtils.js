@@ -14,14 +14,18 @@ class AccountUtils extends _Row{
 
     // Creates a user in user table with given username and password
     addUser = function (username, pass) {
-        return this.databaseWrapper.run_query("INSERT INTO accounts (username, user_password) VALUES (?, ?);", [username, pass]);
+        return this.databaseWrapper.run_query("INSERT INTO accounts (username, user_password_hash) VALUES (?, ?);", [username, pass]);
     };
 
     // Returns password of a user by username
     getPassword = function (username) {
-        let result = this.databaseWrapper.get("SELECT user_password FROM accounts WHERE username = ?;", [username]);
+        let result = this.databaseWrapper.get("SELECT user_password_hash FROM accounts WHERE username = ?;", [username]);
         return result.password;
     };
+
+    getUsername(id) {
+        return this.get_row(id);
+    }
 }
 
 module.exports = AccountUtils;
