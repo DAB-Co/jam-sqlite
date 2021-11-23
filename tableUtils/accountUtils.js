@@ -20,11 +20,11 @@ class AccountUtils extends _Row{
     // Returns password of a user by username
     getPassword = function (username) {
         let result = this.databaseWrapper.get("SELECT user_password_hash FROM accounts WHERE username = ?;", [username]);
-        return result.password;
+        return result["user_password_hash"];
     };
 
     getUsername(id) {
-        return this.get_row(id);
+        return this.get_row(id)["username"];
     }
 }
 

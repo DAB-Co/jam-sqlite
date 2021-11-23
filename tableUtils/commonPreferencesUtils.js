@@ -11,13 +11,17 @@ class CommonPreferencesUtils extends _Row{
         return !!result; // return false if undefined
     }
 
-    updatePreference(preference_name, preference_type, user_weights) {
+    setPreference(preference_name, preference_type, user_weights) {
         if (this.hasPreference(preference_name)) {
-            this.databaseWrapper.run_query();
+            this.databaseWrapper.run_query(`UPDATE ${this.table_name} SET user_weights=? WHERE preference_name=?`, [JSON.stringify(user_weights)]);
         }
         else {
-            this.databaseWrapper.run_query();
+            this.databaseWrapper.run_query(`INSERT INTO ${this.table_name}(preference_name, preference_type, user_weights) VALUES(?,?,?)`, [preference_name, preference_type, JSON.stringify(user_weights)]);
         }
+    }
+
+    getPreferenceData(preference_name) {
+        return this.databaseWrapper.run_query(`SELECT * FROM ${this.table_name} WHERE preference_name=?`, [preference_name]);
     }
 }
 
