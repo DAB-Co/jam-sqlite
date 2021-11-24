@@ -11,11 +11,11 @@ class UserPreferencesUtils extends _Row{
     }
 
     getPreferences(id) {
-        return JSON.stringify(this.get_column(id, "user_preferences"));
+        return JSON.parse(this.get_column(id, "user_preferences"));
     }
 
     updatePreferences(id, preferences) {
-        this.update_column(id, JSON.stringify(preferences));
+        this.update_column(id, "user_preferences", JSON.stringify(preferences));
     }
 }
 

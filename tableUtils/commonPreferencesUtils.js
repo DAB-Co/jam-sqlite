@@ -20,8 +20,8 @@ class CommonPreferencesUtils extends _Row{
         }
     }
 
-    getPreferenceData(preference_name, preference_type) {
-        return this.databaseWrapper.run_query(`SELECT * FROM ${this.table_name} WHERE preference_name=? AND preference_type=?`, [preference_name, preference_type]);
+    getUserWeights(preference_name, preference_type) {
+        return JSON.parse(this.databaseWrapper.get(`SELECT user_weights FROM ${this.table_name} WHERE preference_name=? AND preference_type=?`, [preference_name, preference_type])["user_weights"]);
     }
 }
 

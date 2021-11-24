@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS "matches" (
 );
 CREATE TABLE IF NOT EXISTS "common_preferences" (
 	"preference_id"	INTEGER NOT NULL UNIQUE,
-	"preference_name"	TEXT UNIQUE,
+	"preference_name"	TEXT,
 	"preference_type"	TEXT,
 	"user_weights"	BLOB,
 	PRIMARY KEY("preference_id" AUTOINCREMENT)

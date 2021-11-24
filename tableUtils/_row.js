@@ -6,7 +6,12 @@ class _Row {
     }
 
     get_row_ids() {
-        return this.databaseWrapper.getAll("SELECT ? FROM ${this.table_name}", [this.primary_key]);
+        let ids = [];
+        let raw = this.databaseWrapper.get_all(`SELECT ${this.primary_key} FROM ${this.table_name}`);
+        for (let i in raw) {
+            ids.push(raw[i][this.primary_key]);
+        }
+        return ids;
     }
 
     get_row(id) {
