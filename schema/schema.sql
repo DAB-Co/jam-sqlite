@@ -9,8 +9,8 @@ CREATE TABLE IF NOT EXISTS "accounts" (
 CREATE TABLE IF NOT EXISTS "matches" (
 	"user_id"	INTEGER NOT NULL UNIQUE,
 	"user_connections"	BLOB,
-	PRIMARY KEY("user_id"),
-	FOREIGN KEY("user_id") REFERENCES "accounts"("user_id")
+	FOREIGN KEY("user_id") REFERENCES "accounts"("user_id"),
+	PRIMARY KEY("user_id")
 );
 CREATE TABLE IF NOT EXISTS "common_preferences" (
 	"preference_id"	INTEGER NOT NULL UNIQUE,
@@ -22,7 +22,8 @@ CREATE TABLE IF NOT EXISTS "common_preferences" (
 CREATE TABLE IF NOT EXISTS "user_preferences" (
 	"user_id"	INTEGER NOT NULL UNIQUE,
 	"user_preferences"	BLOB,
-	PRIMARY KEY("user_id"),
-	FOREIGN KEY("user_id") REFERENCES "accounts"("user_id")
+	"exclude"	INTEGER DEFAULT 0,
+	FOREIGN KEY("user_id") REFERENCES "accounts"("user_id"),
+	PRIMARY KEY("user_id")
 );
 COMMIT;
