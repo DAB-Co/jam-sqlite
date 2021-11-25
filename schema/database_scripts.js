@@ -18,13 +18,13 @@ function run_command(command) {
     });
 }
 
-async function create_database(dir) {
+async function create_database(dir, database_name) {
     await fs.mkdir(dir, { recursive: true }, (err) => {
         if (err) {
             throw err;
         }
     });
-    await run_command(`sqlite3 sqlite\\database.db --init \"${path.join(__dirname, "schema.sql")}\" < \"${path.join(__dirname, ".exit")}\"`);
+    await run_command(`sqlite3 \"${path.join(dir, database_name)}\" --init \"${path.join(__dirname, "schema.sql")}\" < \"${path.join(__dirname, ".exit")}\"`);
 }
 
 module.exports = {
