@@ -17,6 +17,15 @@ class MatchesUtils extends _Row{
     update_user_connections(user_id, connections) {
         return this.update_column(user_id, "user_connections", JSON.stringify(connections));
     }
+
+    set_matched(id1, id2) {
+        let c1 = this.get_user_connections(id1);
+        c1[id2]["matched"] = true;
+        this.update_user_connections(id1, c1);
+        let c2 = this.get_user_connections(id2);
+        c2[id1]["matched"] = true;
+        this.update_user_connections(id2, c2);
+    }
 }
 
 module.exports = MatchesUtils;
