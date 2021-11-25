@@ -17,6 +17,10 @@ class UserPreferencesUtils extends _Row{
     updatePreferences(id, preferences) {
         this.update_column(id, "user_preferences", JSON.stringify(preferences));
     }
+
+    isExcluded(id) {
+        return this.get_column(id, "exclude") !== 0;
+    }
 }
 
 module.exports = UserPreferencesUtils;
