@@ -12,14 +12,23 @@ class AccountUtils extends _Row{
         return !!result; // return false if undefined
     };
 
+    emailExists(email) {
+        let result = this.databaseWrapper.get("SELECT * FROM accounts WHERE user_email = ?;", [email]);
+        return !!result; // return false if undefined
+    }
+
     // Creates a user in user table with given username and password
-    addUser = function (username, pass) {
-        return this.databaseWrapper.run_query("INSERT INTO accounts (username, user_password_hash) VALUES (?, ?);", [username, pass]);
+    addUser = function (email, username, pass) {
+        return this.databaseWrapper.run_query("INSERT INTO accounts (user_email, username, user_password_hash) VALUES (?, ?, ?);", [email, username, pass]);
     };
 
+    getEmail(username) {
+        return this.databaseWrapper.get("SELECT user_email FROM accounts WHERE username = ?;", [username]);
+    }
+
     // Returns password of a user by username
-    getPassword = function (username) {
-        let result = this.databaseWrapper.get("SELECT user_password_hash FROM accounts WHERE username = ?;", [username]);
+    getPassword = function (email) {
+        let result = this.databaseWrapper.get("SELECT user_password_hash FROM accounts WHERE user_email = ?;", [email]);
         return result["user_password_hash"];
     };
 
