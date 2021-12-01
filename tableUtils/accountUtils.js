@@ -35,6 +35,11 @@ class AccountUtils extends _Row{
     getUsername(id) {
         return this.get_row(id)["username"];
     }
+
+    getUsernameAndPass = function(email) {
+        let result = this.databaseWrapper.get("SELECT user_password_hash, username FROM accounts WHERE user_email = ?;", [email]);
+        return result;
+    }
 }
 
 module.exports = AccountUtils;
