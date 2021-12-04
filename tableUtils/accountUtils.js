@@ -49,6 +49,7 @@ class AccountUtils extends _Row {
 
     getNotificationToken(username) {
         let result = this.databaseWrapper.get("SELECT notification_token FROM accounts WHERE username = ?;", [username]);
+        if (!result) return "";
         return result["notification_token"];
     }
 
