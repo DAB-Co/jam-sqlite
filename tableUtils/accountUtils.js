@@ -26,9 +26,10 @@ class AccountUtils extends _Row{
         return this.databaseWrapper.get("SELECT user_email FROM accounts WHERE username = ?;", [username]);
     }
 
-    // Returns password of a user by username
-    getPassword = function (email) {
-        let result = this.databaseWrapper.get("SELECT user_password_hash FROM accounts WHERE user_email = ?;", [email]);
+    // Returns password of a user by username, returns empty string if username does not exist
+    getPasswordFromUsername = function (username) {
+        let result = this.databaseWrapper.get("SELECT user_password_hash FROM accounts WHERE username = ?;", [username]);
+        if (!result) return "";
         return result["user_password_hash"];
     };
 
@@ -39,6 +40,11 @@ class AccountUtils extends _Row{
     getUsernameAndPass = function(email) {
         let result = this.databaseWrapper.get("SELECT user_password_hash, username FROM accounts WHERE user_email = ?;", [email]);
         return result;
+    }
+
+    getNotificationToken(username) {
+        let result = this.databaseWrapper.get("SELECT notification_token FROM accounts WHERE username = ?;", [username]);
+        return result["notification_token"];
     }
 }
 
