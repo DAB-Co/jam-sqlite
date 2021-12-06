@@ -34,7 +34,7 @@ class AccountUtils extends _Row {
     // Returns password of a user by username, returns empty string if username does not exist
     getPasswordFromUsername = function (username) {
         let result = this.databaseWrapper.get("SELECT user_password_hash FROM accounts WHERE username = ?;", [username]);
-        if (!result) return "";
+        if (!result) return null;
         return result["user_password_hash"];
     };
 
@@ -49,7 +49,7 @@ class AccountUtils extends _Row {
 
     getNotificationToken(username) {
         let result = this.databaseWrapper.get("SELECT notification_token FROM accounts WHERE username = ?;", [username]);
-        if (!result) return "";
+        if (!result) return null;
         return result["notification_token"];
     }
 
