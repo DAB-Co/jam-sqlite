@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS "accounts" (
 	"user_email"	TEXT UNIQUE,
 	"username"	TEXT UNIQUE,
 	"user_password_hash"	TEXT,
-	"user_notification_token" TEXT,
+	"notification_token" TEXT,
 	PRIMARY KEY("user_id" AUTOINCREMENT)
 );
 CREATE TABLE IF NOT EXISTS "matches" (

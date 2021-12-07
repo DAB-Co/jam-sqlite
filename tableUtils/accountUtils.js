@@ -8,12 +8,12 @@ class AccountUtils extends _Row {
 
     // Returns true if username exists
     usernameExists = function (username) {
-        let result = this._getRow("username", username);
+        let result = this.databaseWrapper.get("SELECT * FROM accounts WHERE username = ?;", [username]);
         return !!result; // return false if undefined
     };
 
     emailExists(email) {
-        let result = this._getRow("user_email", email);
+        let result = this.databaseWrapper.get("SELECT * FROM accounts WHERE user_email = ?;", [email]);
         return !!result; // return false if undefined
     }
 
@@ -24,32 +24,37 @@ class AccountUtils extends _Row {
 
     // Creates a user in user table with given username and password
     addUserWithToken = function (email, username, pass, token) {
-        return this.databaseWrapper.run_query("INSERT INTO accounts (user_email, username, user_password_hash, user_notification_token) VALUES (?, ?, ?, ?);", [email, username, pass, token]);
+        return this.databaseWrapper.run_query("INSERT INTO accounts (user_email, username, user_password_hash, notification_token) VALUES (?, ?, ?, ?);", [email, username, pass, token]);
     };
 
-    getEmailByUsername(username) {
-        return this._getColumn("username", username, "user_email");
+    getEmail(username) {
+        return this.databaseWrapper.get("SELECT user_email FROM accounts WHERE username = ?;", [username]);
     }
 
     // Returns password of a user by username, returns empty string if username does not exist
     getPasswordFromUsername = function (username) {
-        return this._getColumn("username", username, "user_password_hash");
+        let result = this.databaseWrapper.get("SELECT user_password_hash FROM accounts WHERE username = ?;", [username]);
+        if (!result) return null;
+        return result["user_password_hash"];
     };
 
-    getUsernameById(id) {
-        return this._getColumn("user_id", id, "username");
+    getUsername(id) {
+        return this.get_row(id)["username"];
     }
 
-    getAccountByEmail = function (email) {
-        return this._getRow("user_email", email);
+    getUsernameAndPass = function (email) {
+        let result = this.databaseWrapper.get("SELECT user_password_hash, username FROM accounts WHERE user_email = ?;", [email]);
+        return result;
     }
 
-    getNotificationTokenByUsername(username) {
-        return this._getColumn("username", username, "user_notification_token");
+    getNotificationToken(username) {
+        let result = this.databaseWrapper.get("SELECT notification_token FROM accounts WHERE username = ?;", [username]);
+        if (!result) return null;
+        return result["notification_token"];
     }
 
     updateNotificationToken(username, newToken) {
-        this._updateColumn("username", "user_notification_token", username, newToken);
+        return this.databaseWrapper.run_query("UPDATE accounts SET notification_token = ? WHERE username = ?;", [newToken, username]);
     }
 }
 

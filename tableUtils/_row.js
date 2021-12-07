@@ -5,7 +5,7 @@ class _Row {
         this.primary_key = primary_key;
     }
 
-    getPrimaryKeys() {
+    get_row_ids() {
         let ids = [];
         let raw = this.databaseWrapper.get_all(`SELECT ${this.primary_key} FROM ${this.table_name}`);
         for (let i in raw) {
@@ -14,33 +14,16 @@ class _Row {
         return ids;
     }
 
-    _getRow(identifier_type, identifier) {
-        return this.databaseWrapper.get(`SELECT * FROM ${this.table_name} WHERE ${identifier_type}=?`, [identifier]);
+    get_row(id) {
+        return this.databaseWrapper.get(`SELECT * FROM ${this.table_name} WHERE ${this.primary_key}=?`, [id]);
     }
 
-    _getColumn(identifier_type, identifier, column) {
-        let row = this._getRow(identifier_type, identifier);
-        if (row !== undefined && column in row) {
-            return row[column];
-        }
-        else {
-            return undefined;
-        }
+    get_column(row_id, column) {
+        return this.get_row(row_id)[column];
     }
 
-    _updateColumn(identifier_type, column_type, identifier, column) {
-        this.databaseWrapper.run_query(`UPDATE ${this.table_name} SET ${column_type}=? WHERE ${identifier_type}=?`, [column, identifier]);
-    }
-
-    getRowByPrimaryKey(id) {
-        return this._getRow(this.primary_key, id);
-    }
-    getColumnByPrimaryKey(identifier, column) {
-        return this._getColumn(identifier, column);
-    }
-
-    updateColumnByPrimaryKey(row_id, column_id, column_data) {
-        this._updateColumn(this.primary_key, column_id, row_id, column_data);
+    update_column(row_id, column_id, column_data) {
+        this.databaseWrapper.run_query(`UPDATE ${this.table_name} SET ${column_id}=? WHERE ${this.primary_key}=?`, [column_data, row_id]);
     }
 }
 
