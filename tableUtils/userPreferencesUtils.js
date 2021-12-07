@@ -11,15 +11,15 @@ class UserPreferencesUtils extends _Row{
     }
 
     getPreferences(id) {
-        return JSON.parse(this.get_column(id, "user_preferences"));
+        return JSON.parse(this.getColumnByPrimaryKey(id, "user_preferences"));
     }
 
     updatePreferences(id, preferences) {
-        this.update_column(id, "user_preferences", JSON.stringify(preferences));
+        this.updateColumnByPrimaryKey(id, "user_preferences", JSON.stringify(preferences));
     }
 
     isExcluded(id) {
-        return this.get_column(id, "exclude") !== 0;
+        return this.getColumnByPrimaryKey(id, "exclude") !== 0;
     }
 }
 
