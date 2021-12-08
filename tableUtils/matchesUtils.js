@@ -7,7 +7,7 @@ class MatchesUtils extends _Row{
     }
 
     get_user_connections(user_id) {
-        return JSON.parse(this.get_column(user_id, "user_connections"));
+        return JSON.parse(this.getColumnByPrimaryKey(user_id, "user_connections"));
     }
 
     addUser(user_id) {
@@ -15,7 +15,7 @@ class MatchesUtils extends _Row{
     }
 
     update_user_connections(user_id, connections) {
-        return this.update_column(user_id, "user_connections", JSON.stringify(connections));
+        return this.updateColumnByPrimaryKey(user_id, "user_connections", JSON.stringify(connections));
     }
 
     set_matched(id1, id2) {
