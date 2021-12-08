@@ -9,12 +9,12 @@ class AccountUtils extends _Row {
     // Returns true if username exists
     usernameExists = function (username) {
         let result = this._getRow("username", username);
-        return !!result; // return false if undefined
+        return result !== undefined;
     };
 
     emailExists(email) {
         let result = this._getRow("user_email", email);
-        return !!result; // return false if undefined
+        return result !== undefined;
     }
 
     // Creates a user in user table with given username and password
