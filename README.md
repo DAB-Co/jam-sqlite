@@ -1,17 +1,9 @@
 # @dab-co/jam-sqlite
 
 ## Installing this module
-
-### Method 1
-
-- Use ```npm --registry=https://npm.pkg.github.com adduser```. After this run ```npm install``` like you normally would.
-  If this doesn't work, try the methods below.
-
-### Method 2
-
-- Login via ```npm login --scope=@github_username --registry=https://npm.pkg.github.com```
-- And do ```npm install --registry https://npm.pkg.github.com @dab-co/jam-sqlite```
-- To permanently add the registry, do ``` npm config set @dab-co:registry https://npm.pkg.github.com```.
+- ```npm --registry=https://npm.pkg.github.com adduser```
+- ```npm config set @dab-co:registry https://npm.pkg.github.com```
+- ```npm install```
 
 ## Updating and publishing the package
 
