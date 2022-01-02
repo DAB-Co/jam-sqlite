@@ -6,5 +6,5 @@ module.exports = {
     TableUtils: require(path.join(__dirname, "tableUtils.js")),
     UserPreferencesUtils: require(path.join(__dirname, "userPreferencesUtils.js")),
     CommonPreferencesUtils: require(path.join(__dirname, "commonPreferencesUtils.js")),
-    UserFriendUtils: require(path.join(__dirname, "userFriendsUtils.js")),
+    UserFriendsUtils: require(path.join(__dirname, "userFriendsUtils.js")),
 };
