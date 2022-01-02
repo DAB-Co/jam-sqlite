@@ -7,6 +7,7 @@ const Database = jam_sqlite.Database;
 const UserFriendsUtils = jam_sqlite.Utils.UserFriendsUtils;
 const AccountUtils = jam_sqlite.Utils.AccountUtils;
 
+
 async function main() {
     const db_dir = path.join(__dirname, "..", "sqlite");
     const db_path = path.join(db_dir, "database.db");
@@ -21,23 +22,29 @@ async function main() {
     const userFriendUtils = new UserFriendsUtils(database);
     const accountUtils = new AccountUtils(database);
     accountUtils.addUser("user1@email.com", "user1", "12345678");
-    userFriendUtils.addUser(accountUtils.getIdByUsername("user1"));
     accountUtils.addUser("user2@email.com", "user2", "12345678");
-    userFriendUtils.addUser(accountUtils.getIdByUsername("user2"));
-    userFriendUtils.addFriendByUsername("user1", "user2");
 
-    let user1friends = userFriendUtils.getFriendsByUsername("user1");
-    console.assert((user1friends !== undefined && "user2" in user1friends));
+    const user1Id = accountUtils.getIdByUsername("user1");
+    const user2Id = accountUtils.getIdByUsername("user2");
 
-    let user2friends = userFriendUtils.getFriendsByUsername("user2");
-    console.assert((user2friends !== undefined && "user1" in user2friends));
 
-    userFriendUtils.blockUser("user1", "user2");
-    user1friends = userFriendUtils.getFriendsByUsername("user1");
-    console.assert((user1friends !== undefined && "user2" in user1friends && user1friends["user2"]["blocked"]));
+    userFriendUtils.addUser(user1Id);
+    userFriendUtils.addUser(user2Id);
 
-    user2friends = userFriendUtils.getFriendsByUsername("user2");
-    console.assert((user2friends !== undefined && "user1" in user2friends && !user2friends["user1"]["blocked"]));
+    userFriendUtils.addFriend(user1Id, user2Id);
+
+    let user1friends = userFriendUtils.getFriends(user1Id);
+    console.assert((user1friends !== undefined && user2Id in user1friends && user1friends[user2Id]["username"] === "user2"), "user1friends assertion failed");
+
+    let user2friends = userFriendUtils.getFriends(user2Id);
+    console.assert((user2friends !== undefined && user1Id in user2friends && user2friends[user1Id]["username"] === "user1"), "user2friends assertion failed");
+
+    userFriendUtils.blockUser(user1Id, user2Id);
+    user1friends = userFriendUtils.getFriends(user1Id);
+    console.assert((user1friends !== undefined && user2Id in user1friends && user1friends[user2Id]["blocked"]), "user1 blocks user2 failed");
+
+    user2friends = userFriendUtils.getFriends(user2Id);
+    console.assert((user2friends !== undefined && user1Id in user2friends && !user2friends[user1Id]["blocked"]), "user2 not blocked in user1 failed");
 }
 
 main().then();
