@@ -49,6 +49,10 @@ class AccountUtils extends _Row {
         return row;
     }
 
+    getNotificationToken(id) {
+        return this.getColumnByPrimaryKey(id, "user_notification_token");
+    }
+
     getNotificationTokenByUsername(username) {
         return this._getColumn("username", username, "user_notification_token");
     }
