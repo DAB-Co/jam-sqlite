@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS "accounts" (
 	"user_email"	TEXT UNIQUE,
 	"username"	TEXT UNIQUE,
 	"user_password_hash"	TEXT,
-	"user_notification_token" TEXT,
+	"user_notification_token"	TEXT,
 	PRIMARY KEY("user_id" AUTOINCREMENT)
 );
 CREATE TABLE IF NOT EXISTS "matches" (
@@ -24,6 +24,12 @@ CREATE TABLE IF NOT EXISTS "user_preferences" (
 	"user_id"	INTEGER NOT NULL UNIQUE,
 	"user_preferences"	BLOB,
 	"exclude"	INTEGER DEFAULT 0,
+	FOREIGN KEY("user_id") REFERENCES "accounts"("user_id"),
+	PRIMARY KEY("user_id")
+);
+CREATE TABLE IF NOT EXISTS "user_friends" (
+	"user_id"	INTEGER NOT NULL UNIQUE,
+	"friends"	BLOB,
 	FOREIGN KEY("user_id") REFERENCES "accounts"("user_id"),
 	PRIMARY KEY("user_id")
 );
