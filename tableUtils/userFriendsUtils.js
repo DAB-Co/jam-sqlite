@@ -36,6 +36,19 @@ class UserFriendsUtils extends _Row {
         row["friends"][username2]["blocked"] = true;
         this._updateColumn("user_id", row["user_id"], row["friends"]);
     }
+
+    getFriendsByUsername(username) {
+        let row = this.databaseWrapper.run_query(`SELECT friends
+                                                   FROM user_friends
+                                                            INNER JOIN accounts
+                                                                       ON user_friends.user_id = accounts.user_id AND accounts.username = ?`, [username]);
+        if (row !== undefined && "friends" in row) {
+            return row["friends"];
+        }
+        else {
+            return undefined;
+        }
+    }
 }
 
 module.exports = UserFriendsUtils;
