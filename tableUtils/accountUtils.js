@@ -33,8 +33,12 @@ class AccountUtils extends _Row {
 
     // Returns password of a user by username, returns empty string if username does not exist
     getPasswordFromUsername = function (username) {
-        return this._getColumn("username", username, "user_password");
+        return this._getColumn("username", username, "user_password_hash");
     };
+
+    getPassword(id) {
+        return this.getColumnByPrimaryKey(id, "user_password_hash");
+    }
 
     getUsernameById(id) {
         return this.getColumnByPrimaryKey(id, "username");
