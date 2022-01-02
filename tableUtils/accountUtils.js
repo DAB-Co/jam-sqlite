@@ -52,6 +52,10 @@ class AccountUtils extends _Row {
     updateNotificationTokenByUsername(username, newToken) {
         this._updateColumn("username", username, "user_notification_token", newToken);
     }
+
+    getIdByUsername(username) {
+        return this._getColumn("username", username, "user_id");
+    }
 }
 
 module.exports = AccountUtils;

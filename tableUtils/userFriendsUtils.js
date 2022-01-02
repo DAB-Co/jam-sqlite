@@ -6,44 +6,48 @@ class UserFriendsUtils extends _Row {
         super("user_friends", databaseWrapper, "user_id");
     }
 
-    addUser(user_id, username, friends = {}) {
-        this.databaseWrapper.run_query(`INSERT INTO ${this.table_name} (user_id, username, friends)
-                                        VALUES (?, ?, ?);`, [user_id, username, JSON.stringify(friends)]);
+    addUser(user_id, friends = {}) {
+        this.databaseWrapper.run_query(`INSERT INTO ${this.table_name} (user_id, friends)
+                                        VALUES (?, ?);`, [user_id, JSON.stringify(friends)]);
     }
 
     addFriendByUsername(username1, username2) {
-        let row1 = this.databaseWrapper.run_query(`SELECT user_id, friends
+        let row1 = this.databaseWrapper.get(`SELECT user_friends.user_id, friends
                                                    FROM user_friends
                                                             INNER JOIN accounts
                                                                        ON user_friends.user_id = accounts.user_id AND accounts.username = ?`, [username1]);
-        row1["friends"][username2] = { "blocked": false };
-        this._updateColumn("user_id", row1["user_id"], row1["friends"]);
 
-        let row2 = this.databaseWrapper.run_query(`SELECT user_id, friends
+        let friends1 = JSON.parse(row1["friends"]);
+        friends1[username2] = { "blocked": false };
+        this._updateColumn("user_id", row1["user_id"], "friends", JSON.stringify(friends1));
+
+        let row2 = this.databaseWrapper.get(`SELECT user_friends.user_id, friends
                                                    FROM user_friends
                                                             INNER JOIN accounts
                                                                        ON user_friends.user_id = accounts.user_id AND accounts.username = ?`, [username2]);
-        row2["friends"][username1] = { "blocked": false };
-        this._updateColumn("user_id", row2["user_id"], row2["friends"]);
+        let friends2 = JSON.parse(row2["friends"]);
+        friends2[username1] = { "blocked": false };
+        this._updateColumn("user_id", row2["user_id"], "friends", JSON.stringify(friends2));
     }
 
     blockUser(username1, username2) {
-        let row = this.databaseWrapper.run_query(`SELECT user_id, friends
+        let row = this.databaseWrapper.get(`SELECT user_friends.user_id, friends
                                                    FROM user_friends
                                                             INNER JOIN accounts
                                                                        ON user_friends.user_id = accounts.user_id AND accounts.username = ?`, [username1]);
 
-        row["friends"][username2]["blocked"] = true;
-        this._updateColumn("user_id", row["user_id"], row["friends"]);
+        let friends = JSON.parse(row["friends"]);
+        friends[username2]["blocked"] = true;
+        this._updateColumn("user_id", row["user_id"], "friends", JSON.stringify(friends));
     }
 
     getFriendsByUsername(username) {
-        let row = this.databaseWrapper.run_query(`SELECT friends
+        let row = this.databaseWrapper.get(`SELECT friends
                                                    FROM user_friends
                                                             INNER JOIN accounts
                                                                        ON user_friends.user_id = accounts.user_id AND accounts.username = ?`, [username]);
         if (row !== undefined && "friends" in row) {
-            return row["friends"];
+            return JSON.parse(row["friends"]);
         }
         else {
             return undefined;

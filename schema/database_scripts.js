@@ -1,22 +1,9 @@
 const fs = require("fs");
 const path = require("path");
 
-const { exec} = require('child_process');
-
 const database_scripts = fs.readFileSync(path.join(__dirname, "schema.sql"), {encoding:'utf8', flag:'r'});
 
-function run_command(command) {
-    return new Promise(function (resolve, reject) {
-        exec(command, (error, stdout, stderr) => {
-            if (error) {
-                reject(error);
-            }
-            else {
-                resolve(stdout);
-            }
-        });
-    });
-}
+const run_command = require(path.join(__dirname, "..", "utils", "run_command.js"));
 
 async function create_database(dir, database_name) {
     await fs.mkdir(dir, { recursive: true }, (err) => {
