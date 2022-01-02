@@ -40,7 +40,7 @@ class AccountUtils extends _Row {
         return this.getColumnByPrimaryKey(id, "username");
     }
 
-    getUsernameAndPassByEmail = function (email) {
+    getRowByEmail = function (email) {
         let row = this._getRow("user_email", email);
         return row;
     }
