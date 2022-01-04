@@ -140,6 +140,14 @@ class AccountUtils extends _Row {
     updateTokens(id, api_token, notification_token) {
         this.databaseWrapper.run_query(`UPDATE ${this.table_name} SET (user_api_token, user_notification_token)=(?,?) WHERE ${this.primary_key}=?`, [api_token, notification_token, id])
     }
+
+    /**
+     *
+     * @param id
+     */
+    clearTokens(id) {
+        this.databaseWrapper.run_query(`UPDATE ${this.table_name} SET (user_api_token, user_notification_token)=(?,?) WHERE ${this.primary_key}=?`, ["","", id]);
+    }
 }
 
 module.exports = AccountUtils;
