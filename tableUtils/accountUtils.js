@@ -6,63 +6,139 @@ class AccountUtils extends _Row {
         super("accounts", databaseWrapper, "user_id");
     }
 
-    // Returns true if username exists
-    usernameExists = function (username) {
+    /**
+     *
+     * @param username
+     * @returns {boolean}
+     */
+    usernameExists(username) {
         let result = this._getRow("username", username);
         return result !== undefined;
     };
 
+    /**
+     *
+     * @param email
+     * @returns {boolean}
+     */
     emailExists(email) {
         let result = this._getRow("user_email", email);
         return result !== undefined;
     }
 
-    // Creates a user in user table with given username and password
-    addUser = function (email, username, pass) {
-        this.databaseWrapper.run_query("INSERT INTO accounts (user_email, username, user_password_hash) VALUES (?, ?, ?);", [email, username, pass]);
+    /**
+     *
+     * @param email
+     * @param username
+     * @param pass
+     * @param api_token
+     */
+    addUser (email, username, pass, api_token) {
+        this.databaseWrapper.run_query("INSERT INTO accounts (user_email, username, user_password_hash, user_api_token) VALUES (?, ?, ?, ?);", [email, username, pass, api_token]);
     };
 
-    // Creates a user in user table with given username and password
-    addUserWithToken = function (email, username, pass, token) {
-        this.databaseWrapper.run_query("INSERT INTO accounts (user_email, username, user_password_hash, user_notification_token) VALUES (?, ?, ?, ?);", [email, username, pass, token]);
+    /**
+     *
+     * @param email
+     * @param username
+     * @param pass
+     * @param api_token
+     * @param notification_token
+     */
+    addUserWithNotificationToken = function (email, username, pass, api_token, notification_token) {
+        this.databaseWrapper.run_query("INSERT INTO accounts (user_email, username, user_password_hash, user_api_token, user_notification_token) VALUES (?, ?, ?, ?, ?);", [email, username, pass, user_api_token, notification_token]);
     };
 
-    getEmailByUsername(username) {
-        return this._getColumn("username", username, "user_email");
-    }
-
-    // Returns password of a user by username, returns empty string if username does not exist
-    getPasswordFromUsername = function (username) {
-        return this._getColumn("username", username, "user_password_hash");
-    };
-
-    getPassword(id) {
+    /**
+     *
+     * @param id
+     * @returns user_password_hash
+     */
+    getPasswordHash(id) {
         return this.getColumnByPrimaryKey(id, "user_password_hash");
     }
 
+    /**
+     *
+     * @param id
+     * @returns username
+     */
     getUsernameById(id) {
         return this.getColumnByPrimaryKey(id, "username");
     }
 
-    getRowByEmail = function (email) {
+    /**
+     *
+     * @param email
+     * @returns {json} {user_id, user_email, username, user_password_hash, user_notification_token, user_api-token}
+     */
+    getRowByEmail (email) {
         let row = this._getRow("user_email", email);
         return row;
     }
 
+    /**
+     *
+     * @param id
+     * @returns notification_token
+     */
     getNotificationToken(id) {
         return this.getColumnByPrimaryKey(id, "user_notification_token");
     }
 
-    getNotificationTokenByUsername(username) {
-        return this._getColumn("username", username, "user_notification_token");
+    /**
+     *
+     * @param id
+     * @param notification_token
+     */
+    updateNotificationToken(id, notification_token) {
+        this.updateColumnByPrimaryKey(id, "user_notification_token", notification_token);
     }
 
+    /**
+     *
+     * @param username
+     * @param newToken
+     */
     updateNotificationTokenByUsername(username, newToken) {
         this._updateColumn("username", username, "user_notification_token", newToken);
     }
 
+    /**
+     *
+     * @param username
+     * @returns client_id
+     */
     getIdByUsername(username) {
         return this._getColumn("username", username, "user_id");
+    }
+
+    /**
+     *
+     * @param id
+     * @returns api_token
+     */
+    getApiToken(id) {
+        return this.getColumnByPrimaryKey(id, "user_api_token");
+    }
+
+    /**
+     *
+     * @param id
+     * @param token
+     */
+    updateApiToken(id, token) {
+        this.updateColumnByPrimaryKey(id, "user_api_token", token);
+    }
+
+    /**
+     *
+     * @param id
+     * @param api_token
+     * @param notification_token
+     */
+    updateTokens(id, api_token, notification_token) {
+        this.databaseWrapper.run_query(`UPDATE ${this.table_name} SET (user_api_token, user_notification_token)=(?,?) WHERE ${this.primary_key}=?`, [api_token, notification_token, id])
     }
 }
 
