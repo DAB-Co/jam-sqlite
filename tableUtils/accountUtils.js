@@ -46,7 +46,7 @@ class AccountUtils extends _Row {
      * @param notification_token
      */
     addUserWithNotificationToken = function (email, username, pass, api_token, notification_token) {
-        this.databaseWrapper.run_query("INSERT INTO accounts (user_email, username, user_password_hash, user_api_token, user_notification_token) VALUES (?, ?, ?, ?, ?);", [email, username, pass, user_api_token, notification_token]);
+        this.databaseWrapper.run_query("INSERT INTO accounts (user_email, username, user_password_hash, user_api_token, user_notification_token) VALUES (?, ?, ?, ?, ?);", [email, username, pass, api_token, notification_token]);
     };
 
     /**
