@@ -23,7 +23,7 @@ async function main() {
     console.assert(user3_languages[0] === "Hindu", "getting user 3 languages failed");
 
     let hindu_speakers = userLanguagesUtils.getUsersWithTheSameLanguages(["Hindu"]);
-    console.assert(hindu_speakers.indexOf(2) !== -1 && hindu_speakers.indexOf(3) !== -1, "getting hindu speakers failed");
+    console.assert(hindu_speakers.indexOf(1) === -1 && hindu_speakers.indexOf(2) !== -1 && hindu_speakers.indexOf(3) !== -1, "getting hindu speakers failed");
 }
 
 main().then();
