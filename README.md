@@ -42,7 +42,7 @@ module.exports = databaseWrapper;
 ```javascript
 // some file that uses any one of the utils
 const databaseWrapper = require("./initializeDatabase.js");
-const AccountUtils = require("@dab-co/jam-sqlite").TableUtils.AccountUtils;
+const AccountUtils = require("@dab-co/jam-sqlite").Utils.AccountUtils;
 const accountUtils = new AccountUtils(databaseWrapper);
 // note here databaseWrapper is an instance not a class
 // hence the connection has already been established
