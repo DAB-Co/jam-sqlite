@@ -27,7 +27,9 @@ class UserConnectionsUtils extends _Row {
      * @param user2_id
      */
     addConnection(user1_id, user2_id) {
-        this.databaseWrapper.run_query(`INSERT INTO ${this.table_name} (user1_id, user2_id) VALUES (?,?)`, [user1_id, user2_id]);
+        if (user1_id !== user2_id) {
+            this.databaseWrapper.run_query(`INSERT INTO ${this.table_name} (user1_id, user2_id) VALUES (?,?)`, [user1_id, user2_id]);
+        }
     }
 
     /**
