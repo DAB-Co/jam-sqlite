@@ -5,6 +5,12 @@ const database_scripts = fs.readFileSync(path.join(__dirname, "schema.sql"), {en
 
 const run_command = require(path.join(__dirname, "..", "utils", "run_command.js"));
 
+/**
+ *
+ * @param dir
+ * @param database_name
+ * @returns {Promise<void>}
+ */
 async function create_database(dir, database_name) {
     await fs.mkdir(dir, { recursive: true }, (err) => {
         if (err) {
