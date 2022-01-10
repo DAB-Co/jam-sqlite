@@ -14,6 +14,9 @@ async function setup_database() {
         fs.unlinkSync(db_path);
     } catch (e) {
         if (e.code !== "ENOENT") {
+            console.log("-------------------------------------------------------");
+            console.log("PERHAPS THE DATABASE IS BEING USED BY ANOTHER RESOURCE?");
+            console.log("-------------------------------------------------------");
             throw e;
         }
     }
@@ -41,8 +44,8 @@ function register_accounts(database, count) {
             "password": "12345678",
             "api_token": "api_token",
         };
-        accountUtils.addUser(user.email, user.username, user.password, user.api_token);
-        accounts[i] = user;
+        let query_res = accountUtils.addUser(user.email, user.username, user.password, user.api_token);
+        accounts[query_res.lastInsertRowid] = user;
     }
     return accounts;
 }

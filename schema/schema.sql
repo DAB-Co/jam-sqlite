@@ -33,11 +33,11 @@ CREATE TABLE IF NOT EXISTS "user_preferences"
 );
 CREATE TABLE IF NOT EXISTS "user_connections"
 (
-    "user_id1" INTEGER NOT NULL,
-    "user_id2" INTEGER NOT NULL,
+    "user1_id" INTEGER NOT NULL,
+    "user2_id" INTEGER NOT NULL,
     "weight"   INTEGER DEFAULT 0,
     "matched"  INTEGER DEFAULT 0,
-    FOREIGN KEY ("user_id1") REFERENCES "accounts" ("user_id"),
-    FOREIGN KEY ("user_id2") REFERENCES "accounts" ("user_id")
+    FOREIGN KEY ("user1_id") REFERENCES "accounts" ("user_id"),
+    FOREIGN KEY ("user2_id") REFERENCES "accounts" ("user_id")
 );
 COMMIT;
