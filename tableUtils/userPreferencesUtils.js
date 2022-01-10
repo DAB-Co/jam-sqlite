@@ -10,3 +10,5 @@ class UserPreferencesUtils extends _Row {
         super("user_preferences", database);
     }
 }
+
+module.exports = UserPreferencesUtils;

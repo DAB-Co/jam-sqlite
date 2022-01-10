@@ -10,3 +10,5 @@ class UserConnectionsUtils extends _Row {
         super("user_connections", database);
     }
 }
+
+module.exports = UserConnectionsUtils;
