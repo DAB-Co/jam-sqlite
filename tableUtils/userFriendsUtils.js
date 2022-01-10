@@ -2,15 +2,29 @@ const path = require("path");
 const _Row = require(path.join(__dirname, "_row.js"))
 
 class UserFriendsUtils extends _Row {
+    /**
+     *
+     * @param databaseWrapper
+     */
     constructor(databaseWrapper) {
         super("user_friends", databaseWrapper, "user_id");
     }
 
+    /**
+     *
+     * @param user_id
+     * @param friends
+     */
     addUser(user_id, friends = {}) {
         this.databaseWrapper.run_query(`INSERT INTO ${this.table_name} (user_id, friends)
                                         VALUES (?, ?);`, [user_id, JSON.stringify(friends)]);
     }
 
+    /**
+     *
+     * @param id1
+     * @param id2
+     */
     addFriend(id1, id2) {
         let row1 = this.databaseWrapper.get(`SELECT accounts.username, friends
                                                    FROM user_friends
@@ -31,12 +45,22 @@ class UserFriendsUtils extends _Row {
         this.updateColumnByPrimaryKey(id2, "friends", JSON.stringify(friends2));
     }
 
+    /**
+     *
+     * @param id1
+     * @param id2
+     */
     blockUser(id1, id2) {
         let friends = JSON.parse(this.getColumnByPrimaryKey(id1, "friends"));
         friends[id2]["blocked"] = true;
         this.updateColumnByPrimaryKey(id1, "friends", JSON.stringify(friends));
     }
 
+    /**
+     *
+     * @param id
+     * @returns {undefined | json} {id1: {blocked: true}, id2: {blocked: true}}
+     */
     getFriends(id) {
         let res = this.getColumnByPrimaryKey(id, "friends");
         if (res === undefined) {

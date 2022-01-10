@@ -2,6 +2,10 @@ const path = require("path");
 const _Row = require(path.join(__dirname, "_row.js"))
 
 class AccountUtils extends _Row {
+    /**
+     *
+     * @param databaseWrapper
+     */
     constructor(databaseWrapper) {
         super("accounts", databaseWrapper, "user_id");
     }
