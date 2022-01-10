@@ -15,17 +15,6 @@ class UserLanguagesUtils extends _Row {
      * @param user_id
      * @param {string[]} languages
      */
-    addUser(user_id, languages) {
-        for (let i=0; i<languages.length; i++) {
-            this.databaseWrapper.run_query(`INSERT INTO ${this.table_name} (user_id, language) VALUES (?,?)`, [user_id, languages[i].toUpperCase()]);
-        }
-    }
-
-    /**
-     *
-     * @param user_id
-     * @param {string[]} languages
-     */
     addLanguages(user_id, languages) {
         for (let i=0; i<languages.length; i++) {
             this.databaseWrapper.run_query(`INSERT INTO ${this.table_name} (user_id, language) VALUES (?,?)`, [user_id, languages[i].toUpperCase()]);

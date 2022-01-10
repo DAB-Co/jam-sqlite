@@ -10,15 +10,15 @@ async function main() {
 
     const userLanguagesUtils = new UserLanguagesUtils(database);
 
-    userLanguagesUtils.addUser(1, ["English", "Turkish"]);
+    userLanguagesUtils.addLanguages(1, ["English", "Turkish"]);
     let user1_languages = userLanguagesUtils.getUserLanguages(1);
     console.assert(user1_languages[0] === "ENGLISH" && user1_languages[1] === "TURKISH", "getting user 1 languages failed");
 
-    userLanguagesUtils.addUser(2, ["English", "Hindu"]);
+    userLanguagesUtils.addLanguages(2, ["English", "Hindu"]);
     let user2_languages = userLanguagesUtils.getUserLanguages(2);
     console.assert(user2_languages[0] === "ENGLISH" && user2_languages[1] === "HINDU", "getting user 2 languages failed");
 
-    userLanguagesUtils.addUser(3, ["Hindu"]);
+    userLanguagesUtils.addLanguages(3, ["Hindu"]);
     let user3_languages = userLanguagesUtils.getUserLanguages(3);
     console.assert(user3_languages[0] === "HINDU", "getting user 3 languages failed");
 
