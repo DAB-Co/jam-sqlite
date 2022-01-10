@@ -9,6 +9,18 @@ class UserPreferencesUtils extends _Row {
     constructor(database) {
         super("user_preferences", database);
     }
+
+    addPreference(user_id, preference_type, preference_name, preference_type_weight, preference_name_weight) {
+
+    }
+
+    updatePreference(user_id, preference_type, preference_name, preference_type_weight, preference_name_weight) {
+
+    }
+
+    getPreferences(user_ids) {
+
+    }
 }
 
 module.exports = UserPreferencesUtils;

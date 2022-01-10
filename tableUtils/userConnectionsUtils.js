@@ -9,6 +9,22 @@ class UserConnectionsUtils extends _Row {
     constructor(database) {
         super("user_connections", database);
     }
+
+    addConnection(user1_id, user2_id, weight) {
+
+    }
+
+    updateConnection(user1_id, user2_id, weight) {
+
+    }
+
+    getNewMatch(user_id) {
+
+    }
+
+    finalizeMatch(user1_id, user2_id) {
+
+    }
 }
 
 module.exports = UserConnectionsUtils;
