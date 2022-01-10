@@ -22,6 +22,7 @@ class UserConnectionsUtils extends _Row {
     }
 
     /**
+     * will not add if two given id's are the same
      *
      * @param user1_id
      * @param user2_id
