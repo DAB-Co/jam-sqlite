@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS "user_connections"
     "user_id1" INTEGER NOT NULL,
     "user_id2" INTEGER NOT NULL,
     "weight"   INTEGER NOT NULL,
+    "matched"  INTEGER DEFAULT 0,
     FOREIGN KEY ("user_id1") REFERENCES "accounts" ("user_id"),
     FOREIGN KEY ("user_id2") REFERENCES "accounts" ("user_id")
 );
