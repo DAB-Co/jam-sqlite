@@ -19,7 +19,7 @@ describe(__filename, function (){
 
     describe("", function() {
         it("connection doesn't exist between 1 and 2", function(){
-            assert.ok(userConnectionsUtils.connectionExists(1, 2));
+            assert.ok(!userConnectionsUtils.connectionExists(1, 2));
         });
     });
 
