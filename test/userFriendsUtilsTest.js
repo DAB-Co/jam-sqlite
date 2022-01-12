@@ -24,14 +24,14 @@ describe(__filename, function (){
     describe("", function (){
         it("user 1 friends with user 2", function() {
             let user1friends = userFriendsUtils.getFriends(1);
-            assert.equal((user1friends !== undefined && 2 in user1friends && user1friends[2]["username"] === accounts[2].username), true);
+            assert.ok((user1friends !== undefined && 2 in user1friends && user1friends[2]["username"] === accounts[2].username));
         });
     });
 
     describe("", function() {
         it("user 2 friends with user 1", function() {
             let user2friends = userFriendsUtils.getFriends(2);
-            assert.equal(user2friends !== undefined && 1 in user2friends && user2friends[1]["username"] === accounts[1].username, true);
+            assert.ok(user2friends !== undefined && 1 in user2friends && user2friends[1]["username"] === accounts[1].username);
         });
     });
 
@@ -39,14 +39,14 @@ describe(__filename, function (){
         it("user 1 blocked by user 2", function() {
             userFriendsUtils.blockUser(1, 2);
             let user1friends = userFriendsUtils.getFriends(1);
-            assert.equal(user1friends !== undefined && 2 in user1friends && user1friends[2]["blocked"], true);
+            assert.ok(user1friends !== undefined && 2 in user1friends && user1friends[2]["blocked"]);
         });
     });
 
     describe("", function() {
         it("user 1 is not blocked in user 2", function() {
             let user2friends = userFriendsUtils.getFriends(2);
-            assert.equal(user2friends !== undefined && 1 in user2friends && !user2friends[1]["blocked"], true);
+            assert.ok(user2friends !== undefined && 1 in user2friends && !user2friends[1]["blocked"]);
         });
     })
 });
