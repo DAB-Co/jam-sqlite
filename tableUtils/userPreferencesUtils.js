@@ -1,25 +1,25 @@
 const path = require("path");
-const _Row = require(path.join(__dirname, "_row.js"))
+const _Row = require(path.join(__dirname, "_row.js"));
 
-class UserPreferencesUtils extends _Row{
-    constructor(databaseWrapper) {
-        super("user_preferences", databaseWrapper, "user_id");
+class UserPreferencesUtils extends _Row {
+    /**
+     *
+     * @param database
+     */
+    constructor(database) {
+        super("user_preferences", database);
     }
 
-    addUser(id) {
-        this.databaseWrapper.run_query(`INSERT INTO ${this.table_name}(${this.primary_key}, "user_preferences") VALUES(?,?)`, [id, "{}"]);
+    addPreference(user_id, preference_type, preference_name, preference_type_weight, preference_name_weight) {
+
     }
 
-    getPreferences(id) {
-        return JSON.parse(this.getColumnByPrimaryKey(id, "user_preferences"));
+    updatePreference(user_id, preference_type, preference_name, preference_type_weight, preference_name_weight) {
+
     }
 
-    updatePreferences(id, preferences) {
-        this.updateColumnByPrimaryKey(id, "user_preferences", JSON.stringify(preferences));
-    }
+    getPreferences(user_ids) {
 
-    isExcluded(id) {
-        return this.getColumnByPrimaryKey(id, "exclude") !== 0;
     }
 }
 

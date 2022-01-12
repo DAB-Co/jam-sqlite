@@ -2,6 +2,10 @@ const path = require("path");
 const _Row = require(path.join(__dirname, "_row.js"))
 
 class AccountUtils extends _Row {
+    /**
+     *
+     * @param databaseWrapper
+     */
     constructor(databaseWrapper) {
         super("accounts", databaseWrapper, "user_id");
     }
@@ -32,9 +36,10 @@ class AccountUtils extends _Row {
      * @param username
      * @param pass
      * @param api_token
+     * @returns {json} {changes, lastInsertRowid}
      */
-    addUser (email, username, pass, api_token) {
-        this.databaseWrapper.run_query("INSERT INTO accounts (user_email, username, user_password_hash, user_api_token) VALUES (?, ?, ?, ?);", [email, username, pass, api_token]);
+    addUser(email, username, pass, api_token) {
+        return this.databaseWrapper.run_query("INSERT INTO accounts (user_email, username, user_password_hash, user_api_token) VALUES (?, ?, ?, ?);", [email, username, pass, api_token]);
     };
 
     /**
@@ -44,9 +49,10 @@ class AccountUtils extends _Row {
      * @param pass
      * @param api_token
      * @param notification_token
+     * @returns {json} {changes, lastInsertRowid}
      */
-    addUserWithNotificationToken = function (email, username, pass, api_token, notification_token) {
-        this.databaseWrapper.run_query("INSERT INTO accounts (user_email, username, user_password_hash, user_api_token, user_notification_token) VALUES (?, ?, ?, ?, ?);", [email, username, pass, api_token, notification_token]);
+    addUserWithNotificationToken(email, username, pass, api_token, notification_token) {
+        return this.databaseWrapper.run_query("INSERT INTO accounts (user_email, username, user_password_hash, user_api_token, user_notification_token) VALUES (?, ?, ?, ?, ?);", [email, username, pass, api_token, notification_token]);
     };
 
     /**
@@ -72,7 +78,7 @@ class AccountUtils extends _Row {
      * @param email
      * @returns {json} {user_id, user_email, username, user_password_hash, user_notification_token, user_api-token}
      */
-    getRowByEmail (email) {
+    getRowByEmail(email) {
         let row = this._getRow("user_email", email);
         return row;
     }
@@ -138,7 +144,9 @@ class AccountUtils extends _Row {
      * @param notification_token
      */
     updateTokens(id, api_token, notification_token) {
-        this.databaseWrapper.run_query(`UPDATE ${this.table_name} SET (user_api_token, user_notification_token)=(?,?) WHERE ${this.primary_key}=?`, [api_token, notification_token, id])
+        this.databaseWrapper.run_query(`UPDATE ${this.table_name}
+                                        SET (user_api_token, user_notification_token)= (?, ?)
+                                        WHERE ${this.primary_key} = ?`, [api_token, notification_token, id])
     }
 
     /**
@@ -146,7 +154,9 @@ class AccountUtils extends _Row {
      * @param id
      */
     clearTokens(id) {
-        this.databaseWrapper.run_query(`UPDATE ${this.table_name} SET (user_api_token, user_notification_token)=(?,?) WHERE ${this.primary_key}=?`, ["","", id]);
+        this.databaseWrapper.run_query(`UPDATE ${this.table_name}
+                                        SET (user_api_token, user_notification_token)= (?, ?)
+                                        WHERE ${this.primary_key} = ?`, ["", "", id]);
     }
 }
 
