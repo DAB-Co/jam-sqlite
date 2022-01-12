@@ -11,6 +11,7 @@ const overwrite_schema = fs.readFileSync(path.join(__dirname, "overwrite_schema.
  * @param db_path
  */
 function create_database(db_path) {
+    fs.mkdirSync(path.dirname(db_path), {recursive: true});
     let raw_database = new Database(db_path);
     raw_database.exec(schema);
 }
@@ -21,6 +22,7 @@ function create_database(db_path) {
  * @param db_path
  */
 function overwrite_database(db_path) {
+    fs.mkdirSync(path.dirname(db_path), {recursive: true});
     let raw_database = new Database(db_path);
     raw_database.exec(overwrite_schema);
 }
