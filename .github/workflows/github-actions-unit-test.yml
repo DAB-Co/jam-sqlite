@@ -1,9 +1,9 @@
-name: jam-sqlite unit tests
+name: jam-sqlite-unit-tests
 
 on: push
 
 jobs:
-  test:
+  ubuntu-latest-test:
 
     runs-on: ubuntu-latest
 
