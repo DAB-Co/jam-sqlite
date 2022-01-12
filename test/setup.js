@@ -1,27 +1,9 @@
 const path = require("path");
 const jam_sqlite = require(path.join(__dirname, "..", "main.js"));
-const database_scripts = jam_sqlite.database_scripts;
-const fs = require("fs");
-const db_dir = path.join(__dirname, "..", "sqlite");
-const db_path = path.join(db_dir, "database.db");
+const db_path = path.join(__dirname, "..", "sqlite", "database.db")
 
-/**
- *
- * @returns {Promise<Database>}
- */
-async function setup_database() {
-    try {
-        fs.unlinkSync(db_path);
-    } catch (e) {
-        if (e.code !== "ENOENT") {
-            console.log("-------------------------------------------------------");
-            console.log("PERHAPS THE DATABASE IS BEING USED BY ANOTHER RESOURCE?");
-            console.log("-------------------------------------------------------");
-            throw e;
-        }
-    }
-
-    await database_scripts.create_database(db_dir, "database.db");
+function create_database() {
+    jam_sqlite.database_scripts.overwrite_database(db_path);
     return new jam_sqlite.Database(db_path);
 }
 
@@ -51,7 +33,7 @@ function register_accounts(database, count) {
 }
 
 module.exports = {
-    setup_database: setup_database,
+    create_database: create_database,
     register_accounts: register_accounts,
     jam_sqlite: jam_sqlite,
 }

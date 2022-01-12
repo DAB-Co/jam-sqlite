@@ -1,26 +1,33 @@
 const fs = require("fs");
 const path = require("path");
+const Database = require("better-sqlite3");
 
-const database_scripts = fs.readFileSync(path.join(__dirname, "schema.sql"), {encoding:'utf8', flag:'r'});
-
-const run_command = require(path.join(__dirname, "..", "utils", "run_command.js"));
+const schema = fs.readFileSync(path.join(__dirname, "schema.sql"), {encoding:'utf8', flag:'r'});
+const overwrite_schema = fs.readFileSync(path.join(__dirname, "overwrite_schema.sql"), {encoding:'utf8', flag:'r'});
 
 /**
+ * create the database, but do not drop the tables
  *
- * @param dir
- * @param database_name
- * @returns {Promise<void>}
+ * @param db_path
  */
-async function create_database(dir, database_name) {
-    await fs.mkdir(dir, { recursive: true }, (err) => {
-        if (err) {
-            throw err;
-        }
-    });
-    await run_command(`sqlite3 \"${path.join(dir, database_name)}\" --init \"${path.join(__dirname, "schema.sql")}\" < \"${path.join(__dirname, ".exit")}\"`);
+function create_database(db_path) {
+    let raw_database = new Database(db_path);
+    raw_database.exec(schema);
+}
+
+/**
+ * create the database and drop the tables
+ *
+ * @param db_path
+ */
+function overwrite_database(db_path) {
+    let raw_database = new Database(db_path);
+    raw_database.exec(overwrite_schema);
 }
 
 module.exports = {
-    schema: database_scripts,
-    create_database: create_database
+    schema: schema,
+    overwrite_schema: overwrite_schema,
+    create_database: create_database,
+    overwrite_database: overwrite_database,
 };

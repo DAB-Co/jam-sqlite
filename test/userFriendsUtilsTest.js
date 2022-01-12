@@ -1,32 +1,52 @@
 const path = require("path");
 const setup = require(path.join(__dirname, "setup.js"));
+const assert = require("assert");
 
 const jam_sqlite = setup.jam_sqlite;
 const UserFriendsUtils = jam_sqlite.Utils.UserFriendsUtils;
 
+describe(__filename, function (){
+    let database = undefined;
+    let accounts = undefined;
+    let userFriendsUtils = undefined;
 
-async function main() {
-    let database = await setup.setup_database();
-    let accounts = setup.register_accounts(database, 2);
-    const userFriendUtils = new UserFriendsUtils(database);
+    before(function(){
+        database = setup.create_database();
+        accounts = setup.register_accounts(database, 3);
+        userFriendsUtils = new UserFriendsUtils(database);
 
-    userFriendUtils.addUser(1);
-    userFriendUtils.addUser(2);
+        userFriendsUtils.addUser(1);
+        userFriendsUtils.addUser(2);
 
-    userFriendUtils.addFriend(1, 2);
+        userFriendsUtils.addFriend(1, 2);
+    });
 
-    let user1friends = userFriendUtils.getFriends(1);
-    console.assert((user1friends !== undefined && 2 in user1friends && user1friends[2]["username"] === accounts[2].username), "user 1 friends assertion failed");
+    describe("", function (){
+        it("user 1 friends with user 2", function() {
+            let user1friends = userFriendsUtils.getFriends(1);
+            assert.equal((user1friends !== undefined && 2 in user1friends && user1friends[2]["username"] === accounts[2].username), true);
+        });
+    });
 
-    let user2friends = userFriendUtils.getFriends(2);
-    console.assert((user2friends !== undefined && 1 in user2friends && user2friends[1]["username"] === accounts[1].username), "user 2 friends assertion failed");
+    describe("", function() {
+        it("user 2 friends with user 1", function() {
+            let user2friends = userFriendsUtils.getFriends(2);
+            assert.equal(user2friends !== undefined && 1 in user2friends && user2friends[1]["username"] === accounts[1].username, true);
+        });
+    });
 
-    userFriendUtils.blockUser(1, 2);
-    user1friends = userFriendUtils.getFriends(1);
-    console.assert((user1friends !== undefined && 2 in user1friends && user1friends[2]["blocked"]), "user 1 blocks user 2 failed");
+    describe("", function () {
+        it("user 1 blocked by user 2", function() {
+            userFriendsUtils.blockUser(1, 2);
+            let user1friends = userFriendsUtils.getFriends(1);
+            assert.equal(user1friends !== undefined && 2 in user1friends && user1friends[2]["blocked"], true);
+        });
+    });
 
-    user2friends = userFriendUtils.getFriends(2);
-    console.assert((user2friends !== undefined && 1 in user2friends && !user2friends[1]["blocked"]), "user 2 not blocked in user 1 failed");
-}
-
-main().then();
+    describe("", function() {
+        it("user 1 is not blocked in user 2", function() {
+            let user2friends = userFriendsUtils.getFriends(2);
+            assert.equal(user2friends !== undefined && 1 in user2friends && !user2friends[1]["blocked"], true);
+        });
+    })
+});
