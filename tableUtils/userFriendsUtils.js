@@ -46,6 +46,7 @@ class UserFriendsUtils extends _Row {
     }
 
     /**
+     * one way block from id1 to id2
      *
      * @param id1
      * @param id2
