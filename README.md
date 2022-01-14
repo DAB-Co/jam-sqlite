@@ -5,6 +5,12 @@
 - ```npm config set @dab-co:registry https://npm.pkg.github.com```
 - ```npm install```
 
+## Testing
+- unit tests are in tests folder. add a new unit test for it there, if you add functionality.
+- unit tests can be run via ```npm test```
+- optionally, you can link your unpublished package via ```npm link "local path to this package"```.
+  The version in package.json should match to the local copy's package.json version.
+
 ## Updating and publishing the package
 
 - Update the version from package.json and run ```npm install``` to update package-lock.json. Follow
@@ -16,10 +22,7 @@
       > - MINOR version when you add functionality in a backwards compatible manner, and
       > - PATCH version when you make backwards compatible bug fixes.
 
-- To test the changes you have done locally, use ```npm link "local path to this package"``` . 
-  The version in package.json should match to the local copy's package.json version.
-
-- Once you are done with changes you need to use ```npm publish``` in order to be able to install it
+- Once you are done with changes and all the unit tests pass, you need to use ```npm publish``` in order to be able to install it
   via ```npm install```. This will upload the package to the github registry. If this doesn't work, try
   running ```npm login --scope=@github_username --registry=https://npm.pkg.github.com``` first.
   
