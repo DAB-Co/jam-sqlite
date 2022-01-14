@@ -8,7 +8,7 @@
 ## Testing
 - Unit tests are in test folder. If you add new functionality, add the unit test there.
 - Unit tests can be run via ```npm test```
-- Otionally, you can link your unpublished package via ```npm link "local path to this package"```.
+- Optionally, you can link your unpublished package via ```npm link "local path to this package"```.
   The version in package.json should match to the local copy's package.json version.
 
 ## Updating and publishing the package
@@ -22,7 +22,7 @@
       > - MINOR version when you add functionality in a backwards compatible manner, and
       > - PATCH version when you make backwards compatible bug fixes.
 
-- Once you are done with changes and all the unit tests pass, you need to use ```npm publish``` in order to be able to install it
+- Once you are done with changes and [all the unit tests pass](#testing), you need to use ```npm publish``` in order to be able to install it
   via ```npm install```. This will upload the package to the github registry. If this doesn't work, try
   running ```npm login --scope=@github_username --registry=https://npm.pkg.github.com``` first.
   
