@@ -6,9 +6,9 @@
 - ```npm install```
 
 ## Testing
-- Unit tests are in test folder. If you add new functionality, add the unit test there.
+- Unit tests are in test folder. If you add new functionality, add the unit test for it there.
 - Unit tests can be run via ```npm test```
-- Optionally, you can link your unpublished package via ```npm link "local path to this package"```.
+- Optionally, you can link your unpublished package from a local project via ```npm link "local path to this package"```.
   The version in package.json should match to the local copy's package.json version.
 
 ## Updating and publishing the package
