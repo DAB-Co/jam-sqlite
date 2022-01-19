@@ -85,7 +85,17 @@ class UserPreferencesUtils extends _Row {
     }
 
     getCommonPreferences(user_ids) {
-
+        let query_condition = "(";
+        for (let i=0; i<user_ids.length; i++) {
+            query_condition += " user_id=?";
+            if (i !== user_ids.length-1) {
+                query_condition += " OR "
+            }
+        }
+        query_condition += ") GROUP BY preference_type HAVING COUNT(*)>1";
+        let same_preference_type = this.databaseWrapper.get_all(`SELECT user_id, preference_type, preference_name FROM ${this.table_name} WHERE ${query_condition}`);
+        console.log(same_preference_type);
+        return same_preference_type;
     }
 }
 

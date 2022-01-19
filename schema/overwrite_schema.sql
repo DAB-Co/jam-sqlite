@@ -4,8 +4,8 @@ CREATE TABLE IF NOT EXISTS "user_friends"
 (
     "user_id" INTEGER NOT NULL UNIQUE,
     "friends" BLOB,
-    PRIMARY KEY ("user_id"),
-    FOREIGN KEY ("user_id") REFERENCES "accounts" ("user_id")
+    FOREIGN KEY ("user_id") REFERENCES "accounts" ("user_id"),
+    PRIMARY KEY ("user_id")
 );
 DROP TABLE IF EXISTS "user_languages";
 CREATE TABLE IF NOT EXISTS "user_languages"
@@ -31,8 +31,8 @@ CREATE TABLE IF NOT EXISTS "user_connections"
     "user2_id" INTEGER NOT NULL,
     "weight"   INTEGER DEFAULT 0,
     "matched"  INTEGER DEFAULT 0,
-    FOREIGN KEY ("user2_id") REFERENCES "accounts" ("user_id"),
-    FOREIGN KEY ("user1_id") REFERENCES "accounts" ("user_id")
+    FOREIGN KEY ("user1_id") REFERENCES "accounts" ("user_id"),
+    FOREIGN KEY ("user2_id") REFERENCES "accounts" ("user_id")
 );
 DROP TABLE IF EXISTS "accounts";
 CREATE TABLE IF NOT EXISTS "accounts"
@@ -78,20 +78,6 @@ BEGIN
                     AND new.preference_type = preference_type
                     AND new.preference_identifier = preference_identifier
               );
-END;
-DROP TRIGGER IF EXISTS "after_user_preferences_insert";
-CREATE TRIGGER after_user_preferences_insert
-    AFTER INSERT
-    ON user_preferences
-BEGIN
-    SELECT RAISE(IGNORE);
-END;
-DROP TRIGGER IF EXISTS "after_user_preferences_update";
-CREATE TRIGGER after_user_preferences_update
-    AFTER UPDATE
-    ON user_preferences
-BEGIN
-    SELECT RAISE(IGNORE);
 END;
 DROP TRIGGER IF EXISTS "before_user_connections_insert";
 CREATE TRIGGER before_user_connections_insert
