@@ -31,6 +31,35 @@ describe(__filename, function (){
         })
     });
 
+    describe("", function(){
+       it("try to add the same connection again", function (){
+           let bothPassed = true;
+           try {
+               userConnectionsUtils.addConnection(2, 1);
+           } catch (e) {
+               bothPassed = false;
+           }
+           try {
+               userConnectionsUtils.addConnection(1, 2);
+           } catch (e) {
+               bothPassed = false;
+           }
+           assert.ok(!bothPassed, "no error occurred adding duplicate connection");
+       });
+    });
+
+    describe("", function() {
+       it("try to connect to user to itself", function (){
+           let errOccurred = false;
+           try {
+               userConnectionsUtils.addConnection(1, 1);
+           } catch (e) {
+               errOccurred = true;
+           }
+           assert.ok(errOccurred, "no error occurred conecting user to itself");
+       });
+    });
+
     describe("", function() {
         it("add connection between 2 and 3", function() {
             userConnectionsUtils.addConnection(2, 3);

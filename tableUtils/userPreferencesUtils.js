@@ -11,7 +11,7 @@ class UserPreferencesUtils extends _Row {
     }
 
     /**
-     * add new preference to the database (be careful, this doesn't check for duplicates)
+     * add new preference to the database
      *
      * @param user_id
      * @param preference_type
