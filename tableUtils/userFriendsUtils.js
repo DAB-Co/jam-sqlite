@@ -12,16 +12,6 @@ class UserFriendsUtils extends _Row {
 
     /**
      *
-     * @param user_id
-     * @param friends
-     */
-    addUser(user_id, friends = {}) {
-        this.databaseWrapper.run_query(`INSERT INTO ${this.table_name} (user_id, friends)
-                                        VALUES (?, ?);`, [user_id, JSON.stringify(friends)]);
-    }
-
-    /**
-     *
      * @param id1
      * @param id2
      */
