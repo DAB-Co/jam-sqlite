@@ -44,6 +44,17 @@ class UserPreferencesUtils extends _Row {
     }
 
     /**
+     * remove preference from database
+     *
+     * @param user_id
+     * @param preference_type
+     * @param preference_identifier
+     */
+    removePreference(user_id, preference_type, preference_identifier) {
+        this.databaseWrapper.run_query(`DELETE FROM ${this.table_name} WHERE user_id=? AND preference_type=? AND preference_identifier=?`, [user_id, preference_type, preference_identifier]);
+    }
+
+    /**
      * update preference type weight and preference identifier weight
      *
      * @param user_id
@@ -106,6 +117,34 @@ class UserPreferencesUtils extends _Row {
             let ret_val = [];
             for (let i=0; i<res.length; i++) {
                 ret_val.push(res[i].preference_type);
+            }
+            return ret_val;
+        }
+    }
+
+    /**
+     * this will include same pref_ids of users even though pref_types are different.
+     *
+     * @param user_ids
+     * @returns {string[]} preference identifiers
+     */
+    getCommonPreferenceIds(user_ids) {
+        let query_condition = "(";
+        for (let i=0; i<user_ids.length; i++) {
+            query_condition += "user_id=?";
+            if (i !== user_ids.length-1) {
+                query_condition += " OR "
+            }
+        }
+        query_condition += ") GROUP BY preference_identifier HAVING COUNT(*)>1";
+        let res = this.databaseWrapper.get_all(`SELECT preference_identifier FROM ${this.table_name} WHERE ${query_condition}`, user_ids);
+        if (res === undefined || res.length === 0) {
+            return [];
+        }
+        else {
+            let ret_val = [];
+            for (let i=0; i<res.length; i++) {
+                ret_val.push(res[i].preference_identifier);
             }
             return ret_val;
         }

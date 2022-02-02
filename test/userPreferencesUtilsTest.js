@@ -131,4 +131,27 @@ describe(__filename, function() {
             }
         });
     });
+
+    describe("", function() {
+       it ("test removing preference", function() {
+            userPreferencesUtils.removePreference(1, "ptype1", "pid2");
+            assert.strictEqual(userPreferencesUtils.getPreference(1, "ptype1", "pid2"), undefined);
+       });
+    });
+
+    describe("", function() {
+        it("test getCommonPreferenceIds", function() {
+            userPreferencesUtils.addPreference(1, "ptype3", "pid3");
+            userPreferencesUtils.addPreference(2, "ptype4", "pid3");
+            let res = userPreferencesUtils.getCommonPreferenceIds([1, 2]);
+            let valids = {
+                "pid1": true,
+                "pid3": true,
+            }
+            assert.strictEqual(res.length, 2);
+            for (let i=0; i<res.length; i++) {
+                assert.ok(res[i] in valids);
+            }
+        });
+    });
 });
