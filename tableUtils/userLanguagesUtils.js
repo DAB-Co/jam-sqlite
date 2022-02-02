@@ -75,7 +75,7 @@ class UserLanguagesUtils extends _Row {
         for (let i=0; i<languages.length; i++) {
             query_condition += " language=?";
             if (i !== languages.length-1) {
-                query_condition += " OR "
+                query_condition += " OR"
             }
         }
         let rows = this.databaseWrapper.get_all(`SELECT user_id FROM ${this.table_name} WHERE ${query_condition}`, languages);

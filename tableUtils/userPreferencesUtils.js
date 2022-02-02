@@ -21,7 +21,7 @@ class UserPreferencesUtils extends _Row {
      */
     addPreference(user_id, preference_type, preference_identifier, preference_type_weight, preference_identifier_weight) {
         this.databaseWrapper.run_query(`INSERT INTO ${this.table_name} 
-    (user_id, preference_type, preference_identifier, preference_type_weight, preference_name_weight) VALUES(?,?,?,?,?,)`,
+    (user_id, preference_type, preference_identifier, preference_type_weight, preference_identifier_weight) VALUES(?,?,?,?,?)`,
             [user_id, preference_type, preference_identifier, preference_type_weight, preference_identifier_weight]);
     }
 
@@ -38,7 +38,7 @@ class UserPreferencesUtils extends _Row {
         "preference_type_weight,
         "preference_identifier_weight",}
      */
-    getUserPreference(user_id, preference_type, preference_identifier) {
+    getPreference(user_id, preference_type, preference_identifier) {
         return this.databaseWrapper.get(`SELECT * FROM ${this.table_name} WHERE user_id=? AND preference_type=? AND preference_identifier=?`,
             [user_id, preference_type, preference_identifier]);
     }
@@ -52,7 +52,7 @@ class UserPreferencesUtils extends _Row {
      * @param preference_type_weight
      * @param preference_identifier_weight
      */
-    updateUserPreferenceWeights(user_id, preference_type, preference_identifier, preference_type_weight, preference_identifier_weight) {
+    updatePreferenceWeights(user_id, preference_type, preference_identifier, preference_type_weight, preference_identifier_weight) {
         this.databaseWrapper.run_query(`UPDATE ${this.table_name} SET 
                  preference_type_weight=?, preference_identifier_weight=? WHERE user_id=? AND preference_type=? AND preference_identifier=?`,
             [preference_type_weight, preference_identifier_weight, user_id, preference_type, preference_identifier]);
@@ -84,18 +84,31 @@ class UserPreferencesUtils extends _Row {
             [preference_type_weight, user_id, preference_type, preference_identifier]);
     }
 
-    getCommonPreferences(user_ids) {
+    /**
+     *
+     * @param {number[]} user_ids
+     * @returns {string[]} common preference types
+     */
+    getCommonPreferenceTypes(user_ids) {
         let query_condition = "(";
         for (let i=0; i<user_ids.length; i++) {
-            query_condition += " user_id=?";
+            query_condition += "user_id=?";
             if (i !== user_ids.length-1) {
                 query_condition += " OR "
             }
         }
         query_condition += ") GROUP BY preference_type HAVING COUNT(*)>1";
-        let same_preference_type = this.databaseWrapper.get_all(`SELECT user_id, preference_type, preference_name FROM ${this.table_name} WHERE ${query_condition}`);
-        console.log(same_preference_type);
-        return same_preference_type;
+        let res = this.databaseWrapper.get_all(`SELECT preference_type FROM ${this.table_name} WHERE ${query_condition}`, user_ids);
+        if (res === undefined || res.length === 0) {
+            return [];
+        }
+        else {
+            let ret_val = [];
+            for (let i=0; i<res.length; i++) {
+                ret_val.push(res[i].preference_type);
+            }
+            return ret_val;
+        }
     }
 }
 
