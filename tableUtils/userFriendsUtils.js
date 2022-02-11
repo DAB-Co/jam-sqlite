@@ -21,6 +21,7 @@ class UserFriendsUtils extends _Row {
     }
 
     /**
+     * will do nothing if any one of the users don't exist
      *
      * @param id1
      * @param id2
@@ -31,10 +32,18 @@ class UserFriendsUtils extends _Row {
                                                             INNER JOIN accounts
                                                                        ON user_friends.user_id = accounts.user_id AND user_friends.user_id = ?`, [id1]);
 
+        if (row1 === undefined) {
+            return;
+        }
+
         let row2 = this.databaseWrapper.get(`SELECT accounts.username, friends
                                                    FROM user_friends
                                                             INNER JOIN accounts
                                                                        ON user_friends.user_id = accounts.user_id AND user_friends.user_id = ?`, [id2]);
+
+        if (row2 === undefined) {
+            return;
+        }
 
         let friends1 = JSON.parse(row1["friends"]);
         friends1[id2] = { "username": row2["username"], "blocked": false };
@@ -46,15 +55,17 @@ class UserFriendsUtils extends _Row {
     }
 
     /**
-     * one way block from id1 to id2
+     * one way block from id1 to id2, will do nothing if id1 doesn't exist
      *
      * @param id1
      * @param id2
      */
     blockUser(id1, id2) {
         let friends = JSON.parse(this.getColumnByPrimaryKey(id1, "friends"));
-        friends[id2]["blocked"] = true;
-        this.updateColumnByPrimaryKey(id1, "friends", JSON.stringify(friends));
+        if (friends !== undefined && id2 in friends) {
+            friends[id2]["blocked"] = true;
+            this.updateColumnByPrimaryKey(id1, "friends", JSON.stringify(friends));
+        }
     }
 
     /**
