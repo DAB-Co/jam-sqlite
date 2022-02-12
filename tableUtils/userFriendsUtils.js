@@ -51,9 +51,29 @@ class UserFriendsUtils extends _Row {
      * @param id2
      */
     blockUser(id1, id2) {
-        let friends = JSON.parse(this.getColumnByPrimaryKey(id1, "friends"));
+        let res = this.getColumnByPrimaryKey(id1, "friends");
+        if (res === undefined || res === null || res === '') {
+            return;
+        }
+        let friends = JSON.parse(res);
         if (friends !== undefined && id2 in friends) {
             friends[id2]["blocked"] = true;
+            this.updateColumnByPrimaryKey(id1, "friends", JSON.stringify(friends));
+        }
+    }
+
+    /**
+     *
+     * @param id1
+     * @param id2
+     */
+    unblockUser(id1, id2) {let res = this.getColumnByPrimaryKey(id1, "friends");
+        if (res === undefined || res === null || res === '') {
+            return;
+        }
+        let friends = JSON.parse(res);
+        if (friends !== undefined && id2 in friends) {
+            friends[id2]["blocked"] = false;
             this.updateColumnByPrimaryKey(id1, "friends", JSON.stringify(friends));
         }
     }
@@ -66,7 +86,7 @@ class UserFriendsUtils extends _Row {
     getFriends(id) {
         let res = this.getColumnByPrimaryKey(id, "friends");
         if (res === undefined) {
-            return undefined
+            return undefined;
         }
         else {
             return JSON.parse(res);
