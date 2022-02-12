@@ -34,6 +34,14 @@ CREATE TABLE IF NOT EXISTS "user_connections"
     FOREIGN KEY ("user1_id") REFERENCES "accounts" ("user_id"),
     FOREIGN KEY ("user2_id") REFERENCES "accounts" ("user_id")
 );
+DROP TABLE IF EXISTS "spotify";
+CREATE TABLE IF NOT EXISTS "spotify"
+(
+    "user_id"       INTEGER UNIQUE,
+    "refresh_token" TEXT,
+    PRIMARY KEY ("user_id"),
+    FOREIGN KEY ("user_id") REFERENCES "accounts" ("user_id")
+);
 DROP TABLE IF EXISTS "accounts";
 CREATE TABLE IF NOT EXISTS "accounts"
 (
@@ -51,6 +59,7 @@ CREATE TRIGGER after_account_insert
     ON accounts
 BEGIN
     INSERT INTO user_friends (user_id, friends) VALUES (new.user_id, '{}');
+    INSERT INTO spotify(user_id, refresh_token) VALUES (new.user_id, '');
 END;
 DROP TRIGGER IF EXISTS "before_user_languages_insert";
 CREATE TRIGGER before_user_languages_insert
