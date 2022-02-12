@@ -4,16 +4,22 @@ const assert = require("assert");
 
 const jam_sqlite = setup.jam_sqlite;
 const UserConnectionsUtils = jam_sqlite.Utils.UserConnectionsUtils;
+const UserLanguagesUtils = jam_sqlite.Utils.UserLanguagesUtils;
 
 describe(__filename, function (){
     let database = undefined;
     let accounts = undefined;
     let userConnectionsUtils = undefined;
+    let userLanguagesUtils = undefined;
 
     before(function(){
         database = setup.create_database();
         accounts = setup.register_accounts(database, 3);
         userConnectionsUtils = new UserConnectionsUtils(database);
+        userLanguagesUtils = new UserLanguagesUtils(database);
+        userLanguagesUtils.addLanguages(1, ["Turkish"]);
+        userLanguagesUtils.addLanguages(2, ["Turkish"]);
+        userLanguagesUtils.addLanguages(3, ["Turkish"]);
     });
 
 
@@ -29,6 +35,35 @@ describe(__filename, function (){
             userConnectionsUtils.addConnection(1, 2);
             assert.ok(userConnectionsUtils.connectionExists(1, 2));
         })
+    });
+
+    describe("", function(){
+       it("try to add the same connection again", function (){
+           let bothPassed = true;
+           try {
+               userConnectionsUtils.addConnection(2, 1);
+           } catch (e) {
+               bothPassed = false;
+           }
+           try {
+               userConnectionsUtils.addConnection(1, 2);
+           } catch (e) {
+               bothPassed = false;
+           }
+           assert.ok(!bothPassed, "no error occurred adding duplicate connection");
+       });
+    });
+
+    describe("", function() {
+       it("try to connect to user to itself", function (){
+           let errOccurred = false;
+           try {
+               userConnectionsUtils.addConnection(1, 1);
+           } catch (e) {
+               errOccurred = true;
+           }
+           assert.ok(errOccurred, "no error occurred conecting user to itself");
+       });
     });
 
     describe("", function() {
@@ -56,6 +91,14 @@ describe(__filename, function (){
         it("match 3 with 2", function (){
             assert.ok(userConnectionsUtils.getNewMatch(3) === 2);
         });
+    });
+
+    describe("", function () {
+       it("1 and 2 don't have same language so can't be matched", function () {
+           userLanguagesUtils.removeLanguages(1, ["turkish"]);
+           assert.strictEqual(userConnectionsUtils.getNewMatch(1), undefined);
+           assert.strictEqual(userConnectionsUtils.getNewMatch(2), 3);
+       });
     });
 
     describe("", function (){

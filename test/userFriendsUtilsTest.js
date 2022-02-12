@@ -15,10 +15,6 @@ describe(__filename, function (){
         accounts = setup.register_accounts(database, 3);
         userFriendsUtils = new UserFriendsUtils(database);
 
-        userFriendsUtils.addUser(1);
-        userFriendsUtils.addUser(2);
-        userFriendsUtils.addUser(3);
-
         userFriendsUtils.addFriend(1, 2);
     });
 

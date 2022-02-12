@@ -24,6 +24,18 @@ describe(__filename, function() {
         });
     });
 
+    describe("", function () {
+       it("try to add Turkish to user 1 again", function() {
+           let errorOccurred = false;
+           try {
+               userLanguagesUtils.addLanguages(1, ["turkish"]);
+           } catch (e) {
+               errorOccurred = true;
+           }
+           assert.ok(errorOccurred, "no error occurred adding Turkish to user 1 again");
+       });
+    });
+
     describe("", function() {
         it("add English and Hindu to user 2", function() {
             userLanguagesUtils.addLanguages(2, ["English", "Hindu"]);
@@ -46,6 +58,13 @@ describe(__filename, function() {
             assert.ok(hindu_speakers.indexOf(1) === -1 && hindu_speakers.indexOf(2) !== -1 && hindu_speakers.indexOf(3) !== -1);
         });
     });
+
+    describe("", function () {
+        it("user 1 can speak to 2", function () {
+            let can_speak = userLanguagesUtils.getUserCanSpeakWith(1);
+            assert.ok(can_speak.indexOf(1) === -1 && can_speak.indexOf(2) !== -1 && can_speak.indexOf(3) === -1);
+        });
+    })
 
     describe("", function() {
         it("remove Hindu from user 2", function() {
@@ -76,4 +95,11 @@ describe(__filename, function() {
             assert.ok(english_and_hindu_speakers.indexOf(1) !== -1 && english_and_hindu_speakers.indexOf(2) !== -1 && english_and_hindu_speakers.indexOf(3) !== -1);
         });
     });
+
+    describe("", function () {
+        it("user 1 can speak to 2 and 3", function () {
+            let can_speak = userLanguagesUtils.getUserCanSpeakWith(1);
+            assert.ok(can_speak.indexOf(1) === -1 && can_speak.indexOf(2) !== -1 && can_speak.indexOf(3) !== -1);
+        });
+    })
 });

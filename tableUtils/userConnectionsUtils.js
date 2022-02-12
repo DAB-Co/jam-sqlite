@@ -1,5 +1,6 @@
 const path = require("path");
 const _Row = require(path.join(__dirname, "_row.js"));
+const UserLanguagesUtils = require(path.join(__dirname, "userLanguagesUtils.js"));
 
 class UserConnectionsUtils extends _Row {
     /**
@@ -8,6 +9,7 @@ class UserConnectionsUtils extends _Row {
      */
     constructor(database) {
         super("user_connections", database);
+        this.userLanguagesUtils = new UserLanguagesUtils(database);
     }
 
     /**
@@ -22,15 +24,12 @@ class UserConnectionsUtils extends _Row {
     }
 
     /**
-     * will not add if two given id's are the same
      *
      * @param user1_id
      * @param user2_id
      */
     addConnection(user1_id, user2_id) {
-        if (user1_id !== user2_id) {
-            this.databaseWrapper.run_query(`INSERT INTO ${this.table_name} (user1_id, user2_id) VALUES (?,?)`, [user1_id, user2_id]);
-        }
+        this.databaseWrapper.run_query(`INSERT INTO ${this.table_name} (user1_id, user2_id) VALUES (?,?)`, [user1_id, user2_id]);
     }
 
     /**
@@ -52,7 +51,30 @@ class UserConnectionsUtils extends _Row {
      * @returns {undefined | number}
      */
     getNewMatch(user_id) {
-        let result = this.databaseWrapper.get_all(`SELECT user1_id, user2_id FROM ${this.table_name} WHERE matched == 0 AND weight != 0 AND (user1_id=? OR user2_id=?) ORDER BY weight DESC LIMIT 1`, [user_id, user_id]);
+        let can_speak = this.userLanguagesUtils.getUserCanSpeakWith(user_id);
+        // the query will have two parts
+        // (user1_id=? AND (user2_id=? OR user2_id=?...)) OR (user2_id=? AND (user1_id=? OR user1_id=?...))
+        let q1 = "(user1_id=? AND(";
+        for (let i=0; i<can_speak.length; i++) {
+            q1 += "user2_id=?"
+            if (i !== can_speak.length-1) {
+                q1 += " OR "
+            }
+        }
+        q1 += "))";
+        let q2 = "(user2_id=? AND("
+        for (let i=0; i<can_speak.length; i++) {
+            q2 += "user1_id=?"
+            if (i !== can_speak.length-1) {
+                q2 += " OR "
+            }
+        }
+        q2 += "))";
+        if (can_speak.length === 0) {
+            return undefined;
+        }
+        let final_query = `SELECT user1_id, user2_id FROM ${this.table_name} WHERE matched = 0 AND weight != 0 AND (${q1} OR ${q2}) ORDER BY weight DESC LIMIT 1`;
+        let result = this.databaseWrapper.get_all(final_query, [user_id, ...can_speak, user_id, ...can_speak]);
         if (result === undefined || result === null || result.length === 0) {
             return undefined;
         }
