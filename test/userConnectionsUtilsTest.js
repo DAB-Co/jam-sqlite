@@ -4,16 +4,22 @@ const assert = require("assert");
 
 const jam_sqlite = setup.jam_sqlite;
 const UserConnectionsUtils = jam_sqlite.Utils.UserConnectionsUtils;
+const UserLanguagesUtils = jam_sqlite.Utils.UserLanguagesUtils;
 
 describe(__filename, function (){
     let database = undefined;
     let accounts = undefined;
     let userConnectionsUtils = undefined;
+    let userLanguagesUtils = undefined;
 
     before(function(){
         database = setup.create_database();
         accounts = setup.register_accounts(database, 3);
         userConnectionsUtils = new UserConnectionsUtils(database);
+        userLanguagesUtils = new UserLanguagesUtils(database);
+        userLanguagesUtils.addLanguages(1, ["Turkish"]);
+        userLanguagesUtils.addLanguages(2, ["Turkish"]);
+        userLanguagesUtils.addLanguages(3, ["Turkish"]);
     });
 
 
@@ -85,6 +91,14 @@ describe(__filename, function (){
         it("match 3 with 2", function (){
             assert.ok(userConnectionsUtils.getNewMatch(3) === 2);
         });
+    });
+
+    describe("", function () {
+       it("1 and 2 don't have same language so can't be matched", function () {
+           userLanguagesUtils.removeLanguages(1, ["turkish"]);
+           assert.strictEqual(userConnectionsUtils.getNewMatch(1), undefined);
+           assert.strictEqual(userConnectionsUtils.getNewMatch(2), 3);
+       });
     });
 
     describe("", function (){

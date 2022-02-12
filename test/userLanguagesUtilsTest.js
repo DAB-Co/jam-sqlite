@@ -59,6 +59,13 @@ describe(__filename, function() {
         });
     });
 
+    describe("", function () {
+        it("user 1 can speak to 2", function () {
+            let can_speak = userLanguagesUtils.getUserCanSpeakWith(1);
+            assert.ok(can_speak.indexOf(1) === -1 && can_speak.indexOf(2) !== -1 && can_speak.indexOf(3) === -1);
+        });
+    })
+
     describe("", function() {
         it("remove Hindu from user 2", function() {
             userLanguagesUtils.removeLanguages(2, ["hindu"]);
@@ -88,4 +95,11 @@ describe(__filename, function() {
             assert.ok(english_and_hindu_speakers.indexOf(1) !== -1 && english_and_hindu_speakers.indexOf(2) !== -1 && english_and_hindu_speakers.indexOf(3) !== -1);
         });
     });
+
+    describe("", function () {
+        it("user 1 can speak to 2 and 3", function () {
+            let can_speak = userLanguagesUtils.getUserCanSpeakWith(1);
+            assert.ok(can_speak.indexOf(1) === -1 && can_speak.indexOf(2) !== -1 && can_speak.indexOf(3) !== -1);
+        });
+    })
 });

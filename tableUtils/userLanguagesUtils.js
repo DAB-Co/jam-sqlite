@@ -30,6 +30,9 @@ class UserLanguagesUtils extends _Row {
      * @param {string[]} languages
      */
     removeLanguages(user_id, languages) {
+        if (languages === undefined || languages.length === 0) {
+            return;
+        }
         for (let i=0; i<languages.length; i++) {
             languages[i] = languages[i].toUpperCase();
         }
@@ -68,16 +71,20 @@ class UserLanguagesUtils extends _Row {
      * @returns {number[]} user_ids
      */
     getUsersWithTheSameLanguages(languages) {
+        if (languages === undefined || languages.length === 0) {
+            return [];
+        }
         for (let i=0; i<languages.length; i++) {
             languages[i] = languages[i].toUpperCase();
         }
-        let query_condition = "";
+        let query_condition = "(";
         for (let i=0; i<languages.length; i++) {
-            query_condition += " language=?";
+            query_condition += "language=?";
             if (i !== languages.length-1) {
-                query_condition += " OR"
+                query_condition += " OR "
             }
         }
+        query_condition += ") GROUP BY user_id"
         let rows = this.databaseWrapper.get_all(`SELECT user_id FROM ${this.table_name} WHERE ${query_condition}`, languages);
         if (rows === undefined) {
             return [];
@@ -88,6 +95,25 @@ class UserLanguagesUtils extends _Row {
                 speakers.push(rows[i].user_id);
             }
             return speakers;
+        }
+    }
+
+    /**
+     * get other users that have same language with given user
+     *
+     * @param user_id
+     * @returns {number[]}
+     */
+    getUserCanSpeakWith(user_id) {
+        let user_languages = this.getUserLanguages(user_id);
+        if (user_languages === undefined || user_languages === null || user_languages.length === 0) {
+            return [];
+        }
+        else {
+            let res = this.getUsersWithTheSameLanguages(user_languages);
+            let i = res.indexOf(user_id);
+            res.splice(i, 1);
+            return res;
         }
     }
 }

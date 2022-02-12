@@ -101,6 +101,9 @@ class UserPreferencesUtils extends _Row {
      * @returns {string[]} common preference types
      */
     getCommonPreferenceTypes(user_ids) {
+        if (user_ids === undefined || user_ids.length === 0) {
+            return [];
+        }
         let query_condition = "(";
         for (let i=0; i<user_ids.length; i++) {
             query_condition += "user_id=?";
@@ -129,6 +132,9 @@ class UserPreferencesUtils extends _Row {
      * @returns {string[]} preference identifiers
      */
     getCommonPreferenceIds(user_ids) {
+        if (user_ids === undefined || user_ids.length === 0) {
+            return [];
+        }
         let query_condition = "(";
         for (let i=0; i<user_ids.length; i++) {
             query_condition += "user_id=?";
