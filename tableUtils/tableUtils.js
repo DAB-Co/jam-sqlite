@@ -1,10 +1,56 @@
 const path = require("path");
 
+const AccountUtils = require(path.join(__dirname, "accountUtils.js"));
+const UserFriendsUtils = require(path.join(__dirname, "userFriendsUtils.js"));
+const UserLanguagesUtils = require(path.join(__dirname, "userLanguagesUtils.js"));
+const UserConnectionsUtils = require(path.join(__dirname, "userConnectionsUtils.js"));
+const UserPreferencesUtils = require(path.join(__dirname, "userPreferencesUtils.js"));
+const SpotifyUtils = require(path.join(__dirname, "spotifyUtils.js"));
+
+/**
+ * initializes all the utils and returns instances
+ */
+class UtilsInitializer {
+    constructor(database) {
+        this.accountUtilsObject = new AccountUtils(database);
+        this.userFriendsUtilsObject = new UserFriendsUtils(database);
+        this.userLanguagesUtilsObject = new UserLanguagesUtils(database);
+        this.userConnectionsUtilsObject = new UserConnectionsUtils(database);
+        this.userPreferencesUtilsObject = new UserPreferencesUtils(database);
+        this.spotifyUtilsObject = new SpotifyUtils(database);
+    }
+
+    accountUtils() {
+        return this.accountUtilsObject;
+    }
+
+    userFriendsUtils() {
+        return this.userFriendsUtilsObject;
+    }
+
+    userLanguagesUtils() {
+        return this.userLanguagesUtilsObject;
+    }
+
+    userConnectionsUtils() {
+        return this.userConnectionsUtilsObject;
+    }
+
+    userPreferencesUtils() {
+        return this.userPreferencesUtilsObject;
+    }
+
+    spotifyUtils() {
+        return this.spotifyUtilsObject;
+    }
+}
+
 module.exports = {
-    AccountUtils: require(path.join(__dirname, "accountUtils.js")),
-    UserFriendsUtils: require(path.join(__dirname, "userFriendsUtils.js")),
-    UserLanguagesUtils: require(path.join(__dirname, "userLanguagesUtils.js")),
-    UserConnectionsUtils: require(path.join(__dirname, "userConnectionsUtils.js")),
-    UserPreferencesUtils: require(path.join(__dirname, "userPreferencesUtils.js")),
-    SpotifyUtils: require(path.join(__dirname, "spotifyUtils.js")),
+    UtilsInitializer: UtilsInitializer,
+    AccountUtils: AccountUtils,
+    UserFriendsUtils: UserFriendsUtils,
+    UserLanguagesUtils: UserLanguagesUtils,
+    UserConnectionsUtils: UserConnectionsUtils,
+    UserPreferencesUtils: UserPreferencesUtils,
+    SpotifyUtils: SpotifyUtils,
 };
