@@ -38,6 +38,7 @@ Whenever a utility file is needed, the instantiated databaseWrapper object will 
 ### using InitializeUtils class to initialize all table utils
 
 ```javascript
+// initializeUtils.js
 const jam_sqlite = require("@dab-co/jam-sqlite");
 
 const Database = jam_sqlite.Database;
