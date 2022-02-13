@@ -34,6 +34,29 @@ by aggregating it. By aggregation, we make sure every utility file makes use of 
 Whenever a utility file is needed, the instantiated databaseWrapper object will be fed into the corresponding class.
   
 ## Example usage on production:
+
+### using InitializeUtils class to initialize all table utils
+
+```javascript
+const jam_sqlite = require("@dab-co/jam-sqlite");
+
+const Database = jam_sqlite.Database;
+const database = new Database(path.join(process.env.db_path));
+
+const utilsInitializer = new jam_sqlite.Utils.UtilsInitializer(database);
+
+module.exports = utilsInitializer;
+```
+
+```javascript
+// some file that uses any one of the utils
+const utilsInitializer = require("./initializeUtils.js");
+const accountUtils = utilsInitializer.accountUtils();
+const userFriendsUtils = utilsInitializer.userFriendsUtils();
+```
+
+
+### Initializing each table util by hand
   
 ```javascript
 // initializeDatabase.js
@@ -47,7 +70,4 @@ module.exports = databaseWrapper;
 const databaseWrapper = require("./initializeDatabase.js");
 const AccountUtils = require("@dab-co/jam-sqlite").Utils.AccountUtils;
 const accountUtils = new AccountUtils(databaseWrapper);
-// note here databaseWrapper is an instance not a class
-// hence the connection has already been established
-// do stuff ...
 ```
