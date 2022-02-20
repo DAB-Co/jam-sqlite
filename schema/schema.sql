@@ -24,11 +24,10 @@ CREATE TABLE IF NOT EXISTS "user_languages"
 );
 CREATE TABLE IF NOT EXISTS "user_preferences"
 (
-    "user_id"                      INTEGER NOT NULL,
-    "preference_type"              TEXT,
-    "preference_identifier"        TEXT,
-    "preference_type_weight"       INTEGER DEFAULT 0,
-    "preference_identifier_weight" INTEGER DEFAULT 0,
+    "user_id"               INTEGER NOT NULL,
+    "preference_type"       TEXT,
+    "preference_identifier" TEXT,
+    "preference_weight"     INTEGER DEFAULT 0,
     FOREIGN KEY ("user_id") REFERENCES "accounts" ("user_id")
 );
 CREATE TABLE IF NOT EXISTS "user_connections"
