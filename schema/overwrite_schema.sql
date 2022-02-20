@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS "user_connections"
 DROP TABLE IF EXISTS "spotify";
 CREATE TABLE IF NOT EXISTS "spotify"
 (
-    "user_id"       INTEGER UNIQUE,
+    "user_id"       INTEGER NOT NULL UNIQUE,
     "refresh_token" TEXT,
     PRIMARY KEY ("user_id"),
     FOREIGN KEY ("user_id") REFERENCES "accounts" ("user_id")
