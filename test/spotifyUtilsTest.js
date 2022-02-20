@@ -16,6 +16,14 @@ describe(__filename, function() {
     });
 
     describe("", function() {
+       it("test getAllPrimaryKeys", function () {
+          // maybe will be moved to a seperate file later on
+          let res = spotifyUtils.getAllPrimaryKeys();
+          assert.ok(res !== undefined && res.length === 2, res.indexOf(1) !== -1 && res.indexOf(2) !== -1);
+       });
+    });
+
+    describe("", function() {
         it("update refresh token for user 1", function () {
             spotifyUtils.updateRefreshToken(1, "refresh_token");
         });

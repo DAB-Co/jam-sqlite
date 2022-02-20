@@ -17,11 +17,10 @@ CREATE TABLE IF NOT EXISTS "user_languages"
 DROP TABLE IF EXISTS "user_preferences";
 CREATE TABLE IF NOT EXISTS "user_preferences"
 (
-    "user_id"                      INTEGER NOT NULL,
-    "preference_type"              TEXT,
-    "preference_identifier"        TEXT,
-    "preference_type_weight"       INTEGER DEFAULT 0,
-    "preference_identifier_weight" INTEGER DEFAULT 0,
+    "user_id"               INTEGER NOT NULL,
+    "preference_type"       TEXT,
+    "preference_identifier" TEXT,
+    "preference_weight"     INTEGER DEFAULT 0,
     FOREIGN KEY ("user_id") REFERENCES "accounts" ("user_id")
 );
 DROP TABLE IF EXISTS "user_connections";
@@ -37,7 +36,7 @@ CREATE TABLE IF NOT EXISTS "user_connections"
 DROP TABLE IF EXISTS "spotify";
 CREATE TABLE IF NOT EXISTS "spotify"
 (
-    "user_id"       INTEGER UNIQUE,
+    "user_id"       INTEGER NOT NULL UNIQUE,
     "refresh_token" TEXT,
     PRIMARY KEY ("user_id"),
     FOREIGN KEY ("user_id") REFERENCES "accounts" ("user_id")

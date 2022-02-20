@@ -13,23 +13,30 @@ class UserConnectionsUtils extends _Row {
     }
 
     /**
+     *
+     * @param user1_id
+     * @param user2_id
+     * @param weight
+     */
+    addConnection(user1_id, user2_id, weight=0) {
+        this.databaseWrapper.run_query(`INSERT INTO ${this.table_name} (user1_id, user2_id, weight) VALUES (?,?,?)`, [user1_id, user2_id, weight]);
+    }
+
+    /**
      * id order doesn't matter
      *
      * @param user1_id
      * @param user2_id
-     * @returns {boolean}
+     * @returns {number|undefined}
      */
-    connectionExists(user1_id, user2_id) {
-        return this.databaseWrapper.get(`SELECT * FROM ${this.table_name} WHERE (user1_id=? AND user2_id=?) OR (user1_id=? AND user2_id=?)`, [user1_id, user2_id, user2_id, user1_id]) !== undefined;
-    }
-
-    /**
-     *
-     * @param user1_id
-     * @param user2_id
-     */
-    addConnection(user1_id, user2_id) {
-        this.databaseWrapper.run_query(`INSERT INTO ${this.table_name} (user1_id, user2_id) VALUES (?,?)`, [user1_id, user2_id]);
+    getWeight(user1_id, user2_id) {
+        let res = this.databaseWrapper.get(`SELECT weight FROM ${this.table_name} WHERE (user1_id=? AND user2_id=?) OR (user1_id=? AND user2_id=?)`, [user1_id, user2_id, user2_id, user1_id]);
+        if (res === undefined) {
+            return undefined;
+        }
+        else {
+            return res.weight;
+        }
     }
 
     /**
