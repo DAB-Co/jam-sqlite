@@ -67,6 +67,28 @@ class UserPreferencesUtils extends _Row {
     }
 
     /**
+     * get common user ids for a given preference
+     *
+     * @param preference_type
+     * @param preference_identifier
+     * @returns {number[]} user ids
+     */
+    getCommonUserIds(preference_type, preference_identifier) {
+        // `GROUP BY user_id` is not needed because triggers do not allow duplicates while insertion
+        let res = this.databaseWrapper.get_all(`SELECT user_id FROM ${this.table_name} WHERE preference_type=? AND preference_identifier=?`, [preference_type, preference_identifier]);
+        if (res === undefined || res.length === 0) {
+            return [];
+        }
+        else {
+            let ret_val = [];
+            for (let i=0; i<res.length; i++) {
+                ret_val.push(res[i].user_id);
+            }
+            return ret_val;
+        }
+    }
+
+    /**
      *
      * @param user_ids
      * @param preference_type
