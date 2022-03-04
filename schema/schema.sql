@@ -46,6 +46,14 @@ CREATE TABLE IF NOT EXISTS "spotify"
     PRIMARY KEY ("user_id"),
     FOREIGN KEY ("user_id") REFERENCES "accounts" ("user_id")
 );
+CREATE TABLE IF NOT EXISTS "spotify_preferences"
+(
+    "preference_id" TEXT,
+    "type"          TEXT,
+    "name"          TEXT,
+    "images"        BLOB,
+    PRIMARY KEY ("preference_id")
+);
 CREATE TRIGGER after_account_insert
     AFTER INSERT
     ON accounts

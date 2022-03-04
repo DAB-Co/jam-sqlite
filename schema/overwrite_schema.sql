@@ -41,6 +41,15 @@ CREATE TABLE IF NOT EXISTS "spotify"
     PRIMARY KEY ("user_id"),
     FOREIGN KEY ("user_id") REFERENCES "accounts" ("user_id")
 );
+DROP TABLE IF EXISTS "spotify_preferences";
+CREATE TABLE IF NOT EXISTS "spotify_preferences"
+(
+    "preference_id" TEXT,
+    "type"          TEXT,
+    "name"          TEXT,
+    "images"        BLOB,
+    PRIMARY KEY ("preference_id")
+);
 DROP TABLE IF EXISTS "accounts";
 CREATE TABLE IF NOT EXISTS "accounts"
 (
