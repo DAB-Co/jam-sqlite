@@ -93,7 +93,7 @@ CREATE TRIGGER after_user_preferences_insert
                     FROM spotify_preferences
                     WHERE preference_id = new.preference_identifier)
 BEGIN
-    INSERT INTO spotify_preferences VALUES (new.preference_identifier, NULL, NULL, NULL);
+    INSERT INTO spotify_preferences(preference_id, type) VALUES (new.preference_identifier, new.preference_type);
 END;
 CREATE TRIGGER before_user_connections_insert
     BEFORE INSERT

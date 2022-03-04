@@ -21,5 +21,5 @@ describe(__filename, function() {
         it("addUser", function() {
             assert.ok(utilsInitializer.accountUtils().addUser !== undefined);
         });
-    })
+    });
 });
