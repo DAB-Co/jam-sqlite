@@ -22,7 +22,7 @@ describe(__filename, function() {
     describe("", function () {
        it("add preference for user 1", function () {
            userPreferencesUtils.addPreference(1, "video tape", "sabrina eats cake", 31);
-           let pref = spotifyPreferencesUtils.getPreference("sabrina eats cake");
+           let pref = spotifyPreferencesUtils.get_preference("sabrina eats cake");
            assert.strictEqual(pref.preference_id, "sabrina eats cake");
            assert.strictEqual(pref.type, "video tape");
            assert.strictEqual(pref.images, null);
