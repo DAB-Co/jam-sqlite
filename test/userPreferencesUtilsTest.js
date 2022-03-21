@@ -117,6 +117,17 @@ describe(__filename, function () {
     });
 
     describe("", function () {
+        it("test getUserPreferences", function () {
+           let pref1 = userPreferencesUtils.getUserPreferences(1);
+           assert.strictEqual(pref1.length, 1);
+           assert.strictEqual(pref1[0], "pid1");
+            let pref2 = userPreferencesUtils.getUserPreferences(1);
+            assert.strictEqual(pref2.length, 1);
+            assert.strictEqual(pref2[0], "pid1");
+        });
+    });
+
+    describe("", function () {
         it("test getCommonUserIds", function () {
             let res = userPreferencesUtils.getCommonUserIds( "pid1");
             let valids = {
@@ -129,4 +140,6 @@ describe(__filename, function () {
             }
         });
     });
+
+
 });
