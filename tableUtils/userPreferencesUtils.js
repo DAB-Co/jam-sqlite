@@ -28,7 +28,6 @@ class UserPreferencesUtils extends _Row {
      * get specific preference data for a user
      *
      * @param user_id
-     * @param preference_type
      * @param preference_identifier
      * @returns {json | undefined} {
         "user_id",
@@ -36,46 +35,43 @@ class UserPreferencesUtils extends _Row {
         "preference_identifier",
         "preference_weight",}
      */
-    getPreference(user_id, preference_type, preference_identifier) {
-        return this.databaseWrapper.get(`SELECT * FROM ${this.table_name} WHERE user_id=? AND preference_type=? AND preference_identifier=?`,
-            [user_id, preference_type, preference_identifier]);
+    getPreference(user_id, preference_identifier) {
+        return this.databaseWrapper.get(`SELECT * FROM ${this.table_name} WHERE user_id=? AND preference_identifier=?`,
+            [user_id, preference_identifier]);
     }
 
     /**
      * remove preference from database
      *
      * @param user_id
-     * @param preference_type
      * @param preference_identifier
      */
-    removePreference(user_id, preference_type, preference_identifier) {
-        this.databaseWrapper.run_query(`DELETE FROM ${this.table_name} WHERE user_id=? AND preference_type=? AND preference_identifier=?`, [user_id, preference_type, preference_identifier]);
+    removePreference(user_id, preference_identifier) {
+        this.databaseWrapper.run_query(`DELETE FROM ${this.table_name} WHERE user_id=? AND preference_identifier=?`, [user_id, preference_identifier]);
     }
 
     /**
      * update preference type weight and preference identifier weight
      *
      * @param user_id
-     * @param preference_type
      * @param preference_identifier
      * @param preference_weight
      */
-    updatePreferenceWeight(user_id, preference_type, preference_identifier, preference_weight) {
+    updatePreferenceWeight(user_id, preference_identifier, preference_weight) {
         this.databaseWrapper.run_query(`UPDATE ${this.table_name} SET 
-                 preference_weight=? WHERE user_id=? AND preference_type=? AND preference_identifier=?`,
-            [preference_weight, user_id, preference_type, preference_identifier]);
+                 preference_weight=? WHERE user_id=? AND preference_identifier=?`,
+            [preference_weight, user_id, preference_identifier]);
     }
 
     /**
      * get common user ids for a given preference
      *
-     * @param preference_type
      * @param preference_identifier
      * @returns {number[]} user ids
      */
-    getCommonUserIds(preference_type, preference_identifier) {
+    getCommonUserIds(preference_identifier) {
         // `GROUP BY user_id` is not needed because triggers do not allow duplicates while insertion
-        let res = this.databaseWrapper.get_all(`SELECT user_id FROM ${this.table_name} WHERE preference_type=? AND preference_identifier=?`, [preference_type, preference_identifier]);
+        let res = this.databaseWrapper.get_all(`SELECT user_id FROM ${this.table_name} WHERE preference_identifier=?`, [preference_identifier]);
         if (res === undefined || res.length === 0) {
             return [];
         }
@@ -90,23 +86,16 @@ class UserPreferencesUtils extends _Row {
 
     /**
      *
-     * @param user_ids
-     * @param preference_type
+     * @param user_id
      * @returns {string[]} preference identifiers
      */
-    getCommonPreferenceIds(user_ids, preference_type) {
-        if (user_ids === undefined || user_ids.length === 0) {
+    getUserPreferences(user_id) {
+        if (user_id === undefined) {
             return [];
         }
-        let query_condition = "(";
-        for (let i=0; i<user_ids.length; i++) {
-            query_condition += "user_id=?";
-            if (i !== user_ids.length-1) {
-                query_condition += " OR "
-            }
-        }
-        query_condition += ") AND preference_type=? GROUP BY preference_identifier HAVING COUNT(*)>1";
-        let res = this.databaseWrapper.get_all(`SELECT preference_identifier FROM ${this.table_name} WHERE ${query_condition}`, [...user_ids, preference_type]);
+
+        let res = this.databaseWrapper.get_all(`SELECT preference_identifier FROM ${this.table_name} WHERE user_id=?`, user_id);
+
         if (res === undefined || res.length === 0) {
             return [];
         }
@@ -118,6 +107,7 @@ class UserPreferencesUtils extends _Row {
             return ret_val;
         }
     }
+
 }
 
 module.exports = UserPreferencesUtils;
