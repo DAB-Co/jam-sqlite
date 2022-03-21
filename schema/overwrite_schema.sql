@@ -92,7 +92,6 @@ BEGIN
                   SELECT 1
                   FROM user_preferences
                   WHERE new.user_id = user_id
-                    AND new.preference_type = preference_type
                     AND new.preference_identifier = preference_identifier
               );
 END;
