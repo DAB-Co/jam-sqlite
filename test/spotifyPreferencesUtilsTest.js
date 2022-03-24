@@ -28,10 +28,10 @@ describe(__filename, function () {
 
     describe("", function () {
         it("add preference for user 1", function () {
-            userPreferencesUtils.addPreference(1, "video tape", "sabrina eats cake", 31);
+            userPreferencesUtils.addPreference(1, "sabrina eats cake", 31);
             let pref = spotifyPreferencesUtils.get_preference("sabrina eats cake");
             assert.strictEqual(pref.preference_id, "sabrina eats cake");
-            assert.strictEqual(pref.type, "video tape");
+            assert.strictEqual(pref.type, null);
             assert.strictEqual(pref.images, null);
             assert.strictEqual(pref.name, null);
         });
@@ -39,10 +39,10 @@ describe(__filename, function () {
 
     describe("", function () {
         it("add preference for user 2", function () {
-            userPreferencesUtils.addPreference(2, "recording", "dinner with paul allen", 69);
+            userPreferencesUtils.addPreference(2,  "dinner with paul allen", 69);
             let pref = spotifyPreferencesUtils.get_preference("dinner with paul allen");
             assert.strictEqual(pref.preference_id, "dinner with paul allen");
-            assert.strictEqual(pref.type, "recording");
+            assert.strictEqual(pref.type, null);
             assert.strictEqual(pref.images, null);
             assert.strictEqual(pref.name, null);
         });
@@ -56,6 +56,38 @@ describe(__filename, function () {
             assert.strictEqual(pref.type, "prn");
             assert.strictEqual(pref.images, JSON.stringify({"image": "i"}));
             assert.strictEqual(pref.name, "sabrina loves cake");
+        });
+    });
+
+    describe("", function () {
+        it("add another preference for user 1 and test get_preferences", function () {
+            userPreferencesUtils.addPreference(1, "hip to be square", 13);
+            let prefs = spotifyPreferencesUtils.get_preferences(userPreferencesUtils.getUserPreferences(1));
+            let assumed_prefs = {
+                "sabrina eats cake": {
+                    type: "prn",
+                    name: "sabrina loves cake",
+                    images: {
+                        "image": "i",
+                    }
+                },
+                "hip to be square": {
+                    type: null,
+                    name: null,
+                    images: null,
+                }
+            }
+
+            assert.ok(prefs.length > 0);
+            for (let i=0; i<prefs.length; i++) {
+                let pref = prefs[i];
+                let id = pref.preference_id;
+                let assumed_pref = assumed_prefs[id];
+                assert.ok(id in assumed_prefs);
+                assert.strictEqual(pref.type, assumed_pref.type);
+                assert.strictEqual(pref.name, assumed_pref.name);
+                assert.strictEqual(1, 1);
+            }
         });
     })
 });

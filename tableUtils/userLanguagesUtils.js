@@ -30,7 +30,7 @@ class UserLanguagesUtils extends _Row {
      * @param {string[]} languages
      */
     removeLanguages(user_id, languages) {
-        if (languages === undefined || languages.length === 0) {
+        if (languages === undefined || languages == null || !Array.isArray(languages) || languages.length === 0) {
             return;
         }
         for (let i=0; i<languages.length; i++) {
@@ -71,7 +71,7 @@ class UserLanguagesUtils extends _Row {
      * @returns {number[]} user_ids
      */
     getUsersWithTheSameLanguages(languages) {
-        if (languages === undefined || languages.length === 0) {
+        if (languages === undefined || languages == null || !Array.isArray(languages) || languages.length === 0) {
             return [];
         }
         for (let i=0; i<languages.length; i++) {
