@@ -1,5 +1,10 @@
 const path = require("path");
-const _Row = require(path.join(__dirname, "_row.js"))
+const _Row = require(path.join(__dirname, "_row.js"));
+
+//https://www.w3docs.com/snippets/javascript/how-to-check-if-a-value-is-an-object-in-javascript.html
+function isObject(objValue) {
+    return objValue && typeof objValue === 'object' && objValue.constructor === Object;
+}
 
 class SpotifyPreferencesUtils extends _Row {
     constructor(database) {
@@ -14,7 +19,40 @@ class SpotifyPreferencesUtils extends _Row {
      * @param images
      */
     update_preference(preference_id, type, name, images) {
-        this.databaseWrapper.run_query(`UPDATE ${this.table_name} SET (type, name, images)=(?, ?, ?) WHERE preference_id = ?`, [type, name, images, preference_id]);
+        if (!isObject(images)) {
+            throw new TypeError("images is not a dictionary");
+        }
+        this.databaseWrapper.run_query(`UPDATE ${this.table_name} SET (type, name, images)=(?, ?, ?) WHERE preference_id = ?`, [type, name, JSON.stringify(images), preference_id]);
+    }
+
+    /**
+     *
+     * @param preference_id
+     * @param type
+     */
+    update_type(preference_id, type) {
+        this.databaseWrapper.run_query(`UPDATE ${this.table_name} SET type=? WHERE preference_id = ?`, [type, preference_id]);
+    }
+
+    /**
+     *
+     * @param preference_id
+     * @param name
+     */
+    update_name(preference_id, name) {
+        this.databaseWrapper.run_query(`UPDATE ${this.table_name} SET name=? WHERE preference_id = ?`, [name, preference_id]);
+    }
+
+    /**
+     *
+     * @param preference_id
+     * @param images
+     */
+    update_images(preference_id, images) {
+        if (!isObject(images)) {
+            throw new TypeError("images is not a dictionary");
+        }
+        this.databaseWrapper.run_query(`UPDATE ${this.table_name} SET images=? WHERE preference_id = ?`, [JSON.stringify(images), preference_id]);
     }
 
     /**
@@ -23,7 +61,11 @@ class SpotifyPreferencesUtils extends _Row {
      * @returns {JSON} {preference_id, type, name, images}
      */
     get_preference(preference_id) {
-        return this.getRowByPrimaryKey(preference_id);
+        let res = this.getRowByPrimaryKey(preference_id);
+        if (res !== undefined && "images" in res) {
+            res.images = JSON.parse(res.images);
+        }
+        return res;
     }
 
     /**
@@ -48,6 +90,9 @@ class SpotifyPreferencesUtils extends _Row {
             return [];
         }
         else {
+            for (let i=0; i<rows.length; i++) {
+                rows[i].images = JSON.parse(rows[i].images);
+            }
             return rows;
         }
     }
