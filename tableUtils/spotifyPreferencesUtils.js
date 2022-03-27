@@ -19,8 +19,8 @@ class SpotifyPreferencesUtils extends _Row {
      * @param images
      */
     update_preference(preference_id, type, name, images) {
-        if (!isObject(images)) {
-            throw new TypeError("images is not a dictionary");
+        if (!Array.isArray(images)) {
+            throw new TypeError("images is not an array!");
         }
         this.databaseWrapper.run_query(`UPDATE ${this.table_name} SET (type, name, images)=(?, ?, ?) WHERE preference_id = ?`, [type, name, JSON.stringify(images), preference_id]);
     }
@@ -49,8 +49,8 @@ class SpotifyPreferencesUtils extends _Row {
      * @param images
      */
     update_images(preference_id, images) {
-        if (!isObject(images)) {
-            throw new TypeError("images is not a dictionary");
+        if (!Array.isArray(images)) {
+            throw new TypeError("images is not an array!");
         }
         this.databaseWrapper.run_query(`UPDATE ${this.table_name} SET images=? WHERE preference_id = ?`, [JSON.stringify(images), preference_id]);
     }

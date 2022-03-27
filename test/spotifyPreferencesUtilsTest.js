@@ -32,7 +32,7 @@ describe(__filename, function () {
             let pref = spotifyPreferencesUtils.get_preference("sabrina eats cake");
             assert.strictEqual(pref.preference_id, "sabrina eats cake");
             assert.strictEqual(pref.type, null);
-            assert.strictEqual(JSON.stringify(pref.images), JSON.stringify({}));
+            assert.strictEqual(JSON.stringify(pref.images), JSON.stringify([]));
             assert.strictEqual(pref.name, null);
         });
     });
@@ -43,18 +43,18 @@ describe(__filename, function () {
             let pref = spotifyPreferencesUtils.get_preference("dinner with paul allen");
             assert.strictEqual(pref.preference_id, "dinner with paul allen");
             assert.strictEqual(pref.type, null);
-            assert.strictEqual(JSON.stringify(pref.images), JSON.stringify({}));
+            assert.strictEqual(JSON.stringify(pref.images), JSON.stringify([]));
             assert.strictEqual(pref.name, null);
         });
     });
 
     describe("", function () {
         it("update sabrina eats cake name", function () {
-            spotifyPreferencesUtils.update_preference("sabrina eats cake", "prn", "sabrina loves cake", {"image": "i"});
+            spotifyPreferencesUtils.update_preference("sabrina eats cake", "prn", "sabrina loves cake", [{"image": "i"}]);
             let pref = spotifyPreferencesUtils.get_preference("sabrina eats cake");
             assert.strictEqual(pref.preference_id, "sabrina eats cake");
             assert.strictEqual(pref.type, "prn");
-            assert.strictEqual(JSON.stringify(pref.images), JSON.stringify({"image": "i"}));
+            assert.strictEqual(JSON.stringify(pref.images), JSON.stringify([{"image": "i"}]));
             assert.strictEqual(pref.name, "sabrina loves cake");
         });
     });
@@ -67,14 +67,14 @@ describe(__filename, function () {
                 "sabrina eats cake": {
                     type: "prn",
                     name: "sabrina loves cake",
-                    images: {
+                    images: [{
                         "image": "i",
-                    }
+                    }]
                 },
                 "hip to be square": {
                     type: null,
                     name: null,
-                    images: {},
+                    images: [],
                 }
             }
 
@@ -95,17 +95,17 @@ describe(__filename, function () {
         it("update_images test", function () {
             let error_occured = false;
             try {
-                spotifyPreferencesUtils.update_images("sabrina eats cake", '{}');
+                spotifyPreferencesUtils.update_images("sabrina eats cake", '[{}]');
             } catch (e) {
                 error_occured = true;
             }
             assert.ok(error_occured);
 
-            spotifyPreferencesUtils.update_images("sabrina eats cake", {"i succ": "zucc"});
+            spotifyPreferencesUtils.update_images("sabrina eats cake", [{"i succ": "zucc"}]);
             let pref = spotifyPreferencesUtils.get_preference("sabrina eats cake");
             assert.strictEqual(pref.preference_id, "sabrina eats cake");
             assert.strictEqual(pref.type, "prn");
-            assert.strictEqual(JSON.stringify(pref.images), JSON.stringify({"i succ": "zucc"}));
+            assert.strictEqual(JSON.stringify(pref.images), JSON.stringify([{"i succ": "zucc"}]));
             assert.strictEqual(pref.name, "sabrina loves cake");
         });
     });
@@ -117,7 +117,7 @@ describe(__filename, function () {
             let pref = spotifyPreferencesUtils.get_preference("sabrina eats cake");
             assert.strictEqual(pref.preference_id, "sabrina eats cake");
             assert.strictEqual(pref.type, "prn");
-            assert.strictEqual(JSON.stringify(pref.images), JSON.stringify({"i succ": "zucc"}));
+            assert.strictEqual(JSON.stringify(pref.images), JSON.stringify([{"i succ": "zucc"}]));
             assert.strictEqual(pref.name, "chunky chocolate cake");
         });
     });
@@ -129,7 +129,7 @@ describe(__filename, function () {
             let pref = spotifyPreferencesUtils.get_preference("sabrina eats cake");
             assert.strictEqual(pref.preference_id, "sabrina eats cake");
             assert.strictEqual(pref.type, "extra chunky");
-            assert.strictEqual(JSON.stringify(pref.images), JSON.stringify({"i succ": "zucc"}));
+            assert.strictEqual(JSON.stringify(pref.images), JSON.stringify([{"i succ": "zucc"}]));
             assert.strictEqual(pref.name, "chunky chocolate cake");
         });
     });
