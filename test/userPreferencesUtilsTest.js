@@ -18,10 +18,9 @@ describe(__filename, function () {
 
     describe("", function () {
         it("test addPreference and getPreference", function () {
-            userPreferencesUtils.addPreference(1, "ptype1", "pid1", 10);
+            userPreferencesUtils.addPreference(1,  "pid1", 10);
             let pref = userPreferencesUtils.getPreference(1,  "pid1");
             assert.strictEqual(pref.user_id, 1);
-            assert.strictEqual(pref.preference_type, "ptype1");
             assert.strictEqual(pref.preference_identifier, "pid1");
             assert.strictEqual(pref.preference_weight, 10);
         });
@@ -31,7 +30,7 @@ describe(__filename, function () {
         it("fail to add same preference with same type and id again for the same user", function () {
             let error_occured = false;
             try {
-                userPreferencesUtils.addPreference(1, "ptype1", "pid1", 31);
+                userPreferencesUtils.addPreference(1, "pid1", 31);
             } catch (e) {
                 assert.strictEqual(e.code, "SQLITE_CONSTRAINT_TRIGGER");
                 error_occured = true;
@@ -44,7 +43,7 @@ describe(__filename, function () {
         it("can add user with the same id same preference type but different preference id", function () {
             let error_occured = false;
             try {
-                userPreferencesUtils.addPreference(1, "ptype1", "pid2", 31);
+                userPreferencesUtils.addPreference(1, "pid2", 31);
             } catch (e) {
                 assert.strictEqual(e.code, "SQLITE_CONSTRAINT_TRIGGER");
                 error_occured = true;
@@ -57,7 +56,7 @@ describe(__filename, function () {
         it("fail to add user with the same id same preference id but different preference type", function () {
             let error_occured = false;
             try {
-                userPreferencesUtils.addPreference(1, "ptype2", "pid1", 31);
+                userPreferencesUtils.addPreference(1,  "pid1", 31);
             } catch (e) {
                 assert.strictEqual(e.code, "SQLITE_CONSTRAINT_TRIGGER");
                 error_occured = true;
@@ -70,7 +69,7 @@ describe(__filename, function () {
         it("add same preference with same type and id again for different user", function () {
             let error_occured = false;
             try {
-                userPreferencesUtils.addPreference(2, "ptype1", "pid1", 31);
+                userPreferencesUtils.addPreference(2, "pid1", 31);
             } catch (e) {
                 assert.strictEqual(e.code, "SQLITE_CONSTRAINT_TRIGGER");
                 error_occured = true;
@@ -84,7 +83,6 @@ describe(__filename, function () {
             userPreferencesUtils.updatePreferenceWeight(1, "pid1", 31);
             let pref = userPreferencesUtils.getPreference(1,  "pid1");
             assert.strictEqual(pref.user_id, 1);
-            assert.strictEqual(pref.preference_type, "ptype1");
             assert.strictEqual(pref.preference_identifier, "pid1");
             assert.strictEqual(pref.preference_weight, 31);
         });

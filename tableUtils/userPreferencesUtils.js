@@ -14,14 +14,13 @@ class UserPreferencesUtils extends _Row {
      * add new preference to the database
      *
      * @param user_id
-     * @param preference_type
      * @param preference_identifier
      * @param preference_weight
      */
-    addPreference(user_id, preference_type, preference_identifier, preference_weight) {
+    addPreference(user_id, preference_identifier, preference_weight) {
         this.databaseWrapper.run_query(`INSERT INTO ${this.table_name} 
-    (user_id, preference_type, preference_identifier, preference_weight) VALUES(?,?,?,?)`,
-            [user_id, preference_type, preference_identifier, preference_weight]);
+    (user_id, preference_identifier, preference_weight) VALUES(?,?,?)`,
+            [user_id, preference_identifier, preference_weight]);
     }
 
     /**
