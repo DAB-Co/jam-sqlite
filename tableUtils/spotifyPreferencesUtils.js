@@ -1,11 +1,6 @@
 const path = require("path");
 const _Row = require(path.join(__dirname, "_row.js"));
 
-//https://www.w3docs.com/snippets/javascript/how-to-check-if-a-value-is-an-object-in-javascript.html
-function isObject(objValue) {
-    return objValue && typeof objValue === 'object' && objValue.constructor === Object;
-}
-
 class SpotifyPreferencesUtils extends _Row {
     constructor(database) {
         super("spotify_preferences", database, "preference_id");
@@ -20,7 +15,7 @@ class SpotifyPreferencesUtils extends _Row {
      */
     update_preference(preference_id, type, name, images) {
         if (!Array.isArray(images)) {
-            throw new TypeError("images is not an array!");
+            throw new TypeError("images is not an array");
         }
         this.databaseWrapper.run_query(`UPDATE ${this.table_name} SET (type, name, images)=(?, ?, ?) WHERE preference_id = ?`, [type, name, JSON.stringify(images), preference_id]);
     }
@@ -50,7 +45,7 @@ class SpotifyPreferencesUtils extends _Row {
      */
     update_images(preference_id, images) {
         if (!Array.isArray(images)) {
-            throw new TypeError("images is not an array!");
+            throw new TypeError("images is not an array");
         }
         this.databaseWrapper.run_query(`UPDATE ${this.table_name} SET images=? WHERE preference_id = ?`, [JSON.stringify(images), preference_id]);
     }
