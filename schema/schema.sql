@@ -2,9 +2,9 @@ BEGIN TRANSACTION;
 CREATE TABLE IF NOT EXISTS "accounts"
 (
     "user_id"                 INTEGER NOT NULL UNIQUE,
-    "user_email"              TEXT NOT NULL UNIQUE,
-    "username"                TEXT NOT NULL UNIQUE,
-    "user_password_hash"      TEXT NOT NULL,
+    "user_email"              TEXT    NOT NULL UNIQUE,
+    "username"                TEXT    NOT NULL UNIQUE,
+    "user_password_hash"      TEXT    NOT NULL,
     "user_notification_token" TEXT,
     "user_api_token"          TEXT,
     PRIMARY KEY ("user_id" AUTOINCREMENT)
@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS "accounts"
 CREATE TABLE IF NOT EXISTS "user_friends"
 (
     "user_id" INTEGER NOT NULL UNIQUE,
-    "friends" BLOB,
+    "friends" BLOB    NOT NULL DEFAULT '{}',
     FOREIGN KEY ("user_id") REFERENCES "accounts" ("user_id"),
     PRIMARY KEY ("user_id")
 );
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS "user_languages"
 CREATE TABLE IF NOT EXISTS "user_preferences"
 (
     "user_id"               INTEGER NOT NULL,
-    "preference_identifier" TEXT NOT NULL,
+    "preference_identifier" TEXT    NOT NULL,
     "preference_weight"     INTEGER DEFAULT 0,
     FOREIGN KEY ("user_id") REFERENCES "accounts" ("user_id")
 );
@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS "user_connections"
 CREATE TABLE IF NOT EXISTS "spotify"
 (
     "user_id"       INTEGER NOT NULL UNIQUE,
-    "refresh_token" TEXT,
+    "refresh_token" TEXT DEFAULT '',
     PRIMARY KEY ("user_id"),
     FOREIGN KEY ("user_id") REFERENCES "accounts" ("user_id")
 );
@@ -50,15 +50,15 @@ CREATE TABLE IF NOT EXISTS "spotify_preferences"
     "preference_id" TEXT NOT NULL UNIQUE,
     "type"          TEXT,
     "name"          TEXT,
-    "raw_data"      BLOB,
+    "raw_data"      BLOB NOT NULL DEFAULT '{}',
     PRIMARY KEY ("preference_id")
 );
 CREATE TRIGGER after_account_insert
     AFTER INSERT
     ON accounts
 BEGIN
-    INSERT INTO user_friends (user_id, friends) VALUES (new.user_id, '{}');
-    INSERT INTO spotify(user_id, refresh_token) VALUES (new.user_id, '');
+    INSERT INTO user_friends (user_id) VALUES (new.user_id);
+    INSERT INTO spotify(user_id) VALUES (new.user_id);
 END;
 CREATE TRIGGER before_user_languages_insert
     BEFORE INSERT

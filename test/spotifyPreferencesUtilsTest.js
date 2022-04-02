@@ -21,7 +21,7 @@ describe(__filename, function () {
 
     describe("", function () {
         it("get nonexistent preference", function () {
-            let pref = spotifyPreferencesUtils.get_preference("sigma male");
+            let pref = spotifyPreferencesUtils.get_raw_preference("sigma male");
             assert.strictEqual(pref, undefined);
         });
     });
@@ -29,10 +29,10 @@ describe(__filename, function () {
     describe("", function () {
         it("add preference for user 1", function () {
             userPreferencesUtils.addPreference(1, "sabrina eats cake", 31);
-            let pref = spotifyPreferencesUtils.get_preference("sabrina eats cake");
+            let pref = spotifyPreferencesUtils.get_raw_preference("sabrina eats cake");
             assert.strictEqual(pref.preference_id, "sabrina eats cake");
             assert.strictEqual(pref.type, null);
-            assert.strictEqual(pref.raw_data, null);
+            assert.strictEqual(pref.raw_data, '{}');
             assert.strictEqual(pref.name, null);
         });
     });
@@ -40,18 +40,18 @@ describe(__filename, function () {
     describe("", function () {
         it("add preference for user 2", function () {
             userPreferencesUtils.addPreference(2, "dinner with paul allen", 69);
-            let pref = spotifyPreferencesUtils.get_preference("dinner with paul allen");
+            let pref = spotifyPreferencesUtils.get_raw_preference("dinner with paul allen");
             assert.strictEqual(pref.preference_id, "dinner with paul allen");
             assert.strictEqual(pref.type, null);
-            assert.strictEqual(pref.raw_data, null);
+            assert.strictEqual(pref.raw_data, '{}');
             assert.strictEqual(pref.name, null);
         });
     });
 
     describe("", function () {
         it("update sabrina eats cake name", function () {
-            spotifyPreferencesUtils.update_preference("sabrina eats cake", "prn", "sabrina loves cake", JSON.stringify({"image": "i"}));
-            let pref = spotifyPreferencesUtils.get_preference("sabrina eats cake");
+            spotifyPreferencesUtils.update_preference("sabrina eats cake", "prn", "sabrina loves cake", {"image": "i"});
+            let pref = spotifyPreferencesUtils.get_raw_preference("sabrina eats cake");
             assert.strictEqual(pref.preference_id, "sabrina eats cake");
             assert.strictEqual(pref.type, "prn");
             assert.strictEqual(pref.raw_data, JSON.stringify({"image": "i"}));
@@ -63,8 +63,8 @@ describe(__filename, function () {
         it("add another preference for user 1 and test get_preferences", function () {
             userPreferencesUtils.addPreference(1, "hip to be square", 13);
             userPreferencesUtils.addPreference(1, "that yale thing", 31);
-            spotifyPreferencesUtils.update_preference("hip to be square", "type", "name", JSON.stringify({anan: 31}));
-            let prefs = spotifyPreferencesUtils.get_preferences(userPreferencesUtils.getUserPreferences(1));
+            spotifyPreferencesUtils.update_preference("hip to be square", "type", "name", {anan: 31});
+            let prefs = spotifyPreferencesUtils.get_raw_preferences(userPreferencesUtils.getUserPreferences(1));
             let assumed_prefs = {
                 "sabrina eats cake": {
                     type: "prn",
@@ -81,7 +81,7 @@ describe(__filename, function () {
                 "that yale thing": {
                     type: null,
                     name: null,
-                    raw_data: null
+                    raw_data: {}
                 }
             }
 
@@ -93,19 +93,15 @@ describe(__filename, function () {
                 let raw_data = prefs[i].raw_data;
                 assert.strictEqual(name, assumed_prefs[id].name);
                 assert.strictEqual(type, assumed_prefs[id].type);
-                if (raw_data !== null) {
-                    assert.strictEqual(raw_data, JSON.stringify(assumed_prefs[id].raw_data));
-                } else {
-                    assert.strictEqual(raw_data, assumed_prefs[id].raw_data);
-                }
+                assert.strictEqual(raw_data, JSON.stringify(assumed_prefs[id].raw_data));
             }
         });
     });
 
     describe("", function () {
         it("update_raw_data test", function () {
-            spotifyPreferencesUtils.update_raw_data("sabrina eats cake", JSON.stringify({"i succ": "zucc"}));
-            let pref = spotifyPreferencesUtils.get_preference("sabrina eats cake");
+            spotifyPreferencesUtils.update_data("sabrina eats cake", {"i succ": "zucc"});
+            let pref = spotifyPreferencesUtils.get_raw_preference("sabrina eats cake");
             assert.strictEqual(pref.preference_id, "sabrina eats cake");
             assert.strictEqual(pref.type, "prn");
             assert.strictEqual(pref.raw_data, JSON.stringify({"i succ": "zucc"}));
@@ -117,7 +113,7 @@ describe(__filename, function () {
         it("update name test", function () {
             spotifyPreferencesUtils.update_name("sabrina eats cake", "chunky chocolate cake");
 
-            let pref = spotifyPreferencesUtils.get_preference("sabrina eats cake");
+            let pref = spotifyPreferencesUtils.get_raw_preference("sabrina eats cake");
             assert.strictEqual(pref.preference_id, "sabrina eats cake");
             assert.strictEqual(pref.type, "prn");
             assert.strictEqual(pref.raw_data, JSON.stringify({"i succ": "zucc"}));
@@ -129,7 +125,7 @@ describe(__filename, function () {
         it("update type test", function () {
             spotifyPreferencesUtils.update_type("sabrina eats cake", "extra chunky");
 
-            let pref = spotifyPreferencesUtils.get_preference("sabrina eats cake");
+            let pref = spotifyPreferencesUtils.get_raw_preference("sabrina eats cake");
             assert.strictEqual(pref.preference_id, "sabrina eats cake");
             assert.strictEqual(pref.type, "extra chunky");
             assert.strictEqual(pref.raw_data, JSON.stringify({"i succ": "zucc"}));
