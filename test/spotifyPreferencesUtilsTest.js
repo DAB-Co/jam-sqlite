@@ -63,6 +63,15 @@ describe(__filename, function () {
         it("add another preference for user 1 and test get_preferences", function () {
             userPreferencesUtils.addPreference(1, "hip to be square", 13);
             userPreferencesUtils.addPreference(1, "that yale thing", 31);
+
+            let error_occured = false;
+            try {
+                spotifyPreferencesUtils.update_preference("that yale thing", 'type', "name", '{}');
+            } catch (e) {
+                error_occured = true;
+            }
+            assert.ok(error_occured);
+
             spotifyPreferencesUtils.update_preference("hip to be square", "type", "name", {anan: 31});
             let prefs = spotifyPreferencesUtils.get_raw_preferences(userPreferencesUtils.getUserPreferences(1));
             let assumed_prefs = {
@@ -100,6 +109,14 @@ describe(__filename, function () {
 
     describe("", function () {
         it("update_raw_data test", function () {
+            let error_occured = false;
+            try {
+                spotifyPreferencesUtils.update_data("sabrina eats cake", '{}');
+            } catch (e) {
+                error_occured = true;
+            }
+            assert.ok(error_occured);
+
             spotifyPreferencesUtils.update_data("sabrina eats cake", {"i succ": "zucc"});
             let pref = spotifyPreferencesUtils.get_raw_preference("sabrina eats cake");
             assert.strictEqual(pref.preference_id, "sabrina eats cake");
