@@ -31,7 +31,7 @@ describe(__filename, function() {
 
     describe("", function() {
         it("no refresh token for user 2", function () {
-            assert.strictEqual(spotifyUtils.getRefreshToken(2), '');
+            assert.strictEqual(spotifyUtils.getRefreshToken(2), null);
         });
     });
 
