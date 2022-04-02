@@ -18,7 +18,7 @@ DROP TABLE IF EXISTS "user_preferences";
 CREATE TABLE IF NOT EXISTS "user_preferences"
 (
     "user_id"               INTEGER NOT NULL,
-    "preference_identifier" TEXT,
+    "preference_identifier" TEXT NOT NULL,
     "preference_weight"     INTEGER DEFAULT 0,
     FOREIGN KEY ("user_id") REFERENCES "accounts" ("user_id")
 );
@@ -43,19 +43,19 @@ CREATE TABLE IF NOT EXISTS "spotify"
 DROP TABLE IF EXISTS "spotify_preferences";
 CREATE TABLE IF NOT EXISTS "spotify_preferences"
 (
-    "preference_id" TEXT,
+    "preference_id" TEXT NOT NULL UNIQUE,
     "type"          TEXT,
     "name"          TEXT,
-    "images"        BLOB,
+    "raw_data"      BLOB,
     PRIMARY KEY ("preference_id")
 );
 DROP TABLE IF EXISTS "accounts";
 CREATE TABLE IF NOT EXISTS "accounts"
 (
     "user_id"                 INTEGER NOT NULL UNIQUE,
-    "user_email"              TEXT UNIQUE,
-    "username"                TEXT UNIQUE,
-    "user_password_hash"      TEXT,
+    "user_email"              TEXT NOT NULL UNIQUE,
+    "username"                TEXT NOT NULL UNIQUE,
+    "user_password_hash"      TEXT NOT NULL,
     "user_notification_token" TEXT,
     "user_api_token"          TEXT,
     PRIMARY KEY ("user_id" AUTOINCREMENT)
@@ -102,7 +102,7 @@ CREATE TRIGGER after_user_preferences_insert
                     FROM spotify_preferences
                     WHERE preference_id = new.preference_identifier)
 BEGIN
-    INSERT INTO spotify_preferences(preference_id, images) VALUES (new.preference_identifier, '[]');
+    INSERT INTO spotify_preferences(preference_id) VALUES (new.preference_identifier);
 END;
 DROP TRIGGER IF EXISTS "before_user_connections_insert";
 CREATE TRIGGER before_user_connections_insert

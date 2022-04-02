@@ -11,13 +11,10 @@ class SpotifyPreferencesUtils extends _Row {
      * @param preference_id
      * @param type
      * @param name
-     * @param images
+     * @param raw_data
      */
-    update_preference(preference_id, type, name, images) {
-        if (!Array.isArray(images)) {
-            throw new TypeError("images is not an array");
-        }
-        this.databaseWrapper.run_query(`UPDATE ${this.table_name} SET (type, name, images)=(?, ?, ?) WHERE preference_id = ?`, [type, name, JSON.stringify(images), preference_id]);
+    update_preference(preference_id, type, name, raw_data) {
+        this.databaseWrapper.run_query(`UPDATE ${this.table_name} SET (type, name, raw_data)=(?, ?, ?) WHERE preference_id = ?`, [type, name, raw_data, preference_id]);
     }
 
     /**
@@ -41,32 +38,25 @@ class SpotifyPreferencesUtils extends _Row {
     /**
      *
      * @param preference_id
-     * @param images
+     * @param raw_data
      */
-    update_images(preference_id, images) {
-        if (!Array.isArray(images)) {
-            throw new TypeError("images is not an array");
-        }
-        this.databaseWrapper.run_query(`UPDATE ${this.table_name} SET images=? WHERE preference_id = ?`, [JSON.stringify(images), preference_id]);
+    update_raw_data(preference_id, raw_data) {
+        this.databaseWrapper.run_query(`UPDATE ${this.table_name} SET raw_data=? WHERE preference_id = ?`, [raw_data, preference_id]);
     }
 
     /**
      *
      * @param preference_id
-     * @returns {JSON} {preference_id, type, name, images}
+     * @returns {JSON} {preference_id, type, name, raw_data}
      */
     get_preference(preference_id) {
-        let res = this.getRowByPrimaryKey(preference_id);
-        if (res !== undefined && "images" in res) {
-            res.images = JSON.parse(res.images);
-        }
-        return res;
+        return this.getRowByPrimaryKey(preference_id);
     }
 
     /**
      *
      * @param preference_ids
-     * @returns {JSON[]} [{preference_id, type, name, images]
+     * @returns {JSON[]} [{preference_id, type, name, raw_data]
      */
     get_preferences(preference_ids) {
         if (!Array.isArray(preference_ids) || preference_ids.length === 0) {
@@ -85,9 +75,6 @@ class SpotifyPreferencesUtils extends _Row {
             return [];
         }
         else {
-            for (let i=0; i<rows.length; i++) {
-                rows[i].images = JSON.parse(rows[i].images);
-            }
             return rows;
         }
     }
