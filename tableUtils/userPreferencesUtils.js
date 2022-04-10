@@ -30,7 +30,6 @@ class UserPreferencesUtils extends _Row {
      * @param preference_identifier
      * @returns {json | undefined} {
         "user_id",
-        "preference_type",
         "preference_identifier",
         "preference_weight",}
      */
@@ -86,9 +85,29 @@ class UserPreferencesUtils extends _Row {
     /**
      *
      * @param user_id
-     * @returns {string[]} preference identifiers
+     * @returns {JSON[]} [{preference_identifier, preference_weight}, ...]
      */
     getUserPreferences(user_id) {
+        if (user_id === undefined) {
+            return [];
+        }
+
+        let res = this.databaseWrapper.get_all(`SELECT preference_identifier, preference_weight FROM ${this.table_name} WHERE user_id=?`, user_id);
+
+        if (res === undefined || res.length === 0) {
+            return [];
+        }
+        else {
+            return res;
+        }
+    }
+
+    /**
+     *
+     * @param user_id
+     * @returns {string[]} preference identifiers
+     */
+    getUserPreferenceIds(user_id) {
         if (user_id === undefined) {
             return [];
         }
@@ -106,7 +125,6 @@ class UserPreferencesUtils extends _Row {
             return ret_val;
         }
     }
-
 }
 
 module.exports = UserPreferencesUtils;
