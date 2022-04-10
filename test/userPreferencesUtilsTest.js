@@ -18,8 +18,8 @@ describe(__filename, function () {
 
     describe("", function () {
         it("test addPreference and getPreference", function () {
-            userPreferencesUtils.addPreference(1,  "pid1", 10);
-            let pref = userPreferencesUtils.getPreference(1,  "pid1");
+            userPreferencesUtils.addPreference(1, "pid1", 10);
+            let pref = userPreferencesUtils.getPreference(1, "pid1");
             assert.strictEqual(pref.user_id, 1);
             assert.strictEqual(pref.preference_identifier, "pid1");
             assert.strictEqual(pref.preference_weight, 10);
@@ -56,7 +56,7 @@ describe(__filename, function () {
         it("fail to add user with the same id same preference id but different preference type", function () {
             let error_occured = false;
             try {
-                userPreferencesUtils.addPreference(1,  "pid1", 31);
+                userPreferencesUtils.addPreference(1, "pid1", 31);
             } catch (e) {
                 assert.strictEqual(e.code, "SQLITE_CONSTRAINT_TRIGGER");
                 error_occured = true;
@@ -81,7 +81,7 @@ describe(__filename, function () {
     describe("", function () {
         it("test updatePreferenceWeight", function () {
             userPreferencesUtils.updatePreferenceWeight(1, "pid1", 31);
-            let pref = userPreferencesUtils.getPreference(1,  "pid1");
+            let pref = userPreferencesUtils.getPreference(1, "pid1");
             assert.strictEqual(pref.user_id, 1);
             assert.strictEqual(pref.preference_identifier, "pid1");
             assert.strictEqual(pref.preference_weight, 31);
@@ -91,14 +91,14 @@ describe(__filename, function () {
     describe("", function () {
         it("test removing preference", function () {
             userPreferencesUtils.removePreference(1, "pid2");
-            assert.strictEqual(userPreferencesUtils.getPreference(1,  "pid2"), undefined);
+            assert.strictEqual(userPreferencesUtils.getPreference(1, "pid2"), undefined);
         });
     });
 
     describe("", function () {
-       it("test removing preference from nonexistent user", function () {
-           userPreferencesUtils.removePreference(23,  "pid2");
-       });
+        it("test removing preference from nonexistent user", function () {
+            userPreferencesUtils.removePreference(23, "pid2");
+        });
     });
 
     describe("", function () {
@@ -108,26 +108,39 @@ describe(__filename, function () {
     });
 
     describe("", function () {
-       it("test removing nonexistent preference from nonexistent user", function () {
-           // not sure if this is too different from the test 2 above it...
-           userPreferencesUtils.removePreference(1234, "pid318470");
-       });
+        it("test removing nonexistent preference from nonexistent user", function () {
+            // not sure if this is too different from the test 2 above it...
+            userPreferencesUtils.removePreference(1234, "pid318470");
+        });
     });
 
     describe("", function () {
-        it("test getUserPreferences", function () {
-           let pref1 = userPreferencesUtils.getUserPreferences(1);
-           assert.strictEqual(pref1.length, 1);
-           assert.strictEqual(pref1[0], "pid1");
-            let pref2 = userPreferencesUtils.getUserPreferences(1);
+        it("test getUserPreferenceIds", function () {
+            let pref1 = userPreferencesUtils.getUserPreferenceIds(1);
+            assert.strictEqual(pref1.length, 1);
+            assert.strictEqual(pref1[0], "pid1");
+            let pref2 = userPreferencesUtils.getUserPreferenceIds(1);
             assert.strictEqual(pref2.length, 1);
             assert.strictEqual(pref2[0], "pid1");
         });
     });
 
     describe("", function () {
+        it("test getUserPreferences", function () {
+            let pref1 = userPreferencesUtils.getUserPreferences(1);
+            assert.strictEqual(pref1.length, 1);
+            assert.strictEqual(pref1[0].preference_identifier, "pid1");
+            assert.strictEqual(pref1[0].preference_weight, 31);
+            let pref2 = userPreferencesUtils.getUserPreferences(1);
+            assert.strictEqual(pref2.length, 1);
+            assert.strictEqual(pref2[0].preference_identifier, "pid1");
+            assert.strictEqual(pref2[0].preference_weight, 31);
+        });
+    });
+
+    describe("", function () {
         it("test getCommonUserIds", function () {
-            let res = userPreferencesUtils.getCommonUserIds( "pid1");
+            let res = userPreferencesUtils.getCommonUserIds("pid1");
             let valids = {
                 1: true,
                 2: true,
@@ -138,6 +151,4 @@ describe(__filename, function () {
             }
         });
     });
-
-
 });
