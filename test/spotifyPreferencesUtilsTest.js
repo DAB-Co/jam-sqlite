@@ -73,7 +73,7 @@ describe(__filename, function () {
             assert.ok(error_occured);
 
             spotifyPreferencesUtils.update_preference("hip to be square", "type", "name", {anan: 31});
-            let prefs = spotifyPreferencesUtils.get_raw_preferences(userPreferencesUtils.getUserPreferences(1));
+            let prefs = spotifyPreferencesUtils.get_raw_preferences(userPreferencesUtils.getUserPreferenceIds(1));
             let assumed_prefs = {
                 "sabrina eats cake": {
                     type: "prn",
