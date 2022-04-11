@@ -151,4 +151,37 @@ describe(__filename, function () {
             }
         });
     });
+
+    describe("", function() {
+       it("test getCommonUsers", function() {
+           let res = userPreferencesUtils.getCommonUsers("pid1");
+           let valids = {
+               1: 31,
+               2: 31,
+           }
+           assert.strictEqual(res.length, 2);
+           for (let i = 0; i < res.length; i++) {
+               assert.ok(res[i].user_id in valids);
+               assert.strictEqual(res[i].preference_weight, valids[res[i].user_id]);
+           }
+       });
+    });
+
+    describe("", function() {
+       it("test getCommonPreferences", function() {
+           userPreferencesUtils.addPreference(3, "pid2", 69);
+           userPreferencesUtils.addPreference(2, "pid2", 61);
+           userPreferencesUtils.updatePreferenceWeight(2, "pid1", 32);
+           let res = userPreferencesUtils.getAllCommonPreferences();
+           let valids = {
+               pid1: [[ '1', 31], ['2', 32 ]],
+               pid2: [['3', 69 ], ['2', 61]]
+           };
+           assert.strictEqual(Object.keys(res).length, 2);
+           for (let p in res) {
+               assert.ok(p in valids);
+               assert.strictEqual(JSON.stringify(res[p]), JSON.stringify(valids[p]));
+           }
+       });
+    });
 });
