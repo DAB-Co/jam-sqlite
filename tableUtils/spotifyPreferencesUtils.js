@@ -98,6 +98,14 @@ class SpotifyPreferencesUtils extends _Row {
             return rows;
         }
     }
+
+    /**
+     * 
+     * @param preference_id 
+     */
+    delete_Preference(preference_id) {
+        databaseWrapper.run_query(`DELETE FROM ${this.table_name} WHERE ${this.primary_key} = ?`,[preference_id])
+    }
 }
 
 module.exports = SpotifyPreferencesUtils;

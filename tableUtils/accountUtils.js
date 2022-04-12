@@ -158,6 +158,14 @@ class AccountUtils extends _Row {
                                         SET (user_api_token, user_notification_token)= (?, ?)
                                         WHERE ${this.primary_key} = ?`, ["", "", id]);
     }
+
+    /**
+     * 
+     * @param user_id 
+     */
+    deleteUser(user_id) {
+        databaseWrapper.run_query(`DELETE FROM ${this.table_name} WHERE ${this.primary_key} = ?`,[user_id])
+    }
 }
 
 module.exports = AccountUtils;
