@@ -125,6 +125,10 @@ class UserPreferencesUtils extends _Row {
             return ret_val;
         }
     }
+
+    deleteUserPreference(user_id) {
+        this.databaseWrapper.run_query(`DELETE FROM ${this.table_name} WHERE user_id=?`,user_id)
+    }
 }
 
 module.exports = UserPreferencesUtils;

@@ -23,6 +23,14 @@ class SpotifyUtils extends _Row{
     getRefreshToken(user_id) {
         return this.getColumnByPrimaryKey(user_id, "refresh_token");
     }
+
+    /**
+     * 
+     * @param user_id 
+     */
+    deleteRefreshToken(user_id) {
+        this.databaseWrapper.run_query(`DELETE FROM ${this.table_name} WHERE ${this.primary_key} = ?`,[user_id])
+    }
 }
 
 module.exports = SpotifyUtils;

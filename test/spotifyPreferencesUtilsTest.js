@@ -151,7 +151,7 @@ describe(__filename, function () {
     });
     describe("", function () {
         it("delete preference test", function () {
-            spotifyPreferencesUtils.delete_Preference("sabrina eats cake");
+            spotifyPreferencesUtils.deletePreference("sabrina eats cake");
 
             let pref = spotifyPreferencesUtils.get_raw_preference("sabrina eats cake");
             assert.strictEqual(pref,undefined);

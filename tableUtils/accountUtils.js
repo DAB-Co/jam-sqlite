@@ -164,7 +164,7 @@ class AccountUtils extends _Row {
      * @param user_id 
      */
     deleteUser(user_id) {
-        databaseWrapper.run_query(`DELETE FROM ${this.table_name} WHERE ${this.primary_key} = ?`,[user_id])
+        this.databaseWrapper.run_query(`DELETE FROM ${this.table_name} WHERE ${this.primary_key} = ?`,[user_id])
     }
 }
 
