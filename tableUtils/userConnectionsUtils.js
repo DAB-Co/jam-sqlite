@@ -127,7 +127,7 @@ class UserConnectionsUtils extends _Row {
      * @param user_id 
      */
     deleteMatched(user_id) {
-        this.databaseWrapper.run_query(`DELETE FROM ${this.table_name} WHERE user1_id=? OR user2_id=?`, [user_id])
+        this.databaseWrapper.run_query(`DELETE FROM ${this.table_name} WHERE user1_id=? OR user2_id=?`, [user_id,user_id])
     }
 }
 

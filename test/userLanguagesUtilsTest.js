@@ -101,5 +101,12 @@ describe(__filename, function() {
             let can_speak = userLanguagesUtils.getUserCanSpeakWith(1);
             assert.ok(can_speak.indexOf(1) === -1 && can_speak.indexOf(2) !== -1 && can_speak.indexOf(3) !== -1);
         });
-    })
+    });
+    describe("", function () {
+        it("delete user language", function () {
+            userLanguagesUtils.deleteUserLanguage(1);
+            let pref = userLanguagesUtils.getUserLanguages(1);
+            assert.strictEqual(pref.length,0);
+        });
+    });
 });

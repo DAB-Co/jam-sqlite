@@ -156,7 +156,7 @@ describe(__filename, function () {
         it("delete user preference test", function () {
             userPreferencesUtils.deleteUserPreference(1);
             let pref = userPreferencesUtils.getUserPreferenceIds(1);
-            assert.strictEqual(pref,undefined);
+            assert.strictEqual(pref.length,0);
         });
     });
 });
