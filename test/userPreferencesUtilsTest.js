@@ -178,7 +178,7 @@ describe(__filename, function () {
                pid2: [['3', 69 ], ['2', 61]]
            };
            assert.strictEqual(Object.keys(res).length, 2);
-           for (let p in res) {
+           for (let [p, val] of res) {
                assert.ok(p in valids);
                assert.strictEqual(JSON.stringify(res[p]), JSON.stringify(valids[p]));
            }
