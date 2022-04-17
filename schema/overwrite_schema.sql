@@ -22,6 +22,14 @@ CREATE TABLE IF NOT EXISTS "user_preferences"
     "preference_weight"     INTEGER DEFAULT 0,
     FOREIGN KEY ("user_id") REFERENCES "accounts" ("user_id")
 );
+DROP TABLE IF EXISTS "matches_snapshot";
+CREATE TABLE IF NOT EXISTS "matches_snapshot"
+(
+    "snapshot_id" INTEGER NOT NULL UNIQUE,
+    Timestamp     DATETIME,
+    "snapshot"    BLOB,
+    PRIMARY KEY ("snapshot_id" AUTOINCREMENT)
+);
 DROP TABLE IF EXISTS "spotify";
 CREATE TABLE IF NOT EXISTS "spotify"
 (
@@ -93,5 +101,16 @@ CREATE TRIGGER after_user_preferences_insert
                     WHERE preference_id = new.preference_identifier)
 BEGIN
     INSERT INTO spotify_preferences(preference_id) VALUES (new.preference_identifier);
+END;
+CREATE TRIGGER insert_Timestamp_Trigger
+    AFTER INSERT ON matches_snapshot
+BEGIN
+    UPDATE matches_snapshot SET Timestamp =STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW') WHERE snapshot_id = new.snapshot_id;
+END;
+
+CREATE TRIGGER update_Timestamp_Trigger
+    AFTER UPDATE On matches_snapshot
+BEGIN
+    UPDATE matches_snapshot SET Timestamp = STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW') WHERE snapshot_id = new.snapshot_id;
 END;
 COMMIT;
