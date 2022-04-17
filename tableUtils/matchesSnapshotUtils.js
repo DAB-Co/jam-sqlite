@@ -50,3 +50,5 @@ class MatchesSnapshotUtils extends _Row {
         }
     }
 }
+
+module.exports = MatchesSnapshotUtils;
