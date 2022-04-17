@@ -1,6 +1,6 @@
 const path = require("path");
 const jam_sqlite = require(path.join(__dirname, "..", "main.js"));
-const db_path = path.join(__dirname, "..", "sqlite", "database.db")
+const db_path = path.join(__dirname, "..", "sqlite", "database.db");
 
 function create_database() {
     jam_sqlite.database_scripts.overwrite_database(db_path);
