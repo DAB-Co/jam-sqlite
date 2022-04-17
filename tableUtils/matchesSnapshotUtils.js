@@ -15,7 +15,8 @@ class MatchesSnapshotUtils extends _Row {
         if (!isObject(snapshot)) {
             throw new Error("data is not an object");
         }
-        this.databaseWrapper.run_query(`INSERT INTO ${this.table_name} (snapshot) VALUES(?)`, [JSON.stringify(snapshot)]);
+        let s = JSON.stringify(snapshot, (key, value) => (value instanceof Map || value instanceof Set ? [...value] : value));
+        this.databaseWrapper.run_query(`INSERT INTO ${this.table_name} (snapshot) VALUES(?)`, [JSON.stringify(s)]);
     }
 
     /**
@@ -31,7 +32,7 @@ class MatchesSnapshotUtils extends _Row {
             return undefined;
         }
         else {
-            return JSON.parse(res);
+            return JSON.parse(res, (key, value) => (value instanceof Map || value instanceof Set ? [...value] : value));
         }
     }
 
