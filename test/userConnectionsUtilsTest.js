@@ -120,5 +120,20 @@ describe(__filename, function () {
             userConnectionsUtils.addConnection(4, 1, 41);
             assert.strictEqual(userConnectionsUtils.getWeight(1, 4), 41);
         });
-    })
+    });
+
+    describe("", function () {
+        it("get matched test", function () {
+            let pref = userConnectionsUtils.getMatched(1,4);
+            assert.strictEqual(pref,0);
+        });
+    });
+
+    describe("", function() {
+        it("delete matched test", function () {
+            userConnectionsUtils.deleteMatched(1);
+            let pref = userConnectionsUtils.getWeight(1,2);
+            assert.strictEqual(pref,undefined);
+        });
+    });
 });

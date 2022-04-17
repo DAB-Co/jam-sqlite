@@ -116,6 +116,14 @@ class UserLanguagesUtils extends _Row {
             return res;
         }
     }
+
+    /**
+     * 
+     * @param user_id 
+     */
+    deleteUserLanguage(user_id) {
+        this.databaseWrapper.run_query(`DELETE FROM ${this.table_name} WHERE user_id=?`,[user_id])
+    }
 }
 
 module.exports = UserLanguagesUtils;

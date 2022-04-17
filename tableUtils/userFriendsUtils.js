@@ -92,6 +92,14 @@ class UserFriendsUtils extends _Row {
             return JSON.parse(res);
         }
     }
+
+    /**
+     * 
+     * @param user_id 
+     */
+    deleteFriend(user_id) {
+        this.databaseWrapper.run_query(`DELETE FROM ${this.table_name} WHERE ${this.primary_key} = ?`,[user_id])
+    }
 }
 
 module.exports = UserFriendsUtils;

@@ -149,4 +149,12 @@ describe(__filename, function () {
             assert.strictEqual(pref.name, "chunky chocolate cake");
         });
     });
+    describe("", function () {
+        it("delete preference test", function () {
+            spotifyPreferencesUtils.deletePreference("sabrina eats cake");
+
+            let pref = spotifyPreferencesUtils.get_raw_preference("sabrina eats cake");
+            assert.strictEqual(pref,undefined);
+    });
+    });
 });

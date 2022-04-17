@@ -105,6 +105,30 @@ class UserConnectionsUtils extends _Row {
     finalizeMatch(user1_id, user2_id) {
         this.databaseWrapper.run_query(`UPDATE ${this.table_name} SET matched=1 WHERE (user1_id=? AND user2_id=?) OR (user1_id=? AND user2_id=?)`, [user1_id, user2_id, user2_id, user1_id]);
     }
+
+    /**
+     * 
+     * @param user1_id 
+     * @param user2_id 
+     * @returns {number|undefined}
+     */
+    getMatched(user1_id,user2_id) {
+        let res = this.databaseWrapper.get(`SELECT matched FROM ${this.table_name} WHERE (user1_id=? AND user2_id=?) OR (user1_id=? AND user2_id=?)`, [user1_id, user2_id, user2_id, user1_id]);
+        if (res === undefined) {
+            return undefined;
+        }
+        else {
+            return res.matched;
+        }
+    }
+
+    /**
+     * 
+     * @param user_id 
+     */
+    deleteMatched(user_id) {
+        this.databaseWrapper.run_query(`DELETE FROM ${this.table_name} WHERE user1_id=? OR user2_id=?`, [user_id,user_id])
+    }
 }
 
 module.exports = UserConnectionsUtils;

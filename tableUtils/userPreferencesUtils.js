@@ -157,6 +157,14 @@ class UserPreferencesUtils extends _Row {
     }
 
     /**
+     *
+     * @param user_id 
+     */
+    deleteUserPreference(user_id) {
+        this.databaseWrapper.run_query(`DELETE FROM ${this.table_name} WHERE user_id=?`,user_id)
+    }
+
+    /**
      * get all common preferences
      *
      * @returns {any[] | undefined} {preference_identifier: {weights: [[user_id, preference_weight], ...], sum}, ...}
