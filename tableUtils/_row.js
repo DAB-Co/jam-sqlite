@@ -93,6 +93,23 @@ class _Row {
     updateColumnByPrimaryKey(row_id, column_id, column_data) {
         this._updateColumn(this.primary_key, row_id, column_id, column_data);
     }
+
+    /**
+     * 
+     * @param column_type 
+     * @param column_data 
+     */
+    deleteRow(column_type,column_data) {
+        this.databaseWrapper.run_query(`DELETE FROM ${this.table_name} WHERE ${column_type}=?`, [column_data]);
+    }
+
+    /**
+     * 
+     * @param column_data 
+     */
+    deleteRowByPrimaryKey(column_data) {
+        this.databaseWrapper.run_query(`DELETE FROM ${this.table_name} WHERE ${this.primary_key}=?` , [column_data]);
+    }
 }
 
 module.exports = _Row;

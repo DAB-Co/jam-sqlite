@@ -48,8 +48,17 @@ describe(__filename, function() {
     });
 
     describe("", function () {
-       it("refresh token is updated properly for user 1", function () {
-           assert.strictEqual(spotifyUtils.getRefreshToken(1), "updated_token");
-       });
+        it("refresh token is updated properly for user 1", function () {
+            assert.strictEqual(spotifyUtils.getRefreshToken(1), "updated_token");
+        });
+     });
+     
+     describe("", function () {
+        it("delete refresh token test", function () {
+            spotifyUtils.deleteRefreshToken("1");
+
+            let pref = spotifyUtils.getRefreshToken("1");
+            assert.strictEqual(pref,undefined);
+        });
     });
 });
