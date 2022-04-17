@@ -1,5 +1,5 @@
 const path = require("path");
-const _Row = require(path.join(__dirname, "_row.js"))
+const _Row = require(path.join(__dirname, "_row.js"));
 
 class AccountUtils extends _Row {
     /**

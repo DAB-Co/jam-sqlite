@@ -18,8 +18,9 @@ class UserPreferencesUtils extends _Row {
      * @param preference_weight
      */
     addPreference(user_id, preference_identifier, preference_weight) {
-        this.databaseWrapper.run_query(`INSERT INTO ${this.table_name} 
-    (user_id, preference_identifier, preference_weight) VALUES(?,?,?)`,
+        this.databaseWrapper.run_query(`INSERT INTO ${this.table_name}
+                                            (user_id, preference_identifier, preference_weight)
+                                        VALUES (?, ?, ?)`,
             [user_id, preference_identifier, preference_weight]);
     }
 
@@ -34,7 +35,10 @@ class UserPreferencesUtils extends _Row {
         "preference_weight",}
      */
     getPreference(user_id, preference_identifier) {
-        return this.databaseWrapper.get(`SELECT * FROM ${this.table_name} WHERE user_id=? AND preference_identifier=?`,
+        return this.databaseWrapper.get(`SELECT *
+                                         FROM ${this.table_name}
+                                         WHERE user_id = ?
+                                           AND preference_identifier = ?`,
             [user_id, preference_identifier]);
     }
 
@@ -45,7 +49,10 @@ class UserPreferencesUtils extends _Row {
      * @param preference_identifier
      */
     removePreference(user_id, preference_identifier) {
-        this.databaseWrapper.run_query(`DELETE FROM ${this.table_name} WHERE user_id=? AND preference_identifier=?`, [user_id, preference_identifier]);
+        this.databaseWrapper.run_query(`DELETE
+                                        FROM ${this.table_name}
+                                        WHERE user_id = ?
+                                          AND preference_identifier = ?`, [user_id, preference_identifier]);
     }
 
     /**
@@ -56,8 +63,10 @@ class UserPreferencesUtils extends _Row {
      * @param preference_weight
      */
     updatePreferenceWeight(user_id, preference_identifier, preference_weight) {
-        this.databaseWrapper.run_query(`UPDATE ${this.table_name} SET 
-                 preference_weight=? WHERE user_id=? AND preference_identifier=?`,
+        this.databaseWrapper.run_query(`UPDATE ${this.table_name}
+                                        SET preference_weight=?
+                                        WHERE user_id = ?
+                                          AND preference_identifier = ?`,
             [preference_weight, user_id, preference_identifier]);
     }
 
@@ -69,16 +78,35 @@ class UserPreferencesUtils extends _Row {
      */
     getCommonUserIds(preference_identifier) {
         // `GROUP BY user_id` is not needed because triggers do not allow duplicates while insertion
-        let res = this.databaseWrapper.get_all(`SELECT user_id FROM ${this.table_name} WHERE preference_identifier=?`, [preference_identifier]);
+        let res = this.databaseWrapper.get_all(`SELECT user_id
+                                                FROM ${this.table_name}
+                                                WHERE preference_identifier = ?`, [preference_identifier]);
         if (res === undefined || res.length === 0) {
             return [];
-        }
-        else {
+        } else {
             let ret_val = [];
-            for (let i=0; i<res.length; i++) {
+            for (let i = 0; i < res.length; i++) {
                 ret_val.push(res[i].user_id);
             }
             return ret_val;
+        }
+    }
+
+    /**
+     * get common user ids and weights for a given preference
+     *
+     * @param preference_identifier
+     * @returns {JSON[]} [{user_id, preference_weight}, ...]
+     */
+    getCommonUsers(preference_identifier) {
+        // `GROUP BY user_id` is not needed because triggers do not allow duplicates while insertion
+        let res = this.databaseWrapper.get_all(`SELECT user_id, preference_weight
+                                                FROM ${this.table_name}
+                                                WHERE preference_identifier = ?`, [preference_identifier]);
+        if (res === undefined || res.length === 0) {
+            return [];
+        } else {
+            return res;
         }
     }
 
@@ -92,12 +120,13 @@ class UserPreferencesUtils extends _Row {
             return [];
         }
 
-        let res = this.databaseWrapper.get_all(`SELECT preference_identifier, preference_weight FROM ${this.table_name} WHERE user_id=?`, user_id);
+        let res = this.databaseWrapper.get_all(`SELECT preference_identifier, preference_weight
+                                                FROM ${this.table_name}
+                                                WHERE user_id = ?`, user_id);
 
         if (res === undefined || res.length === 0) {
             return [];
-        }
-        else {
+        } else {
             return res;
         }
     }
@@ -112,22 +141,58 @@ class UserPreferencesUtils extends _Row {
             return [];
         }
 
-        let res = this.databaseWrapper.get_all(`SELECT preference_identifier FROM ${this.table_name} WHERE user_id=?`, user_id);
+        let res = this.databaseWrapper.get_all(`SELECT preference_identifier
+                                                FROM ${this.table_name}
+                                                WHERE user_id = ?`, user_id);
 
         if (res === undefined || res.length === 0) {
             return [];
-        }
-        else {
+        } else {
             let ret_val = [];
-            for (let i=0; i<res.length; i++) {
+            for (let i = 0; i < res.length; i++) {
                 ret_val.push(res[i].preference_identifier);
             }
             return ret_val;
         }
     }
 
+    /**
+     *
+     * @param user_id 
+     */
     deleteUserPreference(user_id) {
         this.databaseWrapper.run_query(`DELETE FROM ${this.table_name} WHERE user_id=?`,user_id)
+    }
+
+    /**
+     * get all common preferences
+     *
+     * @returns {any[] | undefined} {preference_identifier: {weights: [[user_id, preference_weight], ...], sum}, ...}
+     */
+    getAllCommonPreferences() {
+        let res = this.databaseWrapper.get_all(`SELECT GROUP_CONCAT(user_id),
+                                                       preference_identifier,
+                                                       GROUP_CONCAT(preference_weight)
+                                                FROM ${this.table_name}
+                                                GROUP BY preference_identifier
+                                                HAVING COUNT(*) > 1`);
+
+        if (res === undefined) {
+            return [];
+        } else {
+            let ret_val = {};
+            for (let i=0; i<res.length; i++) {
+                ret_val[res[i].preference_identifier] = {};
+                ret_val[res[i].preference_identifier] = [];
+                let user_ids = res[i]['GROUP_CONCAT(user_id)'].split(',');
+                let preference_weights = res[i]['GROUP_CONCAT(preference_weight)'].split(',');
+                for (let j=0; j<user_ids.length; j++) {
+                    let curr_weight = parseInt(preference_weights[j]);
+                    ret_val[res[i].preference_identifier].push([user_ids[j],curr_weight]);
+                }
+            }
+            return ret_val;
+        }
     }
 }
 
