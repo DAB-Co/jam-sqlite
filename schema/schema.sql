@@ -29,14 +29,12 @@ CREATE TABLE IF NOT EXISTS "user_preferences"
     "preference_weight"     INTEGER DEFAULT 0,
     FOREIGN KEY ("user_id") REFERENCES "accounts" ("user_id")
 );
-CREATE TABLE IF NOT EXISTS "user_connections"
+CREATE TABLE IF NOT EXISTS "matches_snapshot"
 (
-    "user1_id" INTEGER NOT NULL,
-    "user2_id" INTEGER NOT NULL,
-    "weight"   INTEGER DEFAULT 0,
-    "matched"  INTEGER DEFAULT 0,
-    FOREIGN KEY ("user1_id") REFERENCES "accounts" ("user_id"),
-    FOREIGN KEY ("user2_id") REFERENCES "accounts" ("user_id")
+    "snapshot_id" INTEGER NOT NULL UNIQUE,
+    Timestamp     DATETIME,
+    "snapshot"    BLOB,
+    PRIMARY KEY ("snapshot_id" AUTOINCREMENT)
 );
 CREATE TABLE IF NOT EXISTS "spotify"
 (
@@ -93,20 +91,15 @@ CREATE TRIGGER after_user_preferences_insert
 BEGIN
     INSERT INTO spotify_preferences(preference_id) VALUES (new.preference_identifier);
 END;
-CREATE TRIGGER before_user_connections_insert
-    BEFORE INSERT
-    ON user_connections
+CREATE TRIGGER insert_Timestamp_Trigger
+    AFTER INSERT ON matches_snapshot
 BEGIN
-    SELECT CASE
-               WHEN new.user1_id = new.user2_id
-                   THEN RAISE(ABORT, 'user1_id cant equal to user2_id')
-               END;
-    SELECT RAISE(ABORT, 'this connection exists')
-    WHERE EXISTS(
-                  SELECT 1
-                  FROM user_connections
-                  WHERE (new.user1_id = user1_id AND new.user2_id = user2_id)
-                     OR (new.user1_id = user2_id AND new.user2_id = user1_id)
-              );
+    UPDATE matches_snapshot SET Timestamp =STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW') WHERE snapshot_id = new.snapshot_id;
+END;
+
+CREATE TRIGGER update_Timestamp_Trigger
+    AFTER UPDATE On matches_snapshot
+BEGIN
+    UPDATE matches_snapshot SET Timestamp = STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW') WHERE snapshot_id = new.snapshot_id;
 END;
 COMMIT;

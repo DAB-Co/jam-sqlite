@@ -167,7 +167,7 @@ class UserPreferencesUtils extends _Row {
     /**
      * get all common preferences
      *
-     * @returns {any[] | undefined} {preference_identifier: {weights: [[user_id, preference_weight], ...], sum}, ...}
+     * @returns {Map} {preference_identifier: {user_id: preference_weight, ...}, ...}
      */
     getAllCommonPreferences() {
         let res = this.databaseWrapper.get_all(`SELECT GROUP_CONCAT(user_id),
@@ -178,17 +178,16 @@ class UserPreferencesUtils extends _Row {
                                                 HAVING COUNT(*) > 1`);
 
         if (res === undefined) {
-            return [];
+            return new Map();
         } else {
-            let ret_val = {};
+            let ret_val = new Map();
             for (let i=0; i<res.length; i++) {
-                ret_val[res[i].preference_identifier] = {};
-                ret_val[res[i].preference_identifier] = [];
+                ret_val[res[i].preference_identifier] = new Map();
                 let user_ids = res[i]['GROUP_CONCAT(user_id)'].split(',');
                 let preference_weights = res[i]['GROUP_CONCAT(preference_weight)'].split(',');
                 for (let j=0; j<user_ids.length; j++) {
                     let curr_weight = parseInt(preference_weights[j]);
-                    ret_val[res[i].preference_identifier].push([user_ids[j],curr_weight]);
+                    ret_val[res[i].preference_identifier].set(user_ids[j],curr_weight);
                 }
             }
             return ret_val;
