@@ -174,8 +174,7 @@ class UserPreferencesUtils extends _Row {
                                                        preference_identifier,
                                                        GROUP_CONCAT(preference_weight)
                                                 FROM ${this.table_name}
-                                                GROUP BY preference_identifier
-                                                HAVING COUNT(*) > 1`);
+                                                GROUP BY preference_identifier`);
 
         if (res === undefined) {
             return new Map();

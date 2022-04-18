@@ -171,13 +171,15 @@ describe(__filename, function () {
        it("test getCommonPreferences", function() {
            userPreferencesUtils.addPreference(3, "pid2", 69);
            userPreferencesUtils.addPreference(2, "pid2", 61);
+           userPreferencesUtils.addPreference(2, "pid3", 21);
            userPreferencesUtils.updatePreferenceWeight(2, "pid1", 32);
            let res = userPreferencesUtils.getAllCommonPreferences();
            let valids = {
                pid1: [[ '1', 31], ['2', 32 ]],
-               pid2: [['3', 69 ], ['2', 61]]
+               pid2: [['3', 69 ], ['2', 61]],
+               pid3: [['2', 21]]
            };
-           assert.strictEqual(Object.keys(res).length, 2);
+           assert.strictEqual(Object.keys(res).length, 3);
            for (let [p, val] of res) {
                assert.ok(p in valids);
                assert.strictEqual(JSON.stringify(res[p]), JSON.stringify(valids[p]));
