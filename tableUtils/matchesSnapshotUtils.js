@@ -29,7 +29,14 @@ class MatchesSnapshotUtils extends _Row {
      * @returns {string | undefined}
      */
     getLastSnapshot() {
-        return this.databaseWrapper.get(`SELECT snapshot FROM ${this.table_name} ORDER BY ${this.primary_key} DESC LIMIT 1`);
+        let res = this.databaseWrapper.get(`SELECT snapshot FROM ${this.table_name} ORDER BY ${this.primary_key} DESC LIMIT 1`);
+
+        if (res === undefined) {
+            return undefined;
+        }
+        else {
+            return res.snapshot;
+        }
     }
 }
 
