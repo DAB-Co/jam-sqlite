@@ -102,11 +102,32 @@ describe(__filename, function() {
             assert.ok(can_speak.indexOf(1) === -1 && can_speak.indexOf(2) !== -1 && can_speak.indexOf(3) !== -1);
         });
     });
+
     describe("", function () {
         it("delete user language", function () {
             userLanguagesUtils.deleteUserLanguage(1);
             let pref = userLanguagesUtils.getUserLanguages(1);
             assert.strictEqual(pref.length,0);
+        });
+    });
+
+    describe("", function() {
+        it("getAllCommonLanguages", function() {
+            userLanguagesUtils.addLanguages(1, ["ENGLISH", "Russian"]);
+            let res = userLanguagesUtils.getAllCommonLanguages();
+
+            assert.ok(res.has("ENGLISH"));
+            assert.ok(res.get("ENGLISH").has(1));
+            assert.ok(res.get("ENGLISH").has(2));
+
+            assert.ok(res.has("HINDU"));
+            assert.ok(res.get("HINDU").has(3));
+
+            assert.ok(res.has("RUSSIAN"));
+            assert.ok(res.get("RUSSIAN").has(1));
+
+            assert.ok(res.has("TURKISH"));
+            assert.ok(res.get("TURKISH").has(3));
         });
     });
 });
