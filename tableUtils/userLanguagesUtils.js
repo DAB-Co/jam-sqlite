@@ -118,11 +118,36 @@ class UserLanguagesUtils extends _Row {
     }
 
     /**
-     * 
-     * @param user_id 
+     *
+     * @param user_id
      */
     deleteUserLanguage(user_id) {
         this.databaseWrapper.run_query(`DELETE FROM ${this.table_name} WHERE user_id=?`,[user_id])
+    }
+
+    /**
+     *
+     * @returns {Map<string, Set>}
+     */
+    getAllCommonLanguages() {
+        let res = this.databaseWrapper.get_all(`SELECT GROUP_CONCAT(user_id),
+                                                       language
+                                                FROM ${this.table_name}
+                                                GROUP BY language`);
+
+        if (res === undefined) {
+            return new Map();
+        } else {
+            let ret_val = new Map();
+            for (let i = 0; i < res.length; i++) {
+                ret_val.set(res[i].language, new Set());
+                let user_ids = res[i]['GROUP_CONCAT(user_id)'].split(',');
+                for (let j = 0; j < user_ids.length; j++) {
+                    ret_val.get(res[i].language).add(parseInt(user_ids[j]));
+                }
+            }
+            return ret_val;
+        }
     }
 }
 
