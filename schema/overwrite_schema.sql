@@ -47,6 +47,15 @@ CREATE TABLE IF NOT EXISTS "spotify_preferences"
     "raw_data"      BLOB NOT NULL DEFAULT '{}',
     PRIMARY KEY ("preference_id")
 );
+DROP TABLE IF EXISTS "user_avatars";
+CREATE TABLE "user_avatars"
+(
+    "user_id" INTEGER NOT NULL UNIQUE,
+    "big_avatar" BLOB,
+    "small_avatar" BLOB,
+    PRIMARY KEY ("user_id"),
+    FOREIGN KEY ("user_id") REFERENCES "accounts" ("user_id")
+);
 DROP TABLE IF EXISTS "accounts";
 CREATE TABLE IF NOT EXISTS "accounts"
 (
@@ -58,13 +67,14 @@ CREATE TABLE IF NOT EXISTS "accounts"
     "user_api_token"          TEXT,
     PRIMARY KEY ("user_id" AUTOINCREMENT)
 );
-DROP TRIGGER IF EXISTS "after_account_insert";
+DROP TRIGGER  IF EXISTS after_account_insert;
 CREATE TRIGGER after_account_insert
     AFTER INSERT
     ON accounts
 BEGIN
     INSERT INTO user_friends (user_id) VALUES (new.user_id);
     INSERT INTO spotify(user_id) VALUES (new.user_id);
+    INSERT INTO user_avatars(user_id) VALUES (new.user_id);
 END;
 DROP TRIGGER IF EXISTS "before_user_languages_insert";
 CREATE TRIGGER before_user_languages_insert
