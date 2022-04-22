@@ -7,7 +7,7 @@ const UserPreferencesUtils = require(path.join(__dirname, "userPreferencesUtils.
 const SpotifyUtils = require(path.join(__dirname, "spotifyUtils.js"));
 const SpotifyPreferencesUtils = require(path.join(__dirname, "spotifyPreferencesUtils.js"));
 const MatchesSnapshotUtils = require(path.join(__dirname, "matchesSnapshotUtils.js"));
-const UserAvatarsUtils = require(path.join(__dirname, "userAvatarsUttils.js"));
+const UserAvatarsUtils = require(path.join(__dirname, "userAvatarsUtils.js"));
 
 /**
  * initializes all the utils and returns instances
