@@ -32,7 +32,7 @@ describe(__filename, function() {
            } catch (e) {
                errorOccurred = true;
            }
-           assert.ok(errorOccurred, "no error occurred adding Turkish to user 1 again");
+           assert.ok(!errorOccurred, "error occurred adding Turkish to user 1 again");
        });
     });
 
