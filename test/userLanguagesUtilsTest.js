@@ -25,15 +25,15 @@ describe(__filename, function() {
     });
 
     describe("", function () {
-       it("try to add Turkish to user 1 again", function() {
-           let errorOccurred = false;
-           try {
-               userLanguagesUtils.addLanguages(1, ["turkish"]);
-           } catch (e) {
-               errorOccurred = true;
-           }
-           assert.ok(!errorOccurred, "error occurred adding Turkish to user 1 again");
-       });
+        it("try to add Turkish to user 1 again", function() {
+            let errorOccurred = false;
+            try {
+                userLanguagesUtils.addLanguages(1, ["turkish"]);
+            } catch (e) {
+                errorOccurred = true;
+            }
+            assert.ok(errorOccurred, "no error occurred adding Turkish to user 1 again");
+        });
     });
 
     describe("", function() {

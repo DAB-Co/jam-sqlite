@@ -16,17 +16,21 @@ class UserLanguagesUtils extends _Row {
      * @param {string[]} languages
      */
     addLanguages(user_id, languages) {
+        let exists_error = undefined;
         for (let i = 0; i < languages.length; i++) {
             try {
                 this.databaseWrapper.run_query(`INSERT INTO ${this.table_name} (user_id, language)
                                                 VALUES (?, ?)`, [user_id, languages[i].toUpperCase()]);
             } catch (e) {
                 if (e.message === "this language for this user exists") {
-                    // do nothing if the language already exists
+                    exists_error = e;
                 } else {
                     throw e;
                 }
             }
+        }
+        if (exists_error !== undefined) {
+            throw exists_error;
         }
     }
 
