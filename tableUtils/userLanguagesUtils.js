@@ -16,17 +16,8 @@ class UserLanguagesUtils extends _Row {
      * @param {string[]} languages
      */
     addLanguages(user_id, languages) {
-        for (let i = 0; i < languages.length; i++) {
-            try {
-                this.databaseWrapper.run_query(`INSERT INTO ${this.table_name} (user_id, language)
-                                                VALUES (?, ?)`, [user_id, languages[i].toUpperCase()]);
-            } catch (e) {
-                if (e.message === "this language for this user exists") {
-                    // do nothing if the language already exists
-                } else {
-                    throw e;
-                }
-            }
+        for (let i=0; i<languages.length; i++) {
+            this.databaseWrapper.run_query(`INSERT INTO ${this.table_name} (user_id, language) VALUES (?,?)`, [user_id, languages[i].toUpperCase()]);
         }
     }
 
@@ -42,20 +33,17 @@ class UserLanguagesUtils extends _Row {
         if (languages === undefined || languages == null || !Array.isArray(languages) || languages.length === 0) {
             return;
         }
-        for (let i = 0; i < languages.length; i++) {
+        for (let i=0; i<languages.length; i++) {
             languages[i] = languages[i].toUpperCase();
         }
         let query_condition = "";
-        for (let i = 0; i < languages.length; i++) {
+        for (let i=0; i<languages.length; i++) {
             query_condition += " language=?";
-            if (i !== languages.length - 1) {
+            if (i !== languages.length-1) {
                 query_condition += " OR "
             }
         }
-        this.databaseWrapper.run_query(`DELETE
-                                        FROM ${this.table_name}
-                                        WHERE user_id = ?
-                                          AND ${query_condition}`, [user_id].concat(languages));
+        this.databaseWrapper.run_query(`DELETE FROM ${this.table_name} WHERE user_id=? AND ${query_condition}`, [user_id].concat(languages));
     }
 
     /**
@@ -64,14 +52,13 @@ class UserLanguagesUtils extends _Row {
      * @returns {string[]} languages spoken by a user's id
      */
     getUserLanguages(user_id) {
-        let rows = this.databaseWrapper.get_all(`SELECT language
-                                                 FROM ${this.table_name}
-                                                 WHERE user_id = ?`, [user_id]);
+        let rows = this.databaseWrapper.get_all(`SELECT language FROM ${this.table_name} WHERE user_id = ?`, [user_id]);
         if (rows === undefined) {
             return [];
-        } else {
+        }
+        else {
             let languages = [];
-            for (let i = 0; i < rows.length; i++) {
+            for (let i=0; i<rows.length; i++) {
                 languages.push(rows[i].language);
             }
             return languages;
@@ -87,25 +74,24 @@ class UserLanguagesUtils extends _Row {
         if (languages === undefined || languages == null || !Array.isArray(languages) || languages.length === 0) {
             return [];
         }
-        for (let i = 0; i < languages.length; i++) {
+        for (let i=0; i<languages.length; i++) {
             languages[i] = languages[i].toUpperCase();
         }
         let query_condition = "(";
-        for (let i = 0; i < languages.length; i++) {
+        for (let i=0; i<languages.length; i++) {
             query_condition += "language=?";
-            if (i !== languages.length - 1) {
+            if (i !== languages.length-1) {
                 query_condition += " OR "
             }
         }
         query_condition += ") GROUP BY user_id"
-        let rows = this.databaseWrapper.get_all(`SELECT user_id
-                                                 FROM ${this.table_name}
-                                                 WHERE ${query_condition}`, languages);
+        let rows = this.databaseWrapper.get_all(`SELECT user_id FROM ${this.table_name} WHERE ${query_condition}`, languages);
         if (rows === undefined) {
             return [];
-        } else {
+        }
+        else {
             let speakers = [];
-            for (let i = 0; i < rows.length; i++) {
+            for (let i=0; i<rows.length; i++) {
                 speakers.push(rows[i].user_id);
             }
             return speakers;
@@ -122,7 +108,8 @@ class UserLanguagesUtils extends _Row {
         let user_languages = this.getUserLanguages(user_id);
         if (user_languages === undefined || user_languages === null || user_languages.length === 0) {
             return [];
-        } else {
+        }
+        else {
             let res = this.getUsersWithTheSameLanguages(user_languages);
             let i = res.indexOf(user_id);
             res.splice(i, 1);
@@ -135,9 +122,7 @@ class UserLanguagesUtils extends _Row {
      * @param user_id
      */
     deleteUserLanguage(user_id) {
-        this.databaseWrapper.run_query(`DELETE
-                                        FROM ${this.table_name}
-                                        WHERE user_id = ?`, [user_id])
+        this.databaseWrapper.run_query(`DELETE FROM ${this.table_name} WHERE user_id=?`,[user_id])
     }
 
     /**
