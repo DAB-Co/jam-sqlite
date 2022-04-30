@@ -13,13 +13,15 @@ class UserConnectionsUtils extends _Row {
     }
 
     /**
+     * will throw error for duplicates
      *
      * @param user1_id
      * @param user2_id
      * @param weight
+     * @param {boolean} matched
      */
-    addConnection(user1_id, user2_id, weight=0) {
-        this.databaseWrapper.run_query(`INSERT INTO ${this.table_name} (user1_id, user2_id, weight) VALUES (?,?,?)`, [user1_id, user2_id, weight]);
+    addConnection(user1_id, user2_id, weight=0, matched=false) {
+        this.databaseWrapper.run_query(`INSERT INTO ${this.table_name} (user1_id, user2_id, weight, matched) VALUES (?,?,?,?)`, [user1_id, user2_id, weight, matched ? 1 : 0]);
     }
 
     /**
@@ -47,9 +49,10 @@ class UserConnectionsUtils extends _Row {
      * @param user1_id
      * @param user2_id
      * @param weight
+     * @param {boolean} matched
      */
-    updateConnection(user1_id, user2_id, weight) {
-        this.databaseWrapper.run_query(`UPDATE ${this.table_name} SET weight=? WHERE (user1_id=? AND user2_id=?) OR (user1_id=? AND user2_id=?)`, [weight, user1_id, user2_id, user2_id, user1_id]);
+    updateConnection(user1_id, user2_id, weight, matched=false) {
+        this.databaseWrapper.run_query(`UPDATE ${this.table_name} SET weight=?, matched=? WHERE (user1_id=? AND user2_id=?) OR (user1_id=? AND user2_id=?)`, [weight, matched ? 1 : 0, user1_id, user2_id, user2_id, user1_id]);
     }
 
     /**
@@ -131,15 +134,18 @@ class UserConnectionsUtils extends _Row {
     }
 
     dump(graph, matched) {
-        let added = new Set();
         for (let [u1, edges] of graph) {
-            if (added.has(u1)) {
-                continue;
-            }
             for (let [u2, weight] of edges) {
-                let matched_flag = (matched.has(u1) && matched.get(u1).has(u2)) || (matched.has(u2) && matched.get(u2).has(u1)) ? 1 : 0;
-                this.databaseWrapper.run_query(`INSERT OR REPLACE INTO ${this.table_name}(user1_id, user2_id, weight, matched) VALUES(?,?,?,?)`, [u1, u2, weight, matched_flag]);
-                added.add(u2);
+                let matched_flag = (matched.has(u1) && matched.get(u1).has(u2)) || (matched.has(u2) && matched.get(u2).has(u1));
+                try {
+                    this.addConnection(u1, u2, weight, matched_flag);
+                } catch (e) {
+                    if (e.message === "this connection exists") {
+                        this.updateConnection(u1, u2, weight, matched_flag);
+                    } else {
+                        throw e;
+                    }
+                }
             }
         }
     }

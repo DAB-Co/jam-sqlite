@@ -155,8 +155,7 @@ BEGIN
                   SELECT 1
                   FROM user_connections
                   WHERE (new.user1_id = user1_id AND new.user2_id = user2_id)
-                     -- OR (new.user1_id = user2_id AND new.user2_id = user1_id)
-                     OR (user2_id = new.user1_id) OR (user1_id = new.user2_id)
+                     OR (new.user1_id = user2_id AND new.user2_id = user1_id)
               );
 END;
 CREATE TRIGGER insert_Timestamp_Trigger

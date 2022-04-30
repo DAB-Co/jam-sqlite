@@ -62,15 +62,15 @@ CREATE TABLE IF NOT EXISTS "spotify_preferences"
 );
 CREATE TABLE IF NOT EXISTS "user_avatars"
 (
-  "user_id" INTEGER NOT NULL UNIQUE,
-  "big_avatar" BLOB,
-  "small_avatar" BLOB,
-  PRIMARY KEY ("user_id"),
-  FOREIGN KEY ("user_id") REFERENCES "accounts" ("user_id")
+    "user_id"      INTEGER NOT NULL UNIQUE,
+    "big_avatar"   BLOB,
+    "small_avatar" BLOB,
+    PRIMARY KEY ("user_id"),
+    FOREIGN KEY ("user_id") REFERENCES "accounts" ("user_id")
 );
 CREATE TABLE IF NOT EXISTS "user_devices"
 (
-    "user_id" INTEGER NOT NULL UNIQUE,
+    "user_id"   INTEGER NOT NULL UNIQUE,
     "device_id" TEXT,
     PRIMARY KEY ("user_id"),
     FOREIGN KEY ("user_id") REFERENCES "accounts" ("user_id")
@@ -90,10 +90,10 @@ CREATE TRIGGER before_account_delete
     BEFORE DELETE
     ON accounts
 BEGIN
-   DELETE FROM user_friends WHERE user_id=old.user_id;
-   DELETE FROM spotify WHERE user_id=old.user_id;
-   DELETE FROM user_avatars WHERE user_id=old.user_id;
-   DELETE FROM user_devices WHERE user_id=old.user_id;
+    DELETE FROM user_friends WHERE user_id = old.user_id;
+    DELETE FROM spotify WHERE user_id = old.user_id;
+    DELETE FROM user_avatars WHERE user_id = old.user_id;
+    DELETE FROM user_devices WHERE user_id = old.user_id;
 END;
 DROP TRIGGER IF EXISTS before_user_languages_insert;
 CREATE TRIGGER before_user_languages_insert
@@ -145,19 +145,20 @@ BEGIN
                   SELECT 1
                   FROM user_connections
                   WHERE (new.user1_id = user1_id AND new.user2_id = user2_id)
-                     -- OR (new.user1_id = user2_id AND new.user2_id = user1_id)
-                     OR (user2_id = new.user1_id) OR (user1_id = new.user2_id)
+                     OR (new.user1_id = user2_id AND new.user2_id = user1_id)
               );
 END;
 DROP TRIGGER insert_Timestamp_Trigger;
 CREATE TRIGGER insert_Timestamp_Trigger
-    AFTER INSERT ON matches_snapshot
+    AFTER INSERT
+    ON matches_snapshot
 BEGIN
     UPDATE matches_snapshot SET Timestamp =STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW') WHERE snapshot_id = new.snapshot_id;
 END;
 DROP TRIGGER update_Timestamp_Trigger;
 CREATE TRIGGER update_Timestamp_Trigger
-    AFTER UPDATE On matches_snapshot
+    AFTER UPDATE
+    On matches_snapshot
 BEGIN
     UPDATE matches_snapshot SET Timestamp = STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW') WHERE snapshot_id = new.snapshot_id;
 END;
