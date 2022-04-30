@@ -8,6 +8,7 @@ const SpotifyUtils = require(path.join(__dirname, "spotifyUtils.js"));
 const SpotifyPreferencesUtils = require(path.join(__dirname, "spotifyPreferencesUtils.js"));
 const MatchesSnapshotUtils = require(path.join(__dirname, "matchesSnapshotUtils.js"));
 const UserAvatarsUtils = require(path.join(__dirname, "userAvatarsUtils.js"));
+const UserDevicesUtils = require(path.join(__dirname, "userDevicesUtils.js"));
 
 /**
  * initializes all the utils and returns instances
@@ -22,6 +23,7 @@ class UtilsInitializer {
         this.spotifyPreferencesUtilsObject = new SpotifyPreferencesUtils(database);
         this.matchesSnapshotUtilsObject = new MatchesSnapshotUtils(database);
         this.userAvatarsUtilsObject = new UserAvatarsUtils(database);
+        this.userDevicesUtilsObject = new UserDevicesUtils(database);
     }
 
     accountUtils() {
@@ -55,6 +57,10 @@ class UtilsInitializer {
     userAvatarsUtils() {
         return this.userAvatarsUtilsObject;
     }
+
+    userDevicesUtils() {
+        return this.userDevicesUtilsObject;
+    }
 }
 
 module.exports = {
@@ -67,4 +73,5 @@ module.exports = {
     SpotifyPreferencesUtils: SpotifyPreferencesUtils,
     MatchesSnapshotUtils: MatchesSnapshotUtils,
     UserAvatarsUtils: UserAvatarsUtils,
+    UserDevicesUtils: UserDevicesUtils,
 };
