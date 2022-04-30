@@ -104,6 +104,7 @@ BEGIN
     DELETE FROM spotify WHERE user_id=old.user_id;
     DELETE FROM user_avatars WHERE user_id=old.user_id;
     DELETE FROM user_devices WHERE user_id=old.user_id;
+    DELETE FROM user_connections WHERE user1_id = old.user_id OR user2_id = old.user_id;
 END;
 DROP TRIGGER IF EXISTS "before_user_languages_insert";
 CREATE TRIGGER before_user_languages_insert
