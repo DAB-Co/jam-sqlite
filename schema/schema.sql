@@ -66,6 +66,7 @@ CREATE TABLE IF NOT EXISTS "user_devices"
     PRIMARY KEY ("user_id"),
     FOREIGN KEY ("user_id") REFERENCES "accounts" ("user_id")
 );
+DROP TRIGGER IF EXISTS after_account_insert;
 CREATE TRIGGER after_account_insert
     AFTER INSERT
     ON accounts
@@ -75,6 +76,7 @@ BEGIN
     INSERT INTO user_avatars(user_id) VALUES (new.user_id);
     INSERT INTO user_devices(user_id) VALUES (new.user_id);
 END;
+DROP TRIGGER IF EXISTS before_user_languages_insert;
 CREATE TRIGGER before_user_languages_insert
     BEFORE INSERT
     ON user_languages
@@ -87,6 +89,7 @@ BEGIN
                     AND new.language = language
               );
 END;
+DROP TRIGGER IF EXISTS before_user_preferences_insert;
 CREATE TRIGGER before_user_preferences_insert
     BEFORE INSERT
     ON user_preferences
@@ -99,6 +102,7 @@ BEGIN
                     AND new.preference_identifier = preference_identifier
               );
 END;
+DROP TRIGGER after_user_preferences_insert;
 CREATE TRIGGER after_user_preferences_insert
     AFTER INSERT
     ON user_preferences
@@ -108,12 +112,13 @@ CREATE TRIGGER after_user_preferences_insert
 BEGIN
     INSERT INTO spotify_preferences(preference_id) VALUES (new.preference_identifier);
 END;
+DROP TRIGGER insert_Timestamp_Trigger;
 CREATE TRIGGER insert_Timestamp_Trigger
     AFTER INSERT ON matches_snapshot
 BEGIN
     UPDATE matches_snapshot SET Timestamp =STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW') WHERE snapshot_id = new.snapshot_id;
 END;
-
+DROP TRIGGER update_Timestamp_Trigger;
 CREATE TRIGGER update_Timestamp_Trigger
     AFTER UPDATE On matches_snapshot
 BEGIN
