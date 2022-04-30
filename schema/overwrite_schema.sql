@@ -22,15 +22,13 @@ CREATE TABLE IF NOT EXISTS "user_preferences"
     "preference_weight"     INTEGER DEFAULT 0,
     FOREIGN KEY ("user_id") REFERENCES "accounts" ("user_id")
 );
-DROP TABLE IF EXISTS "user_connections";
-CREATE TABLE IF NOT EXISTS "user_connections"
+DROP TABLE IF EXISTS "matches_snapshot";
+CREATE TABLE IF NOT EXISTS "matches_snapshot"
 (
-    "user1_id" INTEGER NOT NULL,
-    "user2_id" INTEGER NOT NULL,
-    "weight"   INTEGER DEFAULT 0,
-    "matched"  INTEGER DEFAULT 0,
-    FOREIGN KEY ("user1_id") REFERENCES "accounts" ("user_id"),
-    FOREIGN KEY ("user2_id") REFERENCES "accounts" ("user_id")
+    "snapshot_id" INTEGER NOT NULL UNIQUE,
+    Timestamp     DATETIME,
+    "snapshot"    BLOB,
+    PRIMARY KEY ("snapshot_id" AUTOINCREMENT)
 );
 DROP TABLE IF EXISTS "spotify";
 CREATE TABLE IF NOT EXISTS "spotify"
@@ -49,6 +47,23 @@ CREATE TABLE IF NOT EXISTS "spotify_preferences"
     "raw_data"      BLOB NOT NULL DEFAULT '{}',
     PRIMARY KEY ("preference_id")
 );
+DROP TABLE IF EXISTS "user_avatars";
+CREATE TABLE "user_avatars"
+(
+    "user_id" INTEGER NOT NULL UNIQUE,
+    "big_avatar" BLOB,
+    "small_avatar" BLOB,
+    PRIMARY KEY ("user_id"),
+    FOREIGN KEY ("user_id") REFERENCES "accounts" ("user_id")
+);
+DROP TABLE IF EXISTS "user_devices";
+CREATE TABLE IF NOT EXISTS "user_devices"
+(
+    "user_id" INTEGER NOT NULL UNIQUE,
+    "device_id" TEXT,
+    PRIMARY KEY ("user_id"),
+    FOREIGN KEY ("user_id") REFERENCES "accounts" ("user_id")
+);
 DROP TABLE IF EXISTS "accounts";
 CREATE TABLE IF NOT EXISTS "accounts"
 (
@@ -60,13 +75,15 @@ CREATE TABLE IF NOT EXISTS "accounts"
     "user_api_token"          TEXT,
     PRIMARY KEY ("user_id" AUTOINCREMENT)
 );
-DROP TRIGGER IF EXISTS "after_account_insert";
+DROP TRIGGER  IF EXISTS after_account_insert;
 CREATE TRIGGER after_account_insert
     AFTER INSERT
     ON accounts
 BEGIN
     INSERT INTO user_friends (user_id) VALUES (new.user_id);
     INSERT INTO spotify(user_id) VALUES (new.user_id);
+    INSERT INTO user_avatars(user_id) VALUES (new.user_id);
+    INSERT INTO user_devices(user_id) VALUES (new.user_id);
 END;
 DROP TRIGGER IF EXISTS "before_user_languages_insert";
 CREATE TRIGGER before_user_languages_insert
@@ -104,21 +121,15 @@ CREATE TRIGGER after_user_preferences_insert
 BEGIN
     INSERT INTO spotify_preferences(preference_id) VALUES (new.preference_identifier);
 END;
-DROP TRIGGER IF EXISTS "before_user_connections_insert";
-CREATE TRIGGER before_user_connections_insert
-    BEFORE INSERT
-    ON user_connections
+CREATE TRIGGER insert_Timestamp_Trigger
+    AFTER INSERT ON matches_snapshot
 BEGIN
-    SELECT CASE
-               WHEN new.user1_id = new.user2_id
-                   THEN RAISE(ABORT, 'user1_id cant equal to user2_id')
-               END;
-    SELECT RAISE(ABORT, 'this connection exists')
-    WHERE EXISTS(
-                  SELECT 1
-                  FROM user_connections
-                  WHERE (new.user1_id = user1_id AND new.user2_id = user2_id)
-                     OR (new.user1_id = user2_id AND new.user2_id = user1_id)
-              );
+    UPDATE matches_snapshot SET Timestamp =STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW') WHERE snapshot_id = new.snapshot_id;
+END;
+
+CREATE TRIGGER update_Timestamp_Trigger
+    AFTER UPDATE On matches_snapshot
+BEGIN
+    UPDATE matches_snapshot SET Timestamp = STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW') WHERE snapshot_id = new.snapshot_id;
 END;
 COMMIT;
