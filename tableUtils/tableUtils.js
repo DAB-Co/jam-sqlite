@@ -3,6 +3,7 @@ const path = require("path");
 const AccountUtils = require(path.join(__dirname, "accountUtils.js"));
 const UserFriendsUtils = require(path.join(__dirname, "userFriendsUtils.js"));
 const UserLanguagesUtils = require(path.join(__dirname, "userLanguagesUtils.js"));
+const UserConnectionsUtils = require(path.join(__dirname, "userConnectionsUtils.js"));
 const UserPreferencesUtils = require(path.join(__dirname, "userPreferencesUtils.js"));
 const SpotifyUtils = require(path.join(__dirname, "spotifyUtils.js"));
 const SpotifyPreferencesUtils = require(path.join(__dirname, "spotifyPreferencesUtils.js"));
@@ -18,6 +19,7 @@ class UtilsInitializer {
         this.accountUtilsObject = new AccountUtils(database);
         this.userFriendsUtilsObject = new UserFriendsUtils(database);
         this.userLanguagesUtilsObject = new UserLanguagesUtils(database);
+        this.userConnectionsUtilsObject = new UserConnectionsUtils(database);
         this.userPreferencesUtilsObject = new UserPreferencesUtils(database);
         this.spotifyUtilsObject = new SpotifyUtils(database);
         this.spotifyPreferencesUtilsObject = new SpotifyPreferencesUtils(database);
@@ -36,6 +38,10 @@ class UtilsInitializer {
 
     userLanguagesUtils() {
         return this.userLanguagesUtilsObject;
+    }
+
+    userConnectionsUtils() {
+        return this.userConnectionsUtilsObject;
     }
 
     userPreferencesUtils() {
@@ -68,6 +74,7 @@ module.exports = {
     AccountUtils: AccountUtils,
     UserFriendsUtils: UserFriendsUtils,
     UserLanguagesUtils: UserLanguagesUtils,
+    UserConnectionsUtils: UserConnectionsUtils,
     UserPreferencesUtils: UserPreferencesUtils,
     SpotifyUtils: SpotifyUtils,
     SpotifyPreferencesUtils: SpotifyPreferencesUtils,
