@@ -53,6 +53,17 @@ class DatabaseWrapper {
     run_query(sql, params=[]) {
         return this.prepare(sql).run(params);
     }
+
+    /**
+     * returns a database iterator that can be used via keyword 'of'
+     *
+     * @param sql
+     * @param params
+     * @returns {*}
+     */
+    get_iterator(sql, params=[]) {
+        return this.database.prepare(sql).iterate(params);
+    }
 }
 
 module.exports = DatabaseWrapper;
