@@ -59,6 +59,13 @@ CREATE TABLE IF NOT EXISTS "user_avatars"
   PRIMARY KEY ("user_id"),
   FOREIGN KEY ("user_id") REFERENCES "accounts" ("user_id")
 );
+CREATE TABLE IF NOT EXISTS "user_devices"
+(
+    "user_id" INTEGER NOT NULL UNIQUE,
+    "device_id" TEXT,
+    PRIMARY KEY ("user_id"),
+    FOREIGN KEY ("user_id") REFERENCES "accounts" ("user_id")
+);
 CREATE TRIGGER after_account_insert
     AFTER INSERT
     ON accounts
@@ -66,6 +73,7 @@ BEGIN
     INSERT INTO user_friends (user_id) VALUES (new.user_id);
     INSERT INTO spotify(user_id) VALUES (new.user_id);
     INSERT INTO user_avatars(user_id) VALUES (new.user_id);
+    INSERT INTO user_devices(user_id) VALUES (new.user_id);
 END;
 CREATE TRIGGER before_user_languages_insert
     BEFORE INSERT
