@@ -32,7 +32,7 @@ describe(__filename, function () {
 
     describe("", function () {
         it("add user test", function () {
-            accountUtils.addUser("user3@email.com","user3",12345678,"api_token");
+            accountUtils.addUser("user3@email.com","user3","12345678","api_token");
             let pref = accountUtils.usernameExists("user3");
             assert.strictEqual(pref,true);
         });
@@ -40,8 +40,8 @@ describe(__filename, function () {
 
     describe("", function () {
         it("add user with notification token test", function () {
-            accountUtils.addUserWithNotificationToken("user3@email.com","user3",pass,"api_token","notification_token");
-            let pref = accountUtils.usernameExists("user3");
+            accountUtils.addUserWithNotificationToken("user4@email.com","user4", "password","api_token","notification_token");
+            let pref = accountUtils.usernameExists("user4");
             assert.strictEqual(pref,true);
         });
     });

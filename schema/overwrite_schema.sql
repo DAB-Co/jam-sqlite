@@ -85,6 +85,16 @@ BEGIN
     INSERT INTO user_avatars(user_id) VALUES (new.user_id);
     INSERT INTO user_devices(user_id) VALUES (new.user_id);
 END;
+DROP TRIGGER IF EXISTS before_account_delete;
+CREATE TRIGGER before_account_delete
+    BEFORE DELETE
+    ON accounts
+BEGIN
+    DELETE FROM user_friends WHERE user_id=old.user_id;
+    DELETE FROM spotify WHERE user_id=old.user_id;
+    DELETE FROM user_avatars WHERE user_id=old.user_id;
+    DELETE FROM user_devices WHERE user_id=old.user_id;
+END;
 DROP TRIGGER IF EXISTS "before_user_languages_insert";
 CREATE TRIGGER before_user_languages_insert
     BEFORE INSERT
