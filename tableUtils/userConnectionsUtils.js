@@ -20,8 +20,9 @@ class UserConnectionsUtils extends _Row {
      * @param weight
      * @param {boolean} matched
      */
-    addConnection(user1_id, user2_id, weight=0, matched=false) {
-        this.databaseWrapper.run_query(`INSERT INTO ${this.table_name} (user1_id, user2_id, weight, matched) VALUES (?,?,?,?)`, [user1_id, user2_id, weight, matched ? 1 : 0]);
+    addConnection(user1_id, user2_id, weight = 0, matched = false) {
+        this.databaseWrapper.run_query(`INSERT INTO ${this.table_name} (user1_id, user2_id, weight, matched)
+                                        VALUES (?, ?, ?, ?)`, [user1_id, user2_id, weight, matched ? 1 : 0]);
     }
 
     /**
@@ -32,11 +33,13 @@ class UserConnectionsUtils extends _Row {
      * @returns {number|undefined}
      */
     getWeight(user1_id, user2_id) {
-        let res = this.databaseWrapper.get(`SELECT weight FROM ${this.table_name} WHERE (user1_id=? AND user2_id=?) OR (user1_id=? AND user2_id=?)`, [user1_id, user2_id, user2_id, user1_id]);
+        let res = this.databaseWrapper.get(`SELECT weight
+                                            FROM ${this.table_name}
+                                            WHERE (user1_id = ? AND user2_id = ?)
+                                               OR (user1_id = ? AND user2_id = ?)`, [user1_id, user2_id, user2_id, user1_id]);
         if (res === undefined) {
             return undefined;
-        }
-        else {
+        } else {
             return res.weight;
         }
     }
@@ -51,8 +54,12 @@ class UserConnectionsUtils extends _Row {
      * @param weight
      * @param {boolean} matched
      */
-    updateConnection(user1_id, user2_id, weight, matched=false) {
-        this.databaseWrapper.run_query(`UPDATE ${this.table_name} SET weight=?, matched=? WHERE (user1_id=? AND user2_id=?) OR (user1_id=? AND user2_id=?)`, [weight, matched ? 1 : 0, user1_id, user2_id, user2_id, user1_id]);
+    updateConnection(user1_id, user2_id, weight, matched = false) {
+        this.databaseWrapper.run_query(`UPDATE ${this.table_name}
+                                        SET weight=?,
+                                            matched=?
+                                        WHERE (user1_id = ? AND user2_id = ?)
+                                           OR (user1_id = ? AND user2_id = ?)`, [weight, matched ? 1 : 0, user1_id, user2_id, user2_id, user1_id]);
     }
 
     /**
@@ -65,17 +72,17 @@ class UserConnectionsUtils extends _Row {
         // the query will have two parts
         // (user1_id=? AND (user2_id=? OR user2_id=?...)) OR (user2_id=? AND (user1_id=? OR user1_id=?...))
         let q1 = "(user1_id=? AND(";
-        for (let i=0; i<can_speak.length; i++) {
+        for (let i = 0; i < can_speak.length; i++) {
             q1 += "user2_id=?"
-            if (i !== can_speak.length-1) {
+            if (i !== can_speak.length - 1) {
                 q1 += " OR "
             }
         }
         q1 += "))";
         let q2 = "(user2_id=? AND("
-        for (let i=0; i<can_speak.length; i++) {
+        for (let i = 0; i < can_speak.length; i++) {
             q2 += "user1_id=?"
-            if (i !== can_speak.length-1) {
+            if (i !== can_speak.length - 1) {
                 q2 += " OR "
             }
         }
@@ -83,17 +90,21 @@ class UserConnectionsUtils extends _Row {
         if (can_speak.length === 0) {
             return undefined;
         }
-        let final_query = `SELECT user1_id, user2_id FROM ${this.table_name} WHERE matched = 0 AND weight != 0 AND (${q1} OR ${q2}) ORDER BY weight DESC LIMIT 1`;
+        let final_query = `SELECT user1_id, user2_id
+                           FROM ${this.table_name}
+                           WHERE matched = 0
+                             AND weight != 0
+                             AND (${q1} OR ${q2})
+                           ORDER BY weight DESC
+                           LIMIT 1`;
         let result = this.databaseWrapper.get_all(final_query, [user_id, ...can_speak, user_id, ...can_speak]);
         if (result === undefined || result === null || result.length === 0) {
             return undefined;
-        }
-        else {
+        } else {
             let pair = result[0];
             if (pair.user1_id === user_id) {
                 return pair.user2_id;
-            }
-            else {
+            } else {
                 return pair.user1_id;
             }
         }
@@ -106,7 +117,10 @@ class UserConnectionsUtils extends _Row {
      * @param user2_id
      */
     finalizeMatch(user1_id, user2_id) {
-        this.databaseWrapper.run_query(`UPDATE ${this.table_name} SET matched=1 WHERE (user1_id=? AND user2_id=?) OR (user1_id=? AND user2_id=?)`, [user1_id, user2_id, user2_id, user1_id]);
+        this.databaseWrapper.run_query(`UPDATE ${this.table_name}
+                                        SET matched=1
+                                        WHERE (user1_id = ? AND user2_id = ?)
+                                           OR (user1_id = ? AND user2_id = ?)`, [user1_id, user2_id, user2_id, user1_id]);
     }
 
     /**
@@ -115,12 +129,14 @@ class UserConnectionsUtils extends _Row {
      * @param user2_id
      * @returns {number|undefined}
      */
-    getMatched(user1_id,user2_id) {
-        let res = this.databaseWrapper.get(`SELECT matched FROM ${this.table_name} WHERE (user1_id=? AND user2_id=?) OR (user1_id=? AND user2_id=?)`, [user1_id, user2_id, user2_id, user1_id]);
+    getMatched(user1_id, user2_id) {
+        let res = this.databaseWrapper.get(`SELECT matched
+                                            FROM ${this.table_name}
+                                            WHERE (user1_id = ? AND user2_id = ?)
+                                               OR (user1_id = ? AND user2_id = ?)`, [user1_id, user2_id, user2_id, user1_id]);
         if (res === undefined) {
             return undefined;
-        }
-        else {
+        } else {
             return res.matched;
         }
     }
@@ -130,13 +146,51 @@ class UserConnectionsUtils extends _Row {
      * @param user_id
      */
     deleteMatched(user_id) {
-        this.databaseWrapper.run_query(`DELETE FROM ${this.table_name} WHERE user1_id=? OR user2_id=?`, [user_id,user_id])
+        this.databaseWrapper.run_query(`DELETE
+                                        FROM ${this.table_name}
+                                        WHERE user1_id = ?
+                                           OR user2_id = ?`, [user_id, user_id])
     }
 
     dump(graph, matched) {
+        let dump_data = new Map();
+
         for (let [u1, edges] of graph) {
             for (let [u2, weight] of edges) {
-                let matched_flag = (matched.has(u1) && matched.get(u1).has(u2)) || (matched.has(u2) && matched.get(u2).has(u1));
+                if (!dump_data.has(u1)) {
+                    dump_data.set(u1, new Map());
+                }
+
+                dump_data.get(u1).set(u2, {weight: weight, matched_flag: matched.has(u1) && matched.get(u1).has(u2)});
+
+                if (!dump_data.has(u2)) {
+                    dump_data.set(u2, new Map());
+                }
+
+
+                dump_data.get(u2).set(u1, {weight: weight, matched_flag: matched.has(u2) && matched.get(u2).has(u1)});
+            }
+        }
+
+        for (let [u1, matches] of matched) {
+            for (let u2 of matches) {
+                if (!dump_data.has(u1)) {
+                    dump_data.set(u1, new Map());
+                }
+
+                dump_data.get(u1).set(u2, {weight: graph.has(u1) && graph.get(u1).has(u2) ? graph.get(u1).get(u2) : 0, matched_flag: matched.has(u1) && matched.get(u1).has(u2)});
+
+                if (!dump_data.has(u2)) {
+                    dump_data.set(u2, new Map());
+                }
+
+
+                dump_data.get(u2).set(u1, {weight: graph.has(u2) && graph.get(u2).has(u1) ? graph.get(u2).get(u1) : 0, matched_flag: matched.has(u2) && matched.get(u2).has(u1)});
+            }
+        }
+
+        for (let [u1, edges] of dump_data) {
+            for (let [u2, {weight, matched_flag}] of edges) {
                 try {
                     this.addConnection(u1, u2, weight, matched_flag);
                 } catch (e) {
@@ -154,7 +208,8 @@ class UserConnectionsUtils extends _Row {
         let matched = new Map();
         let graph = new Map();
 
-        let iterator = this.databaseWrapper.get_iterator(`SELECT * FROM ${this.table_name}`);
+        let iterator = this.databaseWrapper.get_iterator(`SELECT *
+                                                          FROM ${this.table_name}`);
 
         for (const row of iterator) {
             const u1 = row.user1_id;
