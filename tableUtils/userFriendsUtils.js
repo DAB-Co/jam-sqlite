@@ -11,20 +11,42 @@ class UserFriendsUtils extends _Row {
     }
 
     /**
-     * will do nothing if any one of the users don't exist
-     *
      * @param id1
      * @param id2
      */
     addFriend(id1, id2) {
-        this.databaseWrapper.run_query(`INSERT INTO ${this.table_name} (user_id, friend_id)
+        let err = undefined;
+        try {
+            this.databaseWrapper.run_query(`INSERT INTO ${this.table_name} (user_id, friend_id)
                                         VALUES (?, ?);`, [id1, id2]);
-        this.databaseWrapper.run_query(`INSERT INTO ${this.table_name} (user_id, friend_id)
+        } catch (e) {
+            if (e.message === 'these users are already friends') {
+                err = e;
+            }
+            else {
+                throw e;
+            }
+        }
+
+        try {
+            this.databaseWrapper.run_query(`INSERT INTO ${this.table_name} (user_id, friend_id)
                                         VALUES (?, ?);`, [id2, id1]);
+        } catch (e) {
+            if (e.message === 'these users are already friends') {
+                err = e;
+            }
+            else {
+                throw e;
+            }
+        }
+
+        if (err !== undefined) {
+            throw err;
+        }
     }
 
     /**
-     * one way block from id1 to id2, will do nothing if id1 doesn't exist
+     * one way block from id1 to id2
      *
      * @param id1
      * @param id2
@@ -53,9 +75,10 @@ class UserFriendsUtils extends _Row {
     }
 
     /**
+     * if there is no user, will still return empty json
      *
      * @param id
-     * @returns {json} {id1: {username: username1, blocked: true}, id2: {username: username2, blocked: true}},
+     * @returns {json} {id1: {username: username1, blocked: true}, id2: {username: username2, blocked: true}}
      */
     getFriends(id) {
         let raw_res = this.databaseWrapper.get_all(`
