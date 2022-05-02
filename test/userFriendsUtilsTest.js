@@ -25,7 +25,7 @@ describe(__filename, function () {
                 userFriendsUtils.addFriend(1, 2);
             } catch (e) {
                 error_occured = true;
-                assert.strictEqual(e.message, 'these users are already friends');
+                assert.strictEqual(e.message, 'UNIQUE constraint failed: user_friends.user_id, user_friends.friend_id');
             }
             assert.ok(error_occured);
         });

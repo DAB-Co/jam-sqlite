@@ -176,5 +176,46 @@ describe(__filename, function () {
                }
            }
         });
-    })
+    });
+
+    describe("", function() {
+       it("dump updated graph test", function() {
+           userConnectionsUtils.databaseWrapper.run_query(`DELETE FROM ${userConnectionsUtils.table_name}`);
+           let graph = new Map();
+           graph.set(1, new Map());
+           graph.set(2, new Map());
+           graph.set(3, new Map());
+
+           graph.get(1).set(2, 3);
+           graph.get(2).set(1, 3);
+
+           graph.get(3).set(1, 32);
+           graph.get(1).set(3, 32);
+
+           let matched = new Map();
+           matched.set(1, new Set());
+           matched.set(2, new Set());
+
+           matched.get(1).add(2);
+           matched.get(2).add(1);
+
+           userConnectionsUtils.dump(graph, matched);
+
+           let {matched:matched_res, graph:graph_res} = userConnectionsUtils.load();
+
+           assert.strictEqual(graph.size, graph_res.size);
+           for (const [u1, edges] of graph_res) {
+               for (const [u2, weight] of edges) {
+                   assert.strictEqual(graph.get(u1).get(u2), weight);
+               }
+           }
+
+           assert.strictEqual(matched_res.size, matched.size);
+           for (const [u1, matches] of matched_res) {
+               for (const u2 of matches) {
+                   assert.ok(matched.get(u1).has(u2));
+               }
+           }
+       });
+    });
 });

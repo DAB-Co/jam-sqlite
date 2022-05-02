@@ -32,7 +32,8 @@ describe(__filename, function () {
             try {
                 userPreferencesUtils.addPreference(1, "pid1", 31);
             } catch (e) {
-                assert.strictEqual(e.code, "SQLITE_CONSTRAINT_TRIGGER");
+                console.log(e.message);
+                assert.strictEqual(e.code, 'SQLITE_CONSTRAINT_PRIMARYKEY');
                 error_occured = true;
             }
             assert.ok(error_occured);
@@ -58,7 +59,7 @@ describe(__filename, function () {
             try {
                 userPreferencesUtils.addPreference(1, "pid1", 31);
             } catch (e) {
-                assert.strictEqual(e.code, "SQLITE_CONSTRAINT_TRIGGER");
+                assert.strictEqual(e.code, 'SQLITE_CONSTRAINT_PRIMARYKEY');
                 error_occured = true;
             }
             assert.ok(error_occured);
