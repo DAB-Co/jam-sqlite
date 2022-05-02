@@ -22,7 +22,7 @@ class UserFriendsUtils extends _Row {
             this.databaseWrapper.run_query(`INSERT INTO ${this.table_name} (user_id, friend_id)
                                         VALUES (?, ?);`, [id1, id2]);
         } catch (e) {
-            if (e.message === 'these users are already friends') {
+            if (e.message === 'UNIQUE constraint failed: user_friends.user_id, user_friends.friend_id') {
                 err = e;
             }
             else {
@@ -34,7 +34,7 @@ class UserFriendsUtils extends _Row {
             this.databaseWrapper.run_query(`INSERT INTO ${this.table_name} (user_id, friend_id)
                                         VALUES (?, ?);`, [id2, id1]);
         } catch (e) {
-            if (e.message === 'these users are already friends') {
+            if (e.message === 'UNIQUE constraint failed: user_friends.user_id, user_friends.friend_id') {
                 err = e;
             }
             else {
