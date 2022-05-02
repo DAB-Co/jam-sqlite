@@ -11,6 +11,8 @@ class UserFriendsUtils extends _Row {
     }
 
     /**
+     * will throw error if users are already friends
+     *
      * @param id1
      * @param id2
      */
