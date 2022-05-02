@@ -22,7 +22,7 @@ class UserLanguagesUtils extends _Row {
                 this.databaseWrapper.run_query(`INSERT INTO ${this.table_name} (user_id, language)
                                                 VALUES (?, ?)`, [user_id, languages[i].toUpperCase()]);
             } catch (e) {
-                if (e.message === "this language for this user exists") {
+                if (e.message === `UNIQUE constraint failed: ${this.table_name}.user_id, ${this.table_name}.language`) {
                     exists_error = e;
                 } else {
                     throw e;

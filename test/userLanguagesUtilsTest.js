@@ -30,6 +30,7 @@ describe(__filename, function() {
             try {
                 userLanguagesUtils.addLanguages(1, ["turkish"]);
             } catch (e) {
+                assert.strictEqual(e.message, "UNIQUE constraint failed: user_languages.user_id, user_languages.language");
                 errorOccurred = true;
             }
             assert.ok(errorOccurred, "no error occurred adding Turkish to user 1 again");
