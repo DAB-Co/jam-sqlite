@@ -110,6 +110,16 @@ class _Row {
     deleteRowByPrimaryKey(column_data) {
         this.databaseWrapper.run_query(`DELETE FROM ${this.table_name} WHERE ${this.primary_key}=?` , [column_data]);
     }
+
+    /**
+     * get iterator that iterates every row
+     *
+     * @returns {*}
+     */
+    getTableIterator() {
+        return this.databaseWrapper.get_iterator(`SELECT *
+                                                          FROM ${this.table_name}`);
+    }
 }
 
 module.exports = _Row;
