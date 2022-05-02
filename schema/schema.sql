@@ -16,7 +16,8 @@ CREATE TABLE IF NOT EXISTS "user_friends"
     "blocked" BOOLEAN NOT NULL DEFAULT FALSE,
     FOREIGN KEY ("user_id") REFERENCES "accounts" ("user_id"),
     FOREIGN KEY ("friend_id") REFERENCES "accounts" ("user_id"),
-    PRIMARY KEY ("user_id", "friend_id")
+    PRIMARY KEY ("user_id", "friend_id"),
+    CHECK ("user_id" != "friend_id")
 );
 CREATE TABLE IF NOT EXISTS "user_languages"
 (

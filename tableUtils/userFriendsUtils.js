@@ -1,5 +1,5 @@
 const path = require("path");
-const _Row = require(path.join(__dirname, "_row.js"))
+const _Row = require(path.join(__dirname, "_row.js"));
 
 class UserFriendsUtils extends _Row {
     /**
@@ -17,31 +17,13 @@ class UserFriendsUtils extends _Row {
      * @param id2
      */
     addFriend(id1, id2) {
-        let row1 = this.databaseWrapper.get(`SELECT accounts.username, friends
-                                                   FROM user_friends
-                                                            INNER JOIN accounts
-                                                                       ON user_friends.user_id = accounts.user_id AND user_friends.user_id = ?`, [id1]);
-
-        if (row1 === undefined) {
-            return;
+        try {
+            this.databaseWrapper.run_query(`INSERT INTO ${this.table_name} (user_id, friend_id) VALUES (?, ?);`, [id1, id2]);
+            this.databaseWrapper.run_query(`INSERT INTO ${this.table_name} (user_id, friend_id) VALUES (?, ?);`, [id2, id1]);
+          } catch (err) {
+            // foreign key error etc.
+            // console.log(err);
         }
-
-        let row2 = this.databaseWrapper.get(`SELECT accounts.username, friends
-                                                   FROM user_friends
-                                                            INNER JOIN accounts
-                                                                       ON user_friends.user_id = accounts.user_id AND user_friends.user_id = ?`, [id2]);
-
-        if (row2 === undefined) {
-            return;
-        }
-
-        let friends1 = JSON.parse(row1["friends"]);
-        friends1[id2] = { "username": row2["username"], "blocked": false };
-        this.updateColumnByPrimaryKey(id1, "friends", JSON.stringify(friends1));
-
-        let friends2 = JSON.parse(row2["friends"]);
-        friends2[id1] = { "username": row1["username"], "blocked": false };
-        this.updateColumnByPrimaryKey(id2, "friends", JSON.stringify(friends2));
     }
 
     /**
@@ -51,14 +33,12 @@ class UserFriendsUtils extends _Row {
      * @param id2
      */
     blockUser(id1, id2) {
-        let res = this.getColumnByPrimaryKey(id1, "friends");
-        if (res === undefined || res === null || res === '') {
-            return;
-        }
-        let friends = JSON.parse(res);
-        if (friends !== undefined && id2 in friends) {
-            friends[id2]["blocked"] = true;
-            this.updateColumnByPrimaryKey(id1, "friends", JSON.stringify(friends));
+        try {
+            this.databaseWrapper.run_query(
+                `UPDATE ${this.table_name} SET blocked=TRUE WHERE user_id=? AND friend_id=?;`
+            , [id1, id2]);
+          } catch (err) {
+            console.log(err);
         }
     }
 
@@ -67,34 +47,47 @@ class UserFriendsUtils extends _Row {
      * @param id1
      * @param id2
      */
-    unblockUser(id1, id2) {let res = this.getColumnByPrimaryKey(id1, "friends");
-        if (res === undefined || res === null || res === '') {
-            return;
-        }
-        let friends = JSON.parse(res);
-        if (friends !== undefined && id2 in friends) {
-            friends[id2]["blocked"] = false;
-            this.updateColumnByPrimaryKey(id1, "friends", JSON.stringify(friends));
+    unblockUser(id1, id2) {
+        try {
+            this.databaseWrapper.run_query(
+                `UPDATE ${this.table_name} SET blocked=FALSE WHERE user_id=? AND friend_id=?;`
+            , [id1, id2]);
+          } catch (err) {
+            console.log(err);
         }
     }
 
     /**
      *
      * @param id
-     * @returns {undefined | json} {id1: {blocked: true}, id2: {blocked: true}}
+     * @returns {undefined | json} {id1: {username: username1, blocked: true}, id2: {username: username2, blocked: true}}, 
+     * Undefined if no user with that id, 
+     * Empty set if user has no friend
      */
     getFriends(id) {
-        let res = this.getColumnByPrimaryKey(id, "friends");
-        if (res === undefined) {
-            return undefined;
-        }
-        else {
-            return JSON.parse(res);
+        try {
+            let userExists = this.databaseWrapper.get(`SELECT 1 FROM accounts WHERE user_id=?;`, [id]) !== undefined;
+            if (!userExists) return;
+            let raw_res = this.databaseWrapper.get_all(`
+            SELECT friend_id, blocked, username
+            FROM user_friends F
+            JOIN accounts A ON F.friend_id=A.user_id
+            WHERE F.user_id=?;`, [id]);
+            let result = {};
+            for (let i of raw_res) {
+                result[i["friend_id"]] = {
+                    "username": i["username"],
+                    "blocked": Boolean(i["blocked"]),
+                };
+            }
+            return result;
+          } catch (err) {
+            console.log(err);
         }
     }
 
     /**
-     * 
+     * Deletes user_id from friends table both from user_id and friend_id
      * @param user_id 
      */
     deleteFriend(user_id) {

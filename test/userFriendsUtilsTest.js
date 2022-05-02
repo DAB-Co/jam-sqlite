@@ -132,7 +132,7 @@ describe(__filename, function (){
         it("delete user friend", function () {
             userFriendsUtils.deleteFriend(1);
             let pref = userFriendsUtils.getFriends(1);
-            assert.strictEqual(pref,undefined);
+            assert.deepStrictEqual(pref,{});
         });
     });
 });
