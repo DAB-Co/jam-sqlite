@@ -21,7 +21,7 @@ describe(__filename, function (){
     describe("", function () {
         it("getting friends of nonexistent user is undefined", function() {
             let user31friends = userFriendsUtils.getFriends(31);
-            assert.strictEqual(user31friends, undefined);
+            assert.deepStrictEqual(user31friends, {});
         });
     });
 
@@ -29,9 +29,9 @@ describe(__filename, function (){
         it("blocking for nonexistent user does nothing", function () {
             userFriendsUtils.unblockUser(31, 69);
             let user31Friends = userFriendsUtils.getFriends(31);
-            assert.strictEqual(user31Friends, undefined);
+            assert.deepStrictEqual(user31Friends, {});
             let user69Friends = userFriendsUtils.getFriends(69);
-            assert.strictEqual(user69Friends, undefined);
+            assert.deepStrictEqual(user69Friends, {});
         });
     })
 
@@ -46,12 +46,16 @@ describe(__filename, function (){
     });
 
     describe("", function () {
-       it("adding 1 as a friend of 31 changes nothing since 31 isn't an user", function() {
+       it("adding 1 as a friend of 31 gives error since 31 isn't an user", function() {
            let user31friends = userFriendsUtils.getFriends(31);
-           assert.strictEqual(user31friends, undefined);
-           userFriendsUtils.addFriend(31, 1);
+           assert.deepStrictEqual(user31friends, {});
+           try {
+               userFriendsUtils.addFriend(31, 1);
+           } catch (e) {
+               assert.deepStrictEqual(e.message, "FOREIGN KEY constraint failed");
+           }
            user31friends = userFriendsUtils.getFriends(31);
-           assert.strictEqual(user31friends, undefined);
+           assert.deepStrictEqual(user31friends, {});
        });
     });
 
@@ -59,7 +63,11 @@ describe(__filename, function (){
        it("adding 31 as a friend of 1 changes nothing since 31 isn't an user", function () {
            let user1friends = userFriendsUtils.getFriends(1);
            assert.strictEqual(JSON.stringify(user1friends), '{"2":{"username":"user2","blocked":false}}');
-           userFriendsUtils.addFriend(1, 31);
+           try {
+               userFriendsUtils.addFriend(1, 31);
+           } catch (e) {
+               assert.strictEqual(e.message, "FOREIGN KEY constraint failed");
+           }
            user1friends = userFriendsUtils.getFriends(1);
            assert.strictEqual(JSON.stringify(user1friends), '{"2":{"username":"user2","blocked":false}}');
        });
@@ -106,9 +114,9 @@ describe(__filename, function (){
         it("nonexistent user unblocking does nothing", function () {
             userFriendsUtils.unblockUser(31, 69);
             let user31Friends = userFriendsUtils.getFriends(31);
-            assert.strictEqual(user31Friends, undefined);
+            assert.deepStrictEqual(user31Friends, {});
             let user69Friends = userFriendsUtils.getFriends(69);
-            assert.strictEqual(user69Friends, undefined);
+            assert.deepStrictEqual(user69Friends, {});
         });
     });
 
