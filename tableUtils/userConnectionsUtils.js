@@ -208,8 +208,7 @@ class UserConnectionsUtils extends _Row {
         let matched = new Map();
         let graph = new Map();
 
-        let iterator = this.databaseWrapper.get_iterator(`SELECT *
-                                                          FROM ${this.table_name}`);
+        let iterator = this.getTableIterator();
 
         for (const row of iterator) {
             const u1 = row.user1_id;
