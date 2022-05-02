@@ -2,10 +2,12 @@ BEGIN TRANSACTION;
 DROP TABLE IF EXISTS "user_friends";
 CREATE TABLE IF NOT EXISTS "user_friends"
 (
-    "user_id" INTEGER NOT NULL UNIQUE,
-    "friends" BLOB    NOT NULL DEFAULT '{}',
+    "user_id" INTEGER NOT NULL,
+    "friend_id" INTEGER NOT NULL,
+    "blocked" BOOLEAN NOT NULL DEFAULT FALSE,
     FOREIGN KEY ("user_id") REFERENCES "accounts" ("user_id"),
-    PRIMARY KEY ("user_id")
+    FOREIGN KEY ("friend_id") REFERENCES "accounts" ("user_id"),
+    PRIMARY KEY ("user_id", "friend_id")
 );
 DROP TABLE IF EXISTS "user_languages";
 CREATE TABLE IF NOT EXISTS "user_languages"
@@ -90,7 +92,6 @@ CREATE TRIGGER after_account_insert
     AFTER INSERT
     ON accounts
 BEGIN
-    INSERT INTO user_friends (user_id) VALUES (new.user_id);
     INSERT INTO spotify(user_id) VALUES (new.user_id);
     INSERT INTO user_avatars(user_id) VALUES (new.user_id);
     INSERT INTO user_devices(user_id) VALUES (new.user_id);
@@ -100,7 +101,7 @@ CREATE TRIGGER before_account_delete
     BEFORE DELETE
     ON accounts
 BEGIN
-    DELETE FROM user_friends WHERE user_id=old.user_id;
+    DELETE FROM user_friends WHERE user_id = old.user_id OR friend_id = old.user_id;
     DELETE FROM spotify WHERE user_id=old.user_id;
     DELETE FROM user_avatars WHERE user_id=old.user_id;
     DELETE FROM user_devices WHERE user_id=old.user_id;

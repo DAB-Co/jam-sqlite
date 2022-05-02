@@ -11,12 +11,12 @@ CREATE TABLE IF NOT EXISTS "accounts"
 );
 CREATE TABLE IF NOT EXISTS "user_friends"
 (
-    "user_id1" INTEGER NOT NULL UNIQUE,
-    "user_id2" INTEGER NOT NULL UNIQUE,
+    "user_id" INTEGER NOT NULL,
+    "friend_id" INTEGER NOT NULL,
     "blocked" BOOLEAN NOT NULL DEFAULT FALSE,
-    FOREIGN KEY ("user_id1") REFERENCES "accounts" ("user_id"),
-    FOREIGN KEY ("user_id2") REFERENCES "accounts" ("user_id"),
-    PRIMARY KEY ("user_id1", "user_id2")
+    FOREIGN KEY ("user_id") REFERENCES "accounts" ("user_id"),
+    FOREIGN KEY ("friend_id") REFERENCES "accounts" ("user_id"),
+    PRIMARY KEY ("user_id", "friend_id")
 );
 CREATE TABLE IF NOT EXISTS "user_languages"
 (
@@ -91,7 +91,7 @@ CREATE TRIGGER before_account_delete
     BEFORE DELETE
     ON accounts
 BEGIN
-    DELETE FROM user_friends WHERE user_id1 = old.user_id OR user_id2 = old.user_id;
+    DELETE FROM user_friends WHERE user_id = old.user_id OR friend_id = old.user_id;
     DELETE FROM spotify WHERE user_id = old.user_id;
     DELETE FROM user_avatars WHERE user_id = old.user_id;
     DELETE FROM user_devices WHERE user_id = old.user_id;
