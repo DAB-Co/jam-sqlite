@@ -2,9 +2,9 @@ BEGIN TRANSACTION;
 DROP TABLE IF EXISTS "user_friends";
 CREATE TABLE IF NOT EXISTS "user_friends"
 (
-    "user_id" INTEGER NOT NULL,
+    "user_id"   INTEGER NOT NULL,
     "friend_id" INTEGER NOT NULL,
-    "blocked" BOOLEAN NOT NULL DEFAULT FALSE,
+    "blocked"   BOOLEAN NOT NULL DEFAULT FALSE,
     FOREIGN KEY ("user_id") REFERENCES "accounts" ("user_id"),
     FOREIGN KEY ("friend_id") REFERENCES "accounts" ("user_id"),
     PRIMARY KEY ("user_id", "friend_id"),
@@ -63,8 +63,8 @@ CREATE TABLE IF NOT EXISTS "spotify_preferences"
 DROP TABLE IF EXISTS "user_avatars";
 CREATE TABLE "user_avatars"
 (
-    "user_id" INTEGER NOT NULL UNIQUE,
-    "big_avatar" BLOB,
+    "user_id"      INTEGER NOT NULL UNIQUE,
+    "big_avatar"   BLOB,
     "small_avatar" BLOB,
     PRIMARY KEY ("user_id"),
     FOREIGN KEY ("user_id") REFERENCES "accounts" ("user_id")
@@ -72,7 +72,7 @@ CREATE TABLE "user_avatars"
 DROP TABLE IF EXISTS "user_devices";
 CREATE TABLE IF NOT EXISTS "user_devices"
 (
-    "user_id" INTEGER NOT NULL UNIQUE,
+    "user_id"   INTEGER NOT NULL UNIQUE,
     "device_id" TEXT,
     PRIMARY KEY ("user_id"),
     FOREIGN KEY ("user_id") REFERENCES "accounts" ("user_id")
@@ -88,7 +88,7 @@ CREATE TABLE IF NOT EXISTS "accounts"
     "user_api_token"          TEXT,
     PRIMARY KEY ("user_id" AUTOINCREMENT)
 );
-DROP TRIGGER  IF EXISTS after_account_insert;
+DROP TRIGGER IF EXISTS after_account_insert;
 CREATE TRIGGER after_account_insert
     AFTER INSERT
     ON accounts
@@ -103,9 +103,9 @@ CREATE TRIGGER before_account_delete
     ON accounts
 BEGIN
     DELETE FROM user_friends WHERE user_id = old.user_id OR friend_id = old.user_id;
-    DELETE FROM spotify WHERE user_id=old.user_id;
-    DELETE FROM user_avatars WHERE user_id=old.user_id;
-    DELETE FROM user_devices WHERE user_id=old.user_id;
+    DELETE FROM spotify WHERE user_id = old.user_id;
+    DELETE FROM user_avatars WHERE user_id = old.user_id;
+    DELETE FROM user_devices WHERE user_id = old.user_id;
     DELETE FROM user_connections WHERE user1_id = old.user_id OR user2_id = old.user_id;
 END;
 DROP TRIGGER IF EXISTS "before_user_languages_insert";
@@ -144,6 +144,16 @@ CREATE TRIGGER after_user_preferences_insert
 BEGIN
     INSERT INTO spotify_preferences(preference_id) VALUES (new.preference_identifier);
 END;
+DROP TRIGGER IF EXISTS before_user_friends_insert;
+CREATE TRIGGER before_user_friends_insert
+    BEFORE INSERT
+    on user_friends
+BEGIN
+    SELECT RAISE(ABORT, 'these users are already friends')
+    WHERE EXISTS(
+                  SELECT 1 from user_friends WHERE user_id = new.user_id AND friend_id = new.friend_id
+              );
+END;
 DROP TRIGGER IF EXISTS before_user_connections_insert;
 CREATE TRIGGER before_user_connections_insert
     BEFORE INSERT
@@ -162,13 +172,15 @@ BEGIN
               );
 END;
 CREATE TRIGGER insert_Timestamp_Trigger
-    AFTER INSERT ON matches_snapshot
+    AFTER INSERT
+    ON matches_snapshot
 BEGIN
     UPDATE matches_snapshot SET Timestamp =STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW') WHERE snapshot_id = new.snapshot_id;
 END;
 
 CREATE TRIGGER update_Timestamp_Trigger
-    AFTER UPDATE On matches_snapshot
+    AFTER UPDATE
+    On matches_snapshot
 BEGIN
     UPDATE matches_snapshot SET Timestamp = STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW') WHERE snapshot_id = new.snapshot_id;
 END;

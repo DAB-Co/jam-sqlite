@@ -134,6 +134,16 @@ CREATE TRIGGER after_user_preferences_insert
 BEGIN
     INSERT INTO spotify_preferences(preference_id) VALUES (new.preference_identifier);
 END;
+DROP TRIGGER IF EXISTS before_user_friends_insert;
+CREATE TRIGGER before_user_friends_insert
+    BEFORE INSERT
+    on user_friends
+BEGIN
+    SELECT RAISE(ABORT, 'these users are already friends')
+    WHERE EXISTS(
+                  SELECT 1 from user_friends WHERE user_id = new.user_id AND friend_id = new.friend_id
+              );
+END;
 DROP TRIGGER IF EXISTS before_user_connections_insert;
 CREATE TRIGGER before_user_connections_insert
     BEFORE INSERT
