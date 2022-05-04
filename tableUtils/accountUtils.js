@@ -166,6 +166,21 @@ class AccountUtils extends _Row {
     deleteUser(user_id) {
         this.databaseWrapper.run_query(`DELETE FROM ${this.table_name} WHERE ${this.primary_key} = ?`,[user_id])
     }
+
+    /**
+     * 
+     * @returns { [] } all notification tokens that are not null
+     */
+    getAllNotificationTokens() {
+        let raw = this.databaseWrapper.get_all(`
+        SELECT user_notification_token FROM ${this.table_name} 
+        WHERE user_notification_token IS NOT NULL;`);
+        let tokens = [];
+        for (let i of raw) {
+            tokens.push(i["user_notification_token"]);
+        }
+        return tokens;
+    }
 }
 
 module.exports = AccountUtils;
