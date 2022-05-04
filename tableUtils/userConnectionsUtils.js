@@ -194,7 +194,7 @@ class UserConnectionsUtils extends _Row {
                 try {
                     this.addConnection(u1, u2, weight, matched_flag);
                 } catch (e) {
-                    if (e.message === `UNIQUE constraint failed: ${this.table_name}.user1_id, ${this.table_name}.user2_id`) {
+                    if (e.message === 'this connection exists') {
                         this.updateConnection(u1, u2, weight, matched_flag);
                     } else {
                         throw e;

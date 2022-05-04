@@ -114,4 +114,17 @@ CREATE TRIGGER after_user_preferences_insert
 BEGIN
     INSERT INTO spotify_preferences(preference_id) VALUES (new.preference_identifier);
 END;
+DROP TRIGGER IF EXISTS before_user_connections_insert;
+CREATE TRIGGER before_user_connections_insert
+    BEFORE INSERT
+    ON user_connections
+BEGIN
+    SELECT RAISE(ABORT, 'this connection exists')
+    WHERE EXISTS(
+                  SELECT 1
+                  FROM user_connections
+                  WHERE (new.user1_id = user1_id AND new.user2_id = user2_id)
+                     OR (new.user1_id = user2_id AND new.user2_id = user1_id)
+              );
+END;
 COMMIT;
