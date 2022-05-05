@@ -110,14 +110,15 @@ describe(__filename, function () {
         it("user 2 blocked by user 1", function () {
             userFriendsUtils.blockUser(1, 2);
             let user1friends = userFriendsUtils.getFriends(1);
+            let user2friends = userFriendsUtils.getFriends(2);
             assert.ok(user1friends !== undefined && 2 in user1friends && user1friends[2]["blocked"]);
         });
     });
 
     describe("", function () {
-        it("user 1 is not blocked in user 2", function () {
+        it("user 1 is not as friends in user 2", function () {
             let user2friends = userFriendsUtils.getFriends(2);
-            assert.ok(user2friends !== undefined && 1 in user2friends && !user2friends[1]["blocked"]);
+            assert.ok(user2friends !== undefined && !(1 in user2friends));
         });
     });
 
@@ -125,7 +126,7 @@ describe(__filename, function () {
         it("user 2 unblocking 1 doesn't unblock 1 from 2", function () {
             userFriendsUtils.unblockUser(2, 1);
             let user2friends = userFriendsUtils.getFriends(2);
-            assert.ok(user2friends !== undefined && 1 in user2friends && !user2friends[1]["blocked"]);
+            assert.ok(user2friends !== undefined && !(1 in user2friends));
         });
     });
 
@@ -152,6 +153,8 @@ describe(__filename, function () {
             userFriendsUtils.unblockUser(1, 2);
             let user1friends = userFriendsUtils.getFriends(1);
             assert.ok(user1friends !== undefined && !user1friends[2]["blocked"]);
+            let user2friends = userFriendsUtils.getFriends(2);
+            assert.ok(user2friends !== undefined && !user2friends[1]["blocked"]);
         });
     });
 

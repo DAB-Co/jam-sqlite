@@ -11,9 +11,10 @@ CREATE TABLE IF NOT EXISTS "accounts"
 );
 CREATE TABLE IF NOT EXISTS "user_friends"
 (
-    "user_id" INTEGER NOT NULL,
+    "user_id"   INTEGER NOT NULL,
     "friend_id" INTEGER NOT NULL,
-    "blocked" BOOLEAN NOT NULL DEFAULT FALSE,
+    "blocked"   BOOLEAN NOT NULL DEFAULT FALSE,
+    "been_blocked" BOOLEAN NOT NULL DEFAULT FALSE,
     FOREIGN KEY ("user_id") REFERENCES "accounts" ("user_id"),
     FOREIGN KEY ("friend_id") REFERENCES "accounts" ("user_id"),
     PRIMARY KEY ("user_id", "friend_id"),
