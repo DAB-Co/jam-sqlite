@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS "user_friends"
     "user_id"   INTEGER NOT NULL,
     "friend_id" INTEGER NOT NULL,
     "blocked"   BOOLEAN NOT NULL DEFAULT FALSE,
+    "been_blocked" BOOLEAN NOT NULL DEFAULT FALSE,
     FOREIGN KEY ("user_id") REFERENCES "accounts" ("user_id"),
     FOREIGN KEY ("friend_id") REFERENCES "accounts" ("user_id"),
     PRIMARY KEY ("user_id", "friend_id"),
@@ -36,7 +37,6 @@ CREATE TABLE "user_connections"
     "matched"  INTEGER DEFAULT 0,
     FOREIGN KEY ("user1_id") REFERENCES "accounts" ("user_id"),
     FOREIGN KEY ("user2_id") REFERENCES "accounts" ("user_id"),
-    PRIMARY KEY ("user1_id", "user2_id"),
     CHECK ("user1_id" != user2_id)
 );
 DROP TABLE IF EXISTS "spotify";

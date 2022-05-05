@@ -60,6 +60,12 @@ class UserFriendsUtils extends _Row {
              WHERE user_id = ?
                AND friend_id = ?;`
             , [id1, id2]);
+        this.databaseWrapper.run_query(
+            `UPDATE ${this.table_name}
+             SET been_blocked= TRUE
+             WHERE user_id = ?
+               AND friend_id = ?;`
+            , [id2, id1]);
     }
 
     /**
@@ -74,6 +80,12 @@ class UserFriendsUtils extends _Row {
              WHERE user_id = ?
                AND friend_id = ?;`
             , [id1, id2]);
+        this.databaseWrapper.run_query(
+            `UPDATE ${this.table_name}
+             SET been_blocked= FALSE
+             WHERE user_id = ?
+               AND friend_id = ?;`
+            , [id2, id1]);
     }
 
     /**
@@ -87,7 +99,7 @@ class UserFriendsUtils extends _Row {
             SELECT friend_id, blocked, username
             FROM user_friends F
                      JOIN accounts A ON F.friend_id = A.user_id
-            WHERE F.user_id = ?;`, [id]);
+            WHERE F.user_id = ? AND F.been_blocked=FALSE;`, [id]);
         let result = {};
         for (let i of raw_res) {
             result[i["friend_id"]] = {
