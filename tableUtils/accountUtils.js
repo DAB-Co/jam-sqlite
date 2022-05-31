@@ -174,12 +174,36 @@ class AccountUtils extends _Row {
     getAllNotificationTokens() {
         let raw = this.databaseWrapper.get_all(`
         SELECT user_notification_token FROM ${this.table_name} 
-        WHERE user_notification_token IS NOT NULL;`);
+        WHERE user_notification_token IS NOT NULL`);
         let tokens = [];
         for (let i of raw) {
             tokens.push(i["user_notification_token"]);
         }
         return tokens;
+    }
+
+    /**
+     *
+     * @param {number} user_id
+     * @param {boolean} inactivity
+     */
+    setInactivity(user_id, inactivity) {
+        this.databaseWrapper.run_query(`UPDATE ${this.table_name} SET inactive=${inactivity ? "TRUE" : "FALSE"} WHERE user_id=?`, [user_id]);
+    }
+
+    /**
+     *
+     * @returns {Set<number>}
+     */
+    getAllInactives() {
+        let raw = this.databaseWrapper.get_all(`
+        SELECT user_id FROM ${this.table_name} 
+        WHERE inactive=TRUE`);
+        let inactives = new Set();
+        for (let i of raw) {
+            inactives.add(i["user_id"]);
+        }
+        return inactives;
     }
 }
 
