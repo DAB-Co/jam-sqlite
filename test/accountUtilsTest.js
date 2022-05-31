@@ -131,4 +131,24 @@ describe(__filename, function () {
             assert.strictEqual(pref,undefined);
         });
     });
+
+    describe("", function() {
+       it("getAllInactives", function() {
+          let inactives = accountUtils.getAllInactives();
+          assert.strictEqual(inactives.size, 3);
+          assert.ok(inactives.has(2));
+          assert.ok(inactives.has(3));
+          assert.ok(inactives.has(4));
+       });
+    });
+
+    describe("", function() {
+       it("set 2 to active", function() {
+           accountUtils.setInactivity(2, false);
+           let inactives = accountUtils.getAllInactives();
+           assert.strictEqual(inactives.size, 2);
+           assert.ok(inactives.has(3));
+           assert.ok(inactives.has(4));
+       });
+    });
 });

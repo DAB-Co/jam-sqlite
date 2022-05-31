@@ -7,13 +7,14 @@ CREATE TABLE IF NOT EXISTS "accounts"
     "user_password_hash"      TEXT    NOT NULL,
     "user_notification_token" TEXT,
     "user_api_token"          TEXT,
+    "inactive"                BOOLEAN NOT NULL DEFAULT TRUE,
     PRIMARY KEY ("user_id" AUTOINCREMENT)
 );
 CREATE TABLE IF NOT EXISTS "user_friends"
 (
-    "user_id"   INTEGER NOT NULL,
-    "friend_id" INTEGER NOT NULL,
-    "blocked"   BOOLEAN NOT NULL DEFAULT FALSE,
+    "user_id"      INTEGER NOT NULL,
+    "friend_id"    INTEGER NOT NULL,
+    "blocked"      BOOLEAN NOT NULL DEFAULT FALSE,
     "been_blocked" BOOLEAN NOT NULL DEFAULT FALSE,
     FOREIGN KEY ("user_id") REFERENCES "accounts" ("user_id"),
     FOREIGN KEY ("friend_id") REFERENCES "accounts" ("user_id"),

@@ -82,6 +82,7 @@ CREATE TABLE IF NOT EXISTS "accounts"
     "user_password_hash"      TEXT    NOT NULL,
     "user_notification_token" TEXT,
     "user_api_token"          TEXT,
+    "inactive"                BOOLEAN NOT NULL DEFAULT TRUE,
     PRIMARY KEY ("user_id" AUTOINCREMENT)
 );
 DROP TRIGGER IF EXISTS after_account_insert;

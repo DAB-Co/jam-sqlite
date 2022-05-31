@@ -32,7 +32,7 @@ describe(__filename, function () {
             try {
                 userPreferencesUtils.addPreference(1, "pid1", 31);
             } catch (e) {
-                console.log(e.message);
+                //console.log(e.message);
                 assert.strictEqual(e.code, 'SQLITE_CONSTRAINT_PRIMARYKEY');
                 error_occured = true;
             }
