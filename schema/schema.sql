@@ -97,6 +97,7 @@ BEGIN
     DELETE FROM user_devices WHERE user_id = old.user_id;
     DELETE FROM user_connections WHERE user1_id = old.user_id OR user2_id = old.user_id;
     DELETE FROM user_languages WHERE user_id = old.user_id;
+    DELETE FROM user_preferences WHERE user_id = old.user_id;
 END;
 DROP TRIGGER IF EXISTS after_user_preferences_insert;
 CREATE TRIGGER after_user_preferences_insert
