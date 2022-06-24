@@ -78,7 +78,7 @@ describe(__filename, function () {
     describe("", function () {
         it("adding 31 as a friend of 1 gives error since 31 isn't an user", function () {
             let user1friends = userFriendsUtils.getFriends(1);
-            assert.strictEqual(JSON.stringify(user1friends), '{"2":{"username":"user2","blocked":false}}');
+            assert.strictEqual(JSON.stringify(user1friends), '{"2":{"username":"user2","blocked":false,"public_key":null}}');
             let error_occured = false;
             try {
                 userFriendsUtils.addFriend(1, 31);
@@ -88,7 +88,7 @@ describe(__filename, function () {
             }
             assert.ok(error_occured);
             user1friends = userFriendsUtils.getFriends(1);
-            assert.strictEqual(JSON.stringify(user1friends), '{"2":{"username":"user2","blocked":false}}');
+            assert.strictEqual(JSON.stringify(user1friends), '{"2":{"username":"user2","blocked":false,"public_key":null}}');
         });
     });
 
