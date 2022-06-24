@@ -57,6 +57,20 @@ class AccountUtils extends _Row {
 
     /**
      *
+     * @param email
+     * @param username
+     * @param pass
+     * @param api_token
+     * @param notification_token
+     * @param public_key
+     * @returns {*}
+     */
+    addUserWithTokensAndKey(email, username, pass, api_token, notification_token, public_key) {
+        return this.databaseWrapper.run_query("INSERT INTO accounts (user_email, username, user_password_hash, user_api_token, user_notification_token, public_key) VALUES (?, ?, ?, ?, ?, ?);", [email, username, pass, api_token, notification_token, public_key]);
+    }
+
+    /**
+     *
      * @param id
      * @returns user_password_hash
      */
