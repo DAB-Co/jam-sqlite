@@ -128,6 +128,18 @@ describe(__filename, function () {
         });
     });
 
+    describe("", function() {
+        it("update tokens and key test", function () {
+            accountUtils.updateTokensAndKey(1, "api_token", "notification_token", "key");
+            let pref1 = accountUtils.getApiToken(1);
+            let pref2 = accountUtils.getNotificationToken(1);
+            let pref3 = accountUtils.getRowByPrimaryKey(1).public_key;
+            assert.strictEqual(pref1, "api_token");
+            assert.strictEqual(pref2, "notification_token");
+            assert.strictEqual(pref3, "key");
+        });
+    });
+
     describe("", function () {
         it("clear tokens test", function () {
             accountUtils.clearTokens(1);

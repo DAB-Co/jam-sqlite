@@ -96,7 +96,7 @@ class UserFriendsUtils extends _Row {
      */
     getFriends(id) {
         let raw_res = this.databaseWrapper.get_all(`
-            SELECT friend_id, blocked, username
+            SELECT friend_id, blocked, username, public_key
             FROM user_friends F
                      JOIN accounts A ON F.friend_id = A.user_id
             WHERE F.user_id = ? AND F.been_blocked=FALSE;`, [id]);
@@ -105,6 +105,7 @@ class UserFriendsUtils extends _Row {
             result[i["friend_id"]] = {
                 "username": i["username"],
                 "blocked": Boolean(i["blocked"]),
+                "public_key": i["public_key"],
             };
         }
         return result;
