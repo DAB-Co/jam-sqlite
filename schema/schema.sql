@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS "accounts"
     "user_notification_token" TEXT,
     "user_api_token"          TEXT,
     "inactive"                BOOLEAN NOT NULL DEFAULT TRUE,
+    "public_key"              TEXT,
     PRIMARY KEY ("user_id" AUTOINCREMENT)
 );
 CREATE TABLE IF NOT EXISTS "user_friends"
