@@ -86,6 +86,15 @@ CREATE TABLE IF NOT EXISTS "accounts"
     "public_key"              TEXT,
     PRIMARY KEY ("user_id" AUTOINCREMENT)
 );
+DROP TABLE IF EXISTS "forgot_password_tokens";
+CREATE TABLE IF NOT EXISTS "forgot_password_tokens"
+(
+    "token"        TEXT NOT NULL UNIQUE,
+    "user_email"   TEXT NOT NULL,
+    "date_created" TEXT NOT NULL,
+    PRIMARY KEY ("token"),
+    FOREIGN KEY ("user_email") REFERENCES "accounts" ("user_email")
+);
 DROP TRIGGER IF EXISTS after_account_insert;
 CREATE TRIGGER after_account_insert
     AFTER INSERT
