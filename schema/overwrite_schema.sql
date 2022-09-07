@@ -47,6 +47,14 @@ CREATE TABLE IF NOT EXISTS "spotify"
     PRIMARY KEY ("user_id"),
     FOREIGN KEY ("user_id") REFERENCES "accounts" ("user_id")
 );
+DROP TABLE IF EXISTS "youtube";
+CREATE TABLE "youtube"
+(
+    "user_id" INTEGER NOT NULL UNIQUE,
+    "refresh_token" TEXT,
+    PRIMARY KEY ("user_id"),
+    FOREIGN KEY ("user_id") REFERENCES "accounts" ("user_id")
+);
 DROP TABLE IF EXISTS "spotify_preferences";
 CREATE TABLE IF NOT EXISTS "spotify_preferences"
 (
@@ -101,6 +109,7 @@ CREATE TRIGGER after_account_insert
     ON accounts
 BEGIN
     INSERT INTO spotify(user_id) VALUES (new.user_id);
+    INSERT INTO youtube(user_id) VALUES (new.user_id);
     INSERT INTO user_avatars(user_id) VALUES (new.user_id);
     INSERT INTO user_devices(user_id) VALUES (new.user_id);
 END;
@@ -111,6 +120,7 @@ CREATE TRIGGER before_account_delete
 BEGIN
     DELETE FROM user_friends WHERE user_id = old.user_id OR friend_id = old.user_id;
     DELETE FROM spotify WHERE user_id = old.user_id;
+    DELETE FROM youtube WHERE user_id = old.user_id;
     DELETE FROM user_avatars WHERE user_id = old.user_id;
     DELETE FROM user_devices WHERE user_id = old.user_id;
     DELETE FROM user_connections WHERE user1_id = old.user_id OR user2_id = old.user_id;

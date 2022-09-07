@@ -7,6 +7,7 @@ const UserConnectionsUtils = require(path.join(__dirname, "userConnectionsUtils.
 const UserPreferencesUtils = require(path.join(__dirname, "userPreferencesUtils.js"));
 const SpotifyUtils = require(path.join(__dirname, "spotifyUtils.js"));
 const SpotifyPreferencesUtils = require(path.join(__dirname, "spotifyPreferencesUtils.js"));
+const YoutubeUtils = require(path.join(__dirname, "youtubeUtils.js"));
 const MatchesSnapshotUtils = require(path.join(__dirname, "matchesSnapshotUtils.js"));
 const UserAvatarsUtils = require(path.join(__dirname, "userAvatarsUtils.js"));
 const UserDevicesUtils = require(path.join(__dirname, "userDevicesUtils.js"));
@@ -24,6 +25,7 @@ class UtilsInitializer {
         this.userPreferencesUtilsObject = new UserPreferencesUtils(database);
         this.spotifyUtilsObject = new SpotifyUtils(database);
         this.spotifyPreferencesUtilsObject = new SpotifyPreferencesUtils(database);
+        this.youtubeUtilsObject = new YoutubeUtils(database);
         this.matchesSnapshotUtilsObject = new MatchesSnapshotUtils(database);
         this.userAvatarsUtilsObject = new UserAvatarsUtils(database);
         this.userDevicesUtilsObject = new UserDevicesUtils(database);
@@ -58,6 +60,10 @@ class UtilsInitializer {
         return this.spotifyPreferencesUtilsObject;
     }
 
+    youtubeUtils() {
+        return this.youtubeUtilsObject;
+    }
+
     matchesSnapshotUtils() {
         return this.matchesSnapshotUtilsObject;
     }
@@ -84,6 +90,7 @@ module.exports = {
     UserPreferencesUtils: UserPreferencesUtils,
     SpotifyUtils: SpotifyUtils,
     SpotifyPreferencesUtils: SpotifyPreferencesUtils,
+    YoutubeUtils: YoutubeUtils,
     MatchesSnapshotUtils: MatchesSnapshotUtils,
     UserAvatarsUtils: UserAvatarsUtils,
     UserDevicesUtils: UserDevicesUtils,
